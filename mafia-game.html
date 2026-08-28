@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>لعبة المافيا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0f;
+    --bg-2:#111119;
+    --surface:#17171f;
+    --surface-hi:#1f1f2b;
+    --line: rgba(237,231,218,0.09);
+    --crimson:#a3223e;
+    --crimson-bright:#d1305a;
+    --gold:#c9a227;
+    --gold-dim: rgba(201,162,39,0.35);
+    --ink:#ede7da;
+    --ink-dim:#8a8794;
+    --mafia:#a3223e;
+    --citizen:#3a7d6b;
+    --radius:18px;
+    --font-d:'Tajawal', sans-serif;
+    --font-b:'Almarai', sans-serif;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  html,body{margin:0; padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(163,34,62,0.16), transparent 60%),
+      radial-gradient(ellipse 700px 400px at 100% 100%, rgba(201,162,39,0.08), transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:var(--font-b);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:22px 16px 100px;
+    position:relative;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    pointer-events:none;
+    opacity:0.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    z-index:1;
+  }
+  .wrap{width:100%; max-width:480px; position:relative; z-index:2;}
+
+  header.top{ text-align:center; margin-bottom:22px;}
+  .eyebrow{
+    font-family:var(--font-b); font-weight:700; font-size:12px;
+    letter-spacing:2px; color:var(--gold); text-transform:uppercase;
+    display:inline-block; padding:5px 14px; border:1px solid var(--gold-dim);
+    border-radius:100px; margin-bottom:14px;
+  }
+  h1.title{
+    font-family:var(--font-d); font-weight:900; font-size:44px; margin:0;
+    letter-spacing:1px;
+    background:linear-gradient(180deg,#fff, #cfc7b6 60%, #8a7f5f);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 0 40px rgba(201,162,39,0.15);
+    animation:flicker 6s infinite ease-in-out;
+  }
+  @media (prefers-reduced-motion: reduce){ h1.title{animation:none;} }
+  @keyframes flicker{
+    0%,19%,21%,23%,55%,57%,100%{opacity:1;}
+    20%,22%,56%{opacity:0.82;}
+  }
+  .subtitle{ color:var(--ink-dim); font-size:14px; margin-top:6px;}
+
+  .card{
+    background:linear-gradient(180deg, var(--surface), var(--bg-2));
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+    margin-bottom:14px;
+    box-shadow:0 20px 40px -20px rgba(0,0,0,0.6);
+  }
+  .step-label{
+    font-family:var(--font-d); font-weight:800; font-size:13px;
+    color:var(--gold); letter-spacing:1px; margin:0 0 14px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .step-label .n{
+    width:22px; height:22px; border-radius:50%; background:var(--gold);
+    color:#1a1500; display:inline-flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:800; font-family:var(--font-d);
+  }
+  label.f-label{ display:block; font-size:13px; color:var(--ink-dim); margin:14px 0 6px; font-weight:700;}
+  label.f-label:first-child{margin-top:0;}
+  input[type=number], input[type=text]{
+    width:100%; background:var(--bg); border:1px solid var(--line);
+    color:var(--ink); font-family:var(--font-b); font-weight:700; font-size:16px;
+    padding:12px 14px; border-radius:12px; outline:none; transition:.15s border-color;
+  }
+  input:focus{ border-color:var(--gold); }
+  input[type=number]{-moz-appearance:textfield;}
+
+  .name-row{ display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .name-row .idx{
+    flex:0 0 26px; height:26px; border-radius:8px; background:var(--surface-hi);
+    color:var(--gold); font-size:12px; font-weight:800; font-family:var(--font-d);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .name-row input{ flex:1; padding:10px 12px;}
+
+  .role-row{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:10px 4px; border-bottom:1px solid var(--line);
+  }
+  .role-row:last-of-type{border-bottom:none;}
+  .role-row .rinfo{ display:flex; align-items:center; gap:10px; }
+  .role-row .ricon{
+    width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+    background:var(--surface-hi); flex:0 0 auto;
+  }
+  .role-row .ricon svg{ width:17px; height:17px; }
+  .role-row .rname{ font-weight:800; font-size:14.5px; }
+  .role-row .rteam{ font-size:11px; color:var(--ink-dim); }
+  .stepper{ display:flex; align-items:center; gap:8px; }
+  .stepper button{
+    width:30px; height:30px; border-radius:9px; border:1px solid var(--line);
+    background:var(--bg); color:var(--ink); font-size:16px; font-weight:800; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .stepper button:active{ background:var(--surface-hi); }
+  .stepper .cnt{ width:22px; text-align:center; font-family:var(--font-d); font-weight:800; font-size:15px;}
+
+  .summary-line{
+    display:flex; justify-content:space-between; font-size:13px; color:var(--ink-dim);
+    margin-top:14px; padding-top:12px; border-top:1px dashed var(--line);
+  }
+  .summary-line b{ color:var(--ink); font-family:var(--font-d);}
+  .warn{ color:var(--crimson-bright); font-weight:700; font-size:12.5px; margin-top:8px; display:none;}
+
+  .btn{
+    width:100%; padding:15px 16px; border-radius:14px; border:none;
+    font-family:var(--font-d); font-weight:800; font-size:15.5px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .btn-primary{
+    background:linear-gradient(180deg, var(--gold), #a6841c); color:#1a1500;
+    box-shadow:0 10px 24px -8px rgba(201,162,39,0.5);
+  }
+  .btn-primary:disabled{ opacity:0.4; box-shadow:none; }
+  .btn-ghost{ background:transparent; color:var(--ink-dim); border:1px solid var(--line); }
+  .btn-row{ display:flex; gap:10px; }
+  .btn-row .btn{ flex:1; }
+
+  .hidden{ display:none !important; }
+
+  /* Game grid */
+  .grid-title{ text-align:center; margin-bottom:16px; }
+  .grid-title .lbl{ font-family:var(--font-d); font-weight:800; font-size:15px; }
+  .grid-title .sub{ font-size:12.5px; color:var(--ink-dim); margin-top:3px;}
+  .player-grid{
+    display:grid; grid-template-columns:repeat(2, 1fr); gap:10px;
+  }
+  .p-chip{
+    background:var(--surface); border:1px solid var(--line); border-radius:14px;
+    padding:16px 10px; text-align:center; cursor:pointer; position:relative;
+    transition:.15s transform, .15s border-color;
+  }
+  .p-chip:active{ transform:scale(0.97); }
+  .p-chip .pname{ font-family:var(--font-d); font-weight:800; font-size:14.5px; }
+  .p-chip .seen{
+    position:absolute; top:8px; left:8px; width:8px; height:8px; border-radius:50%;
+    background:var(--gold); box-shadow:0 0 8px var(--gold); display:none;
+  }
+  .p-chip.viewed .seen{ display:block; }
+  .p-chip.viewed{ border-color: var(--gold-dim); }
+
+  .footer-actions{ margin-top:18px; display:flex; gap:10px; }
+
+  /* Modal */
+  .overlay{
+    position:fixed; inset:0; background:rgba(4,4,7,0.88); backdrop-filter:blur(6px);
+    z-index:50; display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  .reveal-card{
+    width:100%; max-width:340px; perspective:1200px;
+  }
+  .flip-inner{
+    position:relative; width:100%; min-height:400px; transition:transform .6s cubic-bezier(.4,.2,.2,1);
+    transform-style:preserve-3d;
+  }
+  .flip-inner.flipped{ transform:rotateY(180deg); }
+  .face{
+    position:absolute; inset:0; backface-visibility:hidden; border-radius:20px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:26px; text-align:center;
+  }
+  .face-front{
+    background:
+      radial-gradient(circle at 50% 30%, rgba(201,162,39,0.14), transparent 60%),
+      linear-gradient(180deg, var(--surface-hi), var(--bg-2));
+    border:1px solid var(--gold-dim);
+  }
+  .face-front .lock{ width:54px; height:54px; margin-bottom:16px; opacity:0.85;}
+  .face-front .who{ font-family:var(--font-d); font-weight:900; font-size:22px; margin-bottom:6px;}
+  .face-front .hint{ color:var(--ink-dim); font-size:13px; line-height:1.9; margin-bottom:22px;}
+  .face-back{
+    background:
+      radial-gradient(circle at 50% 20%, rgba(163,34,62,0.18), transparent 55%),
+      linear-gradient(180deg, var(--surface-hi), var(--bg-2));
+    border:1px solid var(--line);
+    transform:rotateY(180deg);
+  }
+  .seal{
+    width:74px; height:74px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    margin-bottom:16px; box-shadow:0 0 0 1px var(--line), 0 14px 30px -10px rgba(0,0,0,0.7);
+  }
+  .seal svg{ width:32px; height:32px; }
+  .seal.team-mafia{ background:radial-gradient(circle at 35% 30%, #d1305a, #6d1428); }
+  .seal.team-citizen{ background:radial-gradient(circle at 35% 30%, #4fae95, #1f4a40); }
+  .role-title{ font-family:var(--font-d); font-weight:900; font-size:25px; margin-bottom:4px;}
+  .team-tag{
+    font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase;
+    padding:4px 12px; border-radius:100px; margin-bottom:16px;
+  }
+  .team-tag.team-mafia{ background:rgba(163,34,62,0.18); color:#e8637f; }
+  .team-tag.team-citizen{ background:rgba(58,125,107,0.2); color:#6bcbae; }
+  .role-desc{ font-size:14px; line-height:2; color:var(--ink); opacity:0.9; margin-bottom:22px; }
+  .close-btn{
+    background:var(--surface); border:1px solid var(--line); color:var(--ink);
+    font-family:var(--font-d); font-weight:800; padding:12px 26px; border-radius:12px;
+    font-size:14px; cursor:pointer;
+  }
+  .whose-turn{
+    text-align:center; color:var(--ink-dim); font-size:12.5px; margin-bottom:16px;
+  }
+  .whose-turn b{ color:var(--gold); font-family:var(--font-d); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <span class="eyebrow">لعبة الأدوار الليلية</span>
+    <h1 class="title">المافيا</h1>
+    <div class="subtitle">وزّع الأدوار، وخلّي كل واحد ياخذ دوره على انفراد</div>
+  </header>
+
+  <!-- Screen 1: player count -->
+  <section id="screen-count">
+    <div class="card">
+      <p class="step-label"><span class="n">1</span> عدد اللاعبين</p>
+      <label class="f-label">كم واحد رح يلعب؟ (العدد مفتوح)</label>
+      <input type="number" id="playerCount" min="3" max="60" value="8" inputmode="numeric">
+    </div>
+    <button class="btn btn-primary" onclick="goToNames()">التالي — أسماء اللاعبين</button>
+  </section>
+
+  <!-- Screen 2: names -->
+  <section id="screen-names" class="hidden">
+    <div class="card">
+      <p class="step-label"><span class="n">2</span> أسماء اللاعبين</p>
+      <div id="namesList"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="showScreen('count')">رجوع</button>
+      <button class="btn btn-primary" onclick="goToRoles()">التالي — البطاقات</button>
+    </div>
+  </section>
+
+  <!-- Screen 3: roles setup -->
+  <section id="screen-roles" class="hidden">
+    <div class="card">
+      <p class="step-label"><span class="n">3</span> فعّل وحدد عدد كل بطاقة</p>
+      <div id="rolesList"></div>
+      <div class="summary-line">
+        <span>مواطن عادي (تلقائي)</span>
+        <b id="citizenAuto">0</b>
+      </div>
+      <div class="summary-line">
+        <span>إجمالي الأدوار / اللاعبين</span>
+        <b><span id="totalAssigned">0</span> / <span id="totalPlayers">0</span></b>
+      </div>
+      <div class="warn" id="roleWarn">مجموع البطاقات أكبر من عدد اللاعبين — قلّل شوي 👆</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="showScreen('names')">رجوع</button>
+      <button class="btn btn-primary" id="startBtn" onclick="startGame()">ابدأ اللعبة 🌙</button>
+    </div>
+  </section>
+
+  <!-- Screen 4: game grid -->
+  <section id="screen-game" class="hidden">
+    <div class="grid-title">
+      <div class="lbl">دوّر الجهاز على كل لاعب</div>
+      <div class="sub">كل واحد يضغط اسمه ويشوف دوره لحاله بس</div>
+    </div>
+    <div class="player-grid" id="playerGrid"></div>
+    <div class="footer-actions">
+      <button class="btn btn-ghost" onclick="reshuffle()">إعادة توزيع الأدوار 🔀</button>
+      <button class="btn btn-ghost" onclick="newGame()">لعبة جديدة</button>
+    </div>
+  </section>
+
+</div>
+
+<!-- Reveal Modal -->
+<div class="overlay hidden" id="overlay">
+  <div class="reveal-card">
+    <div class="whose-turn">الدور على <b id="turnName">—</b></div>
+    <div class="flip-inner" id="flipInner">
+      <div class="face face-front">
+        <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="#c9a227" stroke-width="1.4"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><circle cx="12" cy="15.5" r="1.4" fill="#c9a227" stroke="none"/></svg>
+        <div class="who" id="frontName">—</div>
+        <div class="hint">بس أنت شوف الشاشة.<br>اضغط تحت وشوف بطاقتك.</div>
+        <button class="btn btn-primary" style="width:auto; padding:12px 30px;" onclick="revealCard()">اضغط للكشف 👁</button>
+      </div>
+      <div class="face face-back" id="backFace">
+        <!-- filled by JS -->
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:18px;" id="closeWrap">
+      <button class="close-btn hidden" id="closeBtn" onclick="closeModal()">تم، أخفِ البطاقة</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---------- Role definitions ----------
+const ROLES = {
+  mafia: {
+    key:'mafia', name:'المافيا', team:'mafia',
+    desc:'من فريق المافيا. مهمتك تتصرف بالليل مع رفقتك للتخلص من المواطنين، ونهارًا تتخفّى وكأنك بريء.',
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5 20.5 9.5 10 20 4 20 4 14 14.5 3.5Z"/><path d="M13 5 19 11"/></svg>'
+  },
+  slasher: {
+    key:'slasher', name:'مافيا القص', team:'mafia',
+    desc:'من فريق المافيا. وظيفتك تسكت لاعب كل ليلة، فما يقدر يحكي ولا يصوّت في النهار الجاي.',
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.3"/><circle cx="6" cy="18" r="2.3"/><path d="M8 7.5 20 18M8 16.5 20 6"/></svg>'
+  },
+  girl: {
+    key:'girl', name:'البنت', team:'citizen',
+    desc:'من فريق المواطنين. كل ليلة تقدرين تختارين لاعب وتحمينه من أي هجوم يوصله.',
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 19 6v5c0 5-3.2 8-7 9-3.8-1-7-4-7-9V6l7-3Z"/></svg>'
+  },
+  sheikh: {
+    key:'sheikh', name:'الشيخ', team:'citizen',
+    desc:'من فريق المواطنين. كل ليلة تسأل عن لاعب، وتعرف إذا كان من المافيا أو لأ.',
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6"/><circle cx="12" cy="8" r="4"/><path d="M9 5.5C10 4 14 4 15 5.5"/></svg>'
+  },
+  boy: {
+    key:'boy', name:'الولد', team:'citizen',
+    desc:'من فريق المواطنين. أنت المسؤول تطرد اللاعب اللي يطلع عليه تصويت الناس بالنهار.',
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21v-6l-3-2V9a3 3 0 0 1 6 0v4l-3 2Z"/><circle cx="9" cy="5" r="2.2"/><path d="M14 9h4a2 2 0 0 1 2 2v3l-2 1.5V21"/><circle cx="17" cy="5.5" r="1.8"/></svg>'
+  },
+  citizen: {
+    key:'citizen', name:'مواطن عادي', team:'citizen',
+    desc:'من فريق المواطنين. ما عندك قدرة خاصة، بس نقاشك وتصويتك بالنهار هو سلاحك.',
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-4 3-6.5 7-6.5s7 2.5 7 6.5"/></svg>'
+  }
+};
+// role keys that have a configurable count (citizen is auto)
+const CONFIGURABLE = ['mafia','slasher','girl','sheikh','boy'];
+
+let state = {
+  playerCount: 8,
+  names: [],
+  roleCounts: { mafia:2, slasher:1, girl:1, sheikh:1, boy:1 },
+  assignments: [], // { name, roleKey }
+  viewed: []
+};
+
+// ---------- Screen navigation ----------
+function showScreen(id){
+  ['count','names','roles','game'].forEach(s=>{
+    document.getElementById('screen-'+s).classList.toggle('hidden', s!==id);
+  });
+}
+
+function goToNames(){
+  const val = parseInt(document.getElementById('playerCount').value, 10);
+  state.playerCount = (isNaN(val) || val < 3) ? 3 : val;
+  document.getElementById('playerCount').value = state.playerCount;
+
+  const list = document.getElementById('namesList');
+  list.innerHTML = '';
+  const prevNames = state.names;
+  state.names = [];
+  for(let i=0;i<state.playerCount;i++){
+    const defName = (prevNames[i]) ? prevNames[i] : ('اللاعب ' + (i+1));
+    state.names.push(defName);
+    const row = document.createElement('div');
+    row.className = 'name-row';
+    row.innerHTML = `<span class="idx">${i+1}</span><input type="text" value="${defName}" data-idx="${i}">`;
+    list.appendChild(row);
+  }
+  list.querySelectorAll('input').forEach(inp=>{
+    inp.addEventListener('input', e=>{
+      state.names[parseInt(e.target.dataset.idx,10)] = e.target.value.trim() || ('اللاعب ' + (parseInt(e.target.dataset.idx,10)+1));
+    });
+  });
+  showScreen('names');
+}
+
+function goToRoles(){
+  const list = document.getElementById('rolesList');
+  list.innerHTML = '';
+  CONFIGURABLE.forEach(key=>{
+    const r = ROLES[key];
+    const row = document.createElement('div');
+    row.className = 'role-row';
+    row.innerHTML = `
+      <div class="rinfo">
+        <span class="ricon" style="color:${r.team==='mafia' ? '#d1305a':'#6bcbae'}">${r.icon}</span>
+        <div>
+          <div class="rname">${r.name}</div>
+          <div class="rteam">${r.team==='mafia' ? 'فريق المافيا' : 'فريق المواطنين'}</div>
+        </div>
+      </div>
+      <div class="stepper">
+        <button onclick="changeRole('${key}', -1)">−</button>
+        <span class="cnt" id="cnt-${key}">${state.roleCounts[key]}</span>
+        <button onclick="changeRole('${key}', 1)">+</button>
+      </div>`;
+    list.appendChild(row);
+  });
+  updateRoleSummary();
+  document.getElementById('totalPlayers').textContent = state.playerCount;
+  showScreen('roles');
+}
+
+function changeRole(key, delta){
+  const next = state.roleCounts[key] + delta;
+  if(next < 0) return;
+  state.roleCounts[key] = next;
+  document.getElementById('cnt-'+key).textContent = next;
+  updateRoleSummary();
+}
+
+function updateRoleSummary(){
+  const assignedSum = CONFIGURABLE.reduce((a,k)=>a+state.roleCounts[k],0);
+  const citizens = Math.max(0, state.playerCount - assignedSum);
+  document.getElementById('citizenAuto').textContent = citizens;
+  document.getElementById('totalAssigned').textContent = Math.min(assignedSum, state.playerCount) + citizens;
+  document.getElementById('totalPlayers').textContent = state.playerCount;
+  const over = assignedSum > state.playerCount;
+  document.getElementById('roleWarn').style.display = over ? 'block' : 'none';
+  document.getElementById('startBtn').disabled = over;
+}
+
+// ---------- Game start / shuffle ----------
+function buildRolePool(){
+  let pool = [];
+  CONFIGURABLE.forEach(key=>{
+    for(let i=0;i<state.roleCounts[key];i++) pool.push(key);
+  });
+  const citizens = state.playerCount - pool.length;
+  for(let i=0;i<citizens;i++) pool.push('citizen');
+  return pool;
+}
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function startGame(){
+  const pool = shuffle(buildRolePool());
+  state.assignments = state.names.map((name, i)=>({ name, roleKey: pool[i] }));
+  state.viewed = new Array(state.playerCount).fill(false);
+  renderGrid();
+  showScreen('game');
+}
+
+function reshuffle(){
+  if(!confirm('رح يتغيّر توزيع الأدوار على الكل من جديد. أكيد؟')) return;
+  startGame();
+}
+
+function newGame(){
+  if(!confirm('رح ترجع لإعداد اللعبة من الأول. أكيد؟')) return;
+  showScreen('count');
+}
+
+// ---------- Player grid ----------
+function renderGrid(){
+  const grid = document.getElementById('playerGrid');
+  grid.innerHTML = '';
+  state.assignments.forEach((p, i)=>{
+    const chip = document.createElement('div');
+    chip.className = 'p-chip' + (state.viewed[i] ? ' viewed' : '');
+    chip.innerHTML = `<span class="seen"></span><div class="pname">${p.name}</div>`;
+    chip.onclick = ()=> openReveal(i);
+    grid.appendChild(chip);
+  });
+}
+
+// ---------- Reveal modal ----------
+let currentIdx = null;
+
+function openReveal(i){
+  currentIdx = i;
+  const p = state.assignments[i];
+  document.getElementById('turnName').textContent = p.name;
+  document.getElementById('frontName').textContent = p.name;
+  document.getElementById('flipInner').classList.remove('flipped');
+  document.getElementById('closeBtn').classList.add('hidden');
+
+  const role = ROLES[p.roleKey];
+  const back = document.getElementById('backFace');
+  back.innerHTML = `
+    <div class="seal team-${role.team}">${role.icon}</div>
+    <div class="role-title">${role.name}</div>
+    <div class="team-tag team-${role.team}">${role.team==='mafia' ? 'فريق المافيا' : 'فريق المواطنين'}</div>
+    <div class="role-desc">${role.desc}</div>`;
+
+  document.getElementById('overlay').classList.remove('hidden');
+}
+
+function revealCard(){
+  document.getElementById('flipInner').classList.add('flipped');
+  document.getElementById('closeBtn').classList.remove('hidden');
+  if(currentIdx !== null){
+    state.viewed[currentIdx] = true;
+  }
+}
+
+function closeModal(){
+  document.getElementById('overlay').classList.add('hidden');
+  renderGrid();
+  currentIdx = null;
+}
+
+document.getElementById('overlay').addEventListener('click', (e)=>{
+  if(e.target.id === 'overlay') closeModal();
+});
+</script>
+</body>
+</html>
