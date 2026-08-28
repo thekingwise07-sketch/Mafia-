@@ -165,17 +165,35 @@
   }
   .p-chip{
     background:var(--surface); border:1px solid var(--line); border-radius:14px;
-    padding:16px 10px; text-align:center; cursor:pointer; position:relative;
-    transition:.15s transform, .15s border-color;
+    padding:16px 10px; text-align:center; position:relative;
+    transition:.15s transform, .15s border-color, .15s opacity;
   }
-  .p-chip:active{ transform:scale(0.97); }
   .p-chip .pname{ font-family:var(--font-d); font-weight:800; font-size:14.5px; }
-  .p-chip .seen{
-    position:absolute; top:8px; left:8px; width:8px; height:8px; border-radius:50%;
-    background:var(--gold); box-shadow:0 0 8px var(--gold); display:none;
+  .chip-badge{
+    position:absolute; top:8px; left:8px; width:19px; height:19px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
   }
-  .p-chip.viewed .seen{ display:block; }
-  .p-chip.viewed{ border-color: var(--gold-dim); }
+  .chip-badge svg{ width:10px; height:10px; }
+  .p-chip.active{
+    cursor:pointer; border-color:var(--gold);
+    animation: chip-pulse 1.8s infinite ease-in-out;
+  }
+  .p-chip.active:active{ transform:scale(0.97); }
+  @media (prefers-reduced-motion: reduce){ .p-chip.active{ animation:none; } }
+  @keyframes chip-pulse{
+    0%,100%{ box-shadow:0 0 0 1px var(--gold-dim), 0 0 18px -8px rgba(201,162,39,0.4); }
+    50%{ box-shadow:0 0 0 1px var(--gold), 0 0 28px -4px rgba(201,162,39,0.7); }
+  }
+  .turn-hint{ font-size:10.5px; color:var(--gold); font-weight:800; margin-top:4px; }
+  .p-chip.done{ opacity:0.5; }
+  .p-chip.done .chip-badge{ background:rgba(201,162,39,0.18); color:var(--gold); }
+  .p-chip.locked{ opacity:0.32; cursor:not-allowed; }
+  .p-chip.locked .chip-badge{ background:rgba(255,255,255,0.06); color:var(--ink-dim); }
+  .all-done{
+    text-align:center; font-family:var(--font-d); font-weight:800; font-size:13.5px;
+    color:var(--gold); background:rgba(201,162,39,0.08); border:1px solid var(--gold-dim);
+    border-radius:14px; padding:14px; margin-top:14px;
+  }
 
   .footer-actions{ margin-top:18px; display:flex; gap:10px; }
 
@@ -295,9 +313,10 @@
   <section id="screen-game" class="hidden">
     <div class="grid-title">
       <div class="lbl">دوّر الجهاز على كل لاعب</div>
-      <div class="sub">كل واحد يضغط اسمه ويشوف دوره لحاله بس</div>
+      <div class="sub">الدور بيجي على كل واحد لحاله بالترتيب، ما بينفتح إلا دوره بس</div>
     </div>
     <div class="player-grid" id="playerGrid"></div>
+    <div class="all-done hidden" id="allDoneMsg">🌙 خلص الكل شاف دوره — يلا ابدأوا الليلة الأولى</div>
     <div class="footer-actions">
       <button class="btn btn-ghost" onclick="reshuffle()">إعادة توزيع الأدوار 🔀</button>
       <button class="btn btn-ghost" onclick="newGame()">لعبة جديدة</button>
@@ -333,7 +352,7 @@ const ROLES = {
   mafia: {
     key:'mafia', name:'المافيا', team:'mafia',
     desc:'من فريق المافيا. مهمتك تتصرف بالليل مع رفقتك للتخلص من المواطنين، ونهارًا تتخفّى وكأنك بريء.',
-    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5 20.5 9.5 10 20 4 20 4 14 14.5 3.5Z"/><path d="M13 5 19 11"/></svg>'
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2c-2.6 2-4 4.8-4 8 0 4 2 7.3 4.5 10.5C14 17.3 16 14 16 10c0-3.2-1.4-6-4-8Z"/><path d="M17.3 3.3 21 7"/><path d="M18.6 4.6 19.9 3.3"/><path d="M17.1 6.1 15.8 7.4"/></svg>'
   },
   slasher: {
     key:'slasher', name:'مافيا القص', team:'mafia',
@@ -343,7 +362,7 @@ const ROLES = {
   girl: {
     key:'girl', name:'البنت', team:'citizen',
     desc:'من فريق المواطنين. كل ليلة تقدرين تختارين لاعب وتحمينه من أي هجوم يوصله.',
-    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 19 6v5c0 5-3.2 8-7 9-3.8-1-7-4-7-9V6l7-3Z"/></svg>'
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-3 0-5 2.2-5 5.2 0 1.6.6 2.7 1.4 3.6C7.3 13 6 14.8 6 17.5V21h12v-3.5c0-2.7-1.3-4.5-2.4-5.7.8-.9 1.4-2 1.4-3.6C17 5.2 15 3 12 3Z"/><path d="M9.4 10.2c0 1 1.1 1.8 2.6 1.8s2.6-.8 2.6-1.8"/></svg>'
   },
   sheikh: {
     key:'sheikh', name:'الشيخ', team:'citizen',
@@ -369,7 +388,7 @@ let state = {
   names: [],
   roleCounts: { mafia:2, slasher:1, girl:1, sheikh:1, boy:1 },
   assignments: [], // { name, roleKey }
-  viewed: []
+  currentTurn: 0
 };
 
 // ---------- Screen navigation ----------
@@ -473,7 +492,7 @@ function shuffle(arr){
 function startGame(){
   const pool = shuffle(buildRolePool());
   state.assignments = state.names.map((name, i)=>({ name, roleKey: pool[i] }));
-  state.viewed = new Array(state.playerCount).fill(false);
+  state.currentTurn = 0;
   renderGrid();
   showScreen('game');
 }
@@ -489,23 +508,51 @@ function newGame(){
 }
 
 // ---------- Player grid ----------
+const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>';
+const LOCK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+
 function renderGrid(){
   const grid = document.getElementById('playerGrid');
   grid.innerHTML = '';
   state.assignments.forEach((p, i)=>{
     const chip = document.createElement('div');
-    chip.className = 'p-chip' + (state.viewed[i] ? ' viewed' : '');
-    chip.innerHTML = `<span class="seen"></span><div class="pname">${p.name}</div>`;
-    chip.onclick = ()=> openReveal(i);
+    let cls = 'p-chip';
+    let badge = '';
+    let extra = '';
+    if(i < state.currentTurn){
+      cls += ' done';
+      badge = `<span class="chip-badge">${CHECK_SVG}</span>`;
+    } else if(i === state.currentTurn){
+      cls += ' active';
+      extra = '<div class="turn-hint">دورك الآن</div>';
+    } else {
+      cls += ' locked';
+      badge = `<span class="chip-badge">${LOCK_SVG}</span>`;
+    }
+    chip.className = cls;
+    chip.innerHTML = `${badge}<div class="pname">${p.name}</div>${extra}`;
+    if(i === state.currentTurn){
+      chip.onclick = ()=> openReveal(i);
+    }
     grid.appendChild(chip);
   });
+
+  const doneMsg = document.getElementById('allDoneMsg');
+  if(state.currentTurn >= state.assignments.length){
+    doneMsg.classList.remove('hidden');
+  } else {
+    doneMsg.classList.add('hidden');
+  }
 }
 
 // ---------- Reveal modal ----------
 let currentIdx = null;
+let revealedThisTurn = false;
 
 function openReveal(i){
+  if(i !== state.currentTurn) return;
   currentIdx = i;
+  revealedThisTurn = false;
   const p = state.assignments[i];
   document.getElementById('turnName').textContent = p.name;
   document.getElementById('frontName').textContent = p.name;
@@ -526,15 +573,17 @@ function openReveal(i){
 function revealCard(){
   document.getElementById('flipInner').classList.add('flipped');
   document.getElementById('closeBtn').classList.remove('hidden');
-  if(currentIdx !== null){
-    state.viewed[currentIdx] = true;
-  }
+  revealedThisTurn = true;
 }
 
 function closeModal(){
   document.getElementById('overlay').classList.add('hidden');
+  if(revealedThisTurn && currentIdx === state.currentTurn){
+    state.currentTurn++;
+  }
   renderGrid();
   currentIdx = null;
+  revealedThisTurn = false;
 }
 
 document.getElementById('overlay').addEventListener('click', (e)=>{
