@@ -399,7 +399,31 @@
     color:var(--gold); background:rgba(201,162,39,0.08); border:1px solid var(--gold-dim);
     border-radius:14px; padding:18px; margin-bottom:14px;
   }
-  .footer-actions{ display:flex; gap:10px; }
+  .footer-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+  .footer-actions .btn{ flex:1; min-width:130px; }
+
+  .roster-row{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:12px 4px; border-bottom:1px solid var(--line);
+  }
+  .roster-row:last-of-type{ border-bottom:none; }
+  .roster-row .rname{ font-family:var(--font-d); font-weight:800; font-size:14.5px; transition:.15s opacity, .15s color; }
+  .roster-row.dead .rname{ opacity:0.4; text-decoration:line-through; }
+  .status-btn{
+    font-family:var(--font-d); font-weight:800; font-size:12.5px;
+    padding:7px 16px; border-radius:100px; border:1px solid; cursor:pointer;
+    display:flex; align-items:center; gap:6px;
+  }
+  .status-btn.alive{ background:rgba(107,203,174,0.14); color:#6bcbae; border-color:rgba(107,203,174,0.4); }
+  .status-btn.dead{ background:rgba(163,34,62,0.16); color:#e8637f; border-color:rgba(163,34,62,0.45); }
+  .roster-summary{
+    display:flex; justify-content:space-around; text-align:center; margin-top:14px; padding-top:14px;
+    border-top:1px dashed var(--line);
+  }
+  .roster-summary .rs-num{ font-family:var(--font-d); font-weight:900; font-size:20px; }
+  .roster-summary .rs-label{ font-size:11px; color:var(--ink-dim); margin-top:2px; }
+  .roster-summary .alive-color{ color:#6bcbae; }
+  .roster-summary .dead-color{ color:#e8637f; }
 </style>
 </head>
 <body>
@@ -524,9 +548,23 @@
 
     <div class="all-done hidden" id="allDoneMsg">🌙 خلص الكل شاف دوره — يلا ابدأوا الليلة الأولى</div>
     <div class="footer-actions hidden" id="footerActions">
+      <button class="btn btn-ghost" onclick="showScreen('roster')">📋 قائمة الأحياء/الموتى</button>
       <button class="btn btn-ghost" onclick="reshuffle()">إعادة توزيع الأدوار 🔀</button>
       <button class="btn btn-ghost" onclick="newGame()">لعبة جديدة</button>
     </div>
+  </section>
+
+  <!-- Screen 5: alive/dead roster -->
+  <section id="screen-roster" class="hidden">
+    <div class="card">
+      <p class="step-label">📋 قائمة اللاعبين</p>
+      <div id="rosterList"></div>
+      <div class="roster-summary">
+        <div><div class="rs-num alive-color" id="aliveCount">0</div><div class="rs-label">أحياء</div></div>
+        <div><div class="rs-num dead-color" id="deadCount">0</div><div class="rs-label">أموات</div></div>
+      </div>
+    </div>
+    <button class="btn btn-ghost" onclick="showScreen('game')">رجوع للعبة</button>
   </section>
 
 </div>
@@ -618,12 +656,13 @@ function selectMode(mode){
 
 // ---------- Screen navigation ----------
 function showScreen(id){
-  ['mode','pin','count','names','roles','game'].forEach(s=>{
+  ['mode','pin','count','names','roles','game','roster'].forEach(s=>{
     document.getElementById('screen-'+s).classList.toggle('hidden', s!==id);
   });
   const showChrome = id!=='mode' && id!=='pin' && !!state.mode;
   document.getElementById('modeIndicator').classList.toggle('hidden', !showChrome);
   document.getElementById('vipCrest').classList.toggle('hidden', !(showChrome && state.mode==='vip'));
+  if(id === 'roster') renderRoster();
 }
 
 function goToNames(){
@@ -720,6 +759,7 @@ function shuffle(arr){
 function startGame(){
   const pool = shuffle(buildRolePool());
   state.assignments = state.names.map((name, i)=>({ name, roleKey: pool[i] }));
+  state.alive = new Array(state.assignments.length).fill(true);
   state.currentTurn = 0;
   showScreen('game');
   showCurrentTurn();
@@ -791,6 +831,7 @@ function showCurrentTurn(){
 function revealCard(){
   document.getElementById('flipInner').classList.add('flipped');
   document.getElementById('nextBtn').classList.remove('hidden');
+  playRevealSound();
 }
 
 function nextTurn(){
@@ -808,6 +849,54 @@ function nextTurn(){
 document.getElementById('pinInput').addEventListener('keydown', e=>{
   if(e.key === 'Enter') checkPin();
 });
+
+// ---------- Alive / dead roster ----------
+function renderRoster(){
+  const list = document.getElementById('rosterList');
+  list.innerHTML = '';
+  state.assignments.forEach((p, i)=>{
+    const alive = state.alive[i];
+    const row = document.createElement('div');
+    row.className = 'roster-row' + (alive ? '' : ' dead');
+    row.innerHTML = `
+      <span class="rname">${p.name}</span>
+      <button class="status-btn ${alive ? 'alive' : 'dead'}" onclick="toggleAlive(${i})">
+        ${alive ? '✅ حي' : '☠️ ميت'}
+      </button>`;
+    list.appendChild(row);
+  });
+  const aliveN = state.alive.filter(Boolean).length;
+  document.getElementById('aliveCount').textContent = aliveN;
+  document.getElementById('deadCount').textContent = state.alive.length - aliveN;
+}
+
+function toggleAlive(i){
+  state.alive[i] = !state.alive[i];
+  renderRoster();
+}
+
+// ---------- Reveal sound effect ----------
+function playRevealSound(){
+  try{
+    const ctx = window._vipAudioCtx || (window._vipAudioCtx = new (window.AudioContext || window.webkitAudioContext)());
+    const now = ctx.currentTime;
+    [660, 990].forEach((freq, i)=>{
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      const t0 = now + i*0.07;
+      gain.gain.setValueAtTime(0.0001, t0);
+      gain.gain.exponentialRampToValueAtTime(0.16, t0 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.38);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(t0);
+      osc.stop(t0 + 0.4);
+    });
+  }catch(e){ /* audio not available — fail silently */ }
+  if(navigator.vibrate) navigator.vibrate(30);
+}
 </script>
 </body>
 </html>
