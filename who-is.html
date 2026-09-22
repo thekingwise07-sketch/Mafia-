@@ -126,6 +126,13 @@
   .cat-chip.selected{ border-color:var(--lime); box-shadow:0 0 0 1px var(--lime) inset; }
   .cat-chip .cicon{ font-size:22px; margin-bottom:6px; }
   .cat-chip .cname{ font-family:var(--font-d); font-weight:800; font-size:13.5px; }
+  .cat-chip.cat-mix{
+    grid-column: 1 / -1;
+    background:linear-gradient(95deg, rgba(124,92,255,0.16), rgba(198,255,92,0.10));
+    border-style:dashed; border-color:rgba(198,255,92,0.35);
+  }
+  .cat-chip.cat-mix.selected{ border-style:solid; }
+  .cat-chip .cmixtag{ font-size:10.5px; color:var(--lime); margin-top:3px; font-weight:700; }
 
   /* Player grid */
   .grid-title{ text-align:center; margin-bottom:16px; }
@@ -264,6 +271,8 @@
   <section id="screen-category" class="card hidden">
     <p class="step-label"><span class="n">٣</span> اختر الفئة</p>
     <div class="cat-grid" id="catGrid"></div>
+    <label class="f-label">كم غريب هالجولة؟</label>
+    <input type="number" id="oddCount" value="1" min="1">
     <div class="btn-row" style="margin-top:16px;">
       <button class="btn btn-ghost" onclick="showScreen('names')">رجوع</button>
       <button class="btn btn-lime" id="startBtn" onclick="startGame()" disabled>وزّع الأدوار</button>
@@ -342,17 +351,28 @@ const CATEGORIES = {
   jobs:{ name:'مهن ووظائف', icon:'👨‍⚕️', words:['طبيب','معلم','مهندس','طيار','شرطي','طباخ','محامي','مصور','مزارع','مبرمج'] },
   sports:{ name:'رياضة', icon:'⚽', words:['كرة قدم','سباحة','كرة سلة','ركض','تنس','كاراتيه','دراجة هوائية','جري ماراثون'] },
   movies:{ name:'أفلام ومسلسلات', icon:'🎬', words:['فيلم أكشن','فيلم رعب','مسلسل كوميدي','فيلم كرتون','فيلم خيال علمي','مسلسل تاريخي'] },
-  school:{ name:'دراسة وجامعة', icon:'📚', words:['امتحان نهائي','محاضرة','واجب بيتي','مكتبة الجامعة','قاعة محاضرات','مشروع تخرج','دوام صيفي'] },
   travel:{ name:'سفر ومواصلات', icon:'✈️', words:['طيارة','قطار','باص','سيارة أجرة','رحلة بحرية','فندق','مطار','حقيبة سفر'] },
-  tech:{ name:'تكنولوجيا', icon:'📱', words:['جوال ذكي','لابتوب','ألعاب فيديو','واي فاي','كاميرا','ساعة ذكية','سماعات لاسلكية'] }
+  tech:{ name:'تكنولوجيا', icon:'📱', words:['جوال ذكي','لابتوب','ألعاب فيديو','واي فاي','كاميرا','ساعة ذكية','سماعات لاسلكية'] },
+  cocktail:{ name:'كوكتيل', icon:'🍹', mix:true, words:[] } // virtual: filled at pick-time from every category above
 };
+
+// "كوكتيل" picks a random word pooled from all real (non-mix) categories.
+function getCategoryWords(key){
+  const c = CATEGORIES[key];
+  if(!c.mix) return c.words;
+  let pool = [];
+  Object.keys(CATEGORIES).forEach(k=>{
+    if(!CATEGORIES[k].mix) pool = pool.concat(CATEGORIES[k].words);
+  });
+  return pool;
+}
 
 let state = {
   playerCount: 5,
   names: [],
   category: null,
   word: '',
-  oddIndex: -1,
+  oddIndices: [],
   viewed: [],
   votes: {}, // voterIndex -> targetIndex
 };
@@ -395,8 +415,8 @@ function goToCategory(){
   Object.keys(CATEGORIES).forEach(key=>{
     const c = CATEGORIES[key];
     const chip = document.createElement('div');
-    chip.className = 'cat-chip' + (state.category===key ? ' selected' : '');
-    chip.innerHTML = `<div class="cicon">${c.icon}</div><div class="cname">${c.name}</div>`;
+    chip.className = 'cat-chip' + (c.mix ? ' cat-mix' : '') + (state.category===key ? ' selected' : '');
+    chip.innerHTML = `<div class="cicon">${c.icon}</div><div class="cname">${c.name}</div>` + (c.mix ? `<div class="cmixtag">خلطة عشوائية</div>` : '');
     chip.onclick = ()=>{
       state.category = key;
       document.querySelectorAll('.cat-chip').forEach(el=>el.classList.remove('selected'));
@@ -405,6 +425,10 @@ function goToCategory(){
     };
     grid.appendChild(chip);
   });
+  const oddInput = document.getElementById('oddCount');
+  const maxOdd = Math.max(1, state.playerCount - 1); // at least one player must hold the real word
+  oddInput.max = maxOdd;
+  if(parseInt(oddInput.value,10) > maxOdd || !oddInput.value) oddInput.value = 1;
   showScreen('category');
 }
 
@@ -420,9 +444,15 @@ function shuffle(arr){
 
 function startGame(){
   if(!state.category) return;
-  const words = CATEGORIES[state.category].words;
+  const words = getCategoryWords(state.category);
   state.word = words[Math.floor(Math.random()*words.length)];
-  state.oddIndex = Math.floor(Math.random()*state.playerCount);
+
+  let oddCount = parseInt(document.getElementById('oddCount').value, 10);
+  if(isNaN(oddCount) || oddCount < 1) oddCount = 1;
+  if(oddCount > state.playerCount - 1) oddCount = state.playerCount - 1;
+  const order = shuffle(state.names.map((_, i) => i));
+  state.oddIndices = order.slice(0, oddCount);
+
   state.viewed = new Array(state.playerCount).fill(false);
   state.votes = {};
   renderGrid();
@@ -466,7 +496,7 @@ function openReveal(i){
   document.getElementById('flipInner').classList.remove('flipped');
   document.getElementById('closeBtn').classList.add('hidden');
 
-  const isOdd = (i === state.oddIndex);
+  const isOdd = state.oddIndices.includes(i);
   const back = document.getElementById('backFace');
   back.className = 'face face-back ' + (isOdd ? 'odd' : 'normal');
 
@@ -476,7 +506,7 @@ function openReveal(i){
       <div class="role-tag odd">أنت الغريب</div>
       <div class="word-title odd-title">ما عندك كلمة! لازم تتصنّت وتتظاهر إنك عارف</div>
       <div class="catlabel">الفئة: ${CATEGORIES[state.category].name}</div>
-      <div class="role-desc" style="margin-top:10px;">اسمع كلام الباقيين منيح، حاول تخمّن الكلمة، وما تخلي حد يشك فيك — لو ما لقوك تفوز!</div>`;
+      <div class="role-desc" style="margin-top:10px;">اسمع كلام الباقيين منيح، حاول تخمّن الكلمة، وما تخلي حد يشك فيك. فيه احتمال يكون معك غرباء ثانيين — بس ما تعرف مين هم برضه!</div>`;
   } else {
     back.innerHTML = `
       <div class="seal normal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></div>
@@ -548,32 +578,37 @@ function updateVoteSummary(){
 }
 
 function revealVoteResult(){
-  // find who got the most votes
+  // find everyone tied for the most votes
   const tally = new Array(state.playerCount).fill(0);
   Object.values(state.votes).forEach(idx=> tally[idx]++);
-  let maxVotes = -1, accused = -1, tie = false;
-  tally.forEach((v,i)=>{
-    if(v > maxVotes){ maxVotes = v; accused = i; tie = false; }
-    else if(v === maxVotes){ tie = true; }
-  });
+  const maxVotes = Math.max(...tally);
+  const accusedSet = tally
+    .map((v,i)=> ({v,i}))
+    .filter(x=> x.v === maxVotes && maxVotes > 0)
+    .map(x=> x.i)
+    .sort((a,b)=>a-b);
+
+  const oddSorted = state.oddIndices.slice().sort((a,b)=>a-b);
+  const setsMatch = accusedSet.length === oddSorted.length &&
+    accusedSet.every((v,i)=> v === oddSorted[i]);
 
   const box = document.getElementById('resultBox');
-  const correct = (!tie && accused === state.oddIndex);
+  const oddNames = state.oddIndices.map(i=> state.names[i]).join('، ');
+  const accusedNames = accusedSet.length ? accusedSet.map(i=> state.names[i]).join('، ') : 'محد بالتحديد';
 
-  if(correct){
+  if(setsMatch){
     box.innerHTML = `
       <div class="badge win">فازت المجموعة! 🎉</div>
-      <div class="word-reveal">${state.names[state.oddIndex]} كان الغريب</div>
+      <div class="word-reveal">${oddNames} ${state.oddIndices.length>1 ? 'كانوا الغرباء' : 'كان الغريب'}</div>
       <div class="desc-line">الكلمة كانت: <b style="color:var(--ink);">${state.word}</b></div>
-      <div class="desc-line">بس فرصة أخيرة للغريب — لو يخمّن الكلمة الصح، يقلب النتيجة لصالحه!</div>
+      <div class="desc-line">بس فرصة أخيرة للغرباء — لو يخمّنوا الكلمة الصح، يقلبوا النتيجة لصالحهم!</div>
       <div class="guess-list" id="guessList"></div>`;
     renderGuessOptions(true);
   } else {
-    const wrongName = (accused>=0 && !tie) ? state.names[accused] : 'محد بالتحديد (تعادل أصوات)';
     box.innerHTML = `
-      <div class="badge lose">فاز الغريب! 🕵️</div>
-      <div class="word-reveal">${state.names[state.oddIndex]} كان الغريب فعلاً</div>
-      <div class="desc-line">المجموعة اتهمت: <b style="color:var(--ink);">${wrongName}</b> — غلط!</div>
+      <div class="badge lose">${state.oddIndices.length>1 ? 'فاز الغرباء' : 'فاز الغريب'}! 🕵️</div>
+      <div class="word-reveal">${oddNames} ${state.oddIndices.length>1 ? 'كانوا الغرباء فعلاً' : 'كان الغريب فعلاً'}</div>
+      <div class="desc-line">المجموعة اتهمت: <b style="color:var(--ink);">${accusedNames}</b> — ما طابقت الكل!</div>
       <div class="desc-line">الكلمة كانت: <b style="color:var(--ink);">${state.word}</b></div>`;
   }
 
@@ -583,7 +618,7 @@ function revealVoteResult(){
 function renderGuessOptions(showGuess){
   if(!showGuess) return;
   const listEl = document.getElementById('guessList');
-  const words = shuffle(CATEGORIES[state.category].words).slice(0,6);
+  const words = shuffle(getCategoryWords(state.category)).slice(0,6);
   if(!words.includes(state.word)) words[0] = state.word;
   shuffle(words).forEach(w=>{
     const chip = document.createElement('div');
@@ -593,9 +628,9 @@ function renderGuessOptions(showGuess){
       const box = document.getElementById('resultBox');
       if(w === state.word){
         box.innerHTML = `
-          <div class="badge lose">قلبها الغريب! 🔄</div>
-          <div class="word-reveal">${state.names[state.oddIndex]} خمّن الكلمة صح</div>
-          <div class="desc-line">الكلمة كانت: <b style="color:var(--ink);">${state.word}</b> — يفوز الغريب رغم إنه انكشف!</div>`;
+          <div class="badge lose">قلبوها ${state.oddIndices.length>1 ? 'الغرباء' : 'الغريب'}! 🔄</div>
+          <div class="word-reveal">تخمين صحيح للكلمة</div>
+          <div class="desc-line">الكلمة كانت: <b style="color:var(--ink);">${state.word}</b> — ${state.oddIndices.length>1 ? 'يفوز الغرباء' : 'يفوز الغريب'} رغم الانكشاف!</div>`;
       } else {
         box.innerHTML = `
           <div class="badge win">ثبتت نتيجة المجموعة ✅</div>
