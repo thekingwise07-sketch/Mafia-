@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>ليلة ألعاب</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05050a;
+    --ink:#f2f0ea;
+    --ink-dim:#8d8a99;
+    --line: rgba(242,240,234,0.08);
+    --mafia-a:#a3223e;
+    --mafia-b:#c9a227;
+    --odd-a:#7c5cff;
+    --odd-b:#c6ff5c;
+    --font-d:'Tajawal', sans-serif;
+    --font-b:'Almarai', sans-serif;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  html,body{margin:0; padding:0;}
+  body{
+    min-height:100vh;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-b);
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  /* ambient glow field */
+  .glow{
+    position:fixed; inset:0; pointer-events:none; z-index:0; opacity:0.55;
+    background:
+      radial-gradient(520px 360px at 12% 8%, rgba(163,34,62,0.28), transparent 60%),
+      radial-gradient(520px 360px at 88% 14%, rgba(124,92,255,0.26), transparent 60%),
+      radial-gradient(600px 420px at 50% 100%, rgba(198,255,92,0.08), transparent 60%);
+    animation: drift 14s ease-in-out infinite alternate;
+  }
+  @keyframes drift{
+    0%{ transform:translateY(0px) scale(1); }
+    100%{ transform:translateY(-16px) scale(1.03); }
+  }
+  @media (prefers-reduced-motion: reduce){ .glow{animation:none;} }
+
+  .noise{
+    position:fixed; inset:0; pointer-events:none; z-index:1; opacity:0.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .stage{
+    position:relative; z-index:2;
+    min-height:100vh;
+    display:flex; flex-direction:column; align-items:center;
+    padding:56px 20px 60px;
+    max-width:520px; margin:0 auto;
+  }
+
+  .kicker{
+    font-family:var(--font-b); font-weight:800; font-size:12px; letter-spacing:1px;
+    color:var(--ink-dim); padding:6px 16px; border:1px solid var(--line); border-radius:100px;
+    margin-bottom:22px;
+  }
+
+  h1.hero{
+    font-family:var(--font-d); font-weight:900; font-size:56px; line-height:1.02;
+    text-align:center; margin:0 0 10px;
+    letter-spacing:0.5px;
+  }
+  h1.hero .l1{ display:block; color:var(--ink); }
+  h1.hero .l2{
+    display:block;
+    background:linear-gradient(95deg, var(--mafia-b) 0%, var(--mafia-a) 35%, var(--odd-a) 65%, var(--odd-b) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero-sub{
+    text-align:center; color:var(--ink-dim); font-size:14.5px; max-width:320px;
+    margin:0 auto 44px; line-height:1.7;
+  }
+
+  .doors{
+    width:100%; display:flex; flex-direction:column; gap:18px;
+  }
+
+  .door{
+    position:relative; border-radius:26px; overflow:hidden; cursor:pointer;
+    border:1px solid var(--line);
+    padding:26px 24px;
+    min-height:168px;
+    display:flex; flex-direction:column; justify-content:flex-end;
+    transition:transform .18s ease, border-color .18s ease;
+    text-decoration:none; color:inherit;
+  }
+  .door:active{ transform:scale(0.98); }
+
+  .door.mafia{
+    background:
+      radial-gradient(360px 220px at 85% -20%, rgba(201,162,39,0.22), transparent 60%),
+      radial-gradient(320px 260px at -10% 120%, rgba(163,34,62,0.30), transparent 60%),
+      linear-gradient(160deg, #14090c, #0a0509);
+  }
+  .door.mafia:active{ border-color: rgba(201,162,39,0.5); }
+
+  .door.oddone{
+    background:
+      radial-gradient(360px 220px at 85% -20%, rgba(198,255,92,0.14), transparent 60%),
+      radial-gradient(320px 260px at -10% 120%, rgba(124,92,255,0.32), transparent 60%),
+      linear-gradient(160deg, #0d0a1a, #07060f);
+  }
+  .door.oddone:active{ border-color: rgba(124,92,255,0.5); }
+
+  .door .dtag{
+    position:absolute; top:18px; left:18px;
+    font-family:var(--font-b); font-weight:800; font-size:11px; letter-spacing:.5px;
+    padding:5px 12px; border-radius:100px; border:1px solid;
+  }
+  .door.mafia .dtag{ color:var(--mafia-b); border-color:rgba(201,162,39,0.4); background:rgba(201,162,39,0.08); }
+  .door.oddone .dtag{ color:var(--odd-b); border-color:rgba(198,255,92,0.35); background:rgba(198,255,92,0.06); }
+
+  .door .dicon{
+    position:absolute; top:16px; left:auto; right:18px;
+    width:38px; height:38px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    border:1px solid;
+  }
+  .door.mafia .dicon{ border-color:rgba(201,162,39,0.4); background:rgba(201,162,39,0.08); color:var(--mafia-b); }
+  .door.oddone .dicon{ border-color:rgba(198,255,92,0.35); background:rgba(198,255,92,0.06); color:var(--odd-b); }
+  .door .dicon svg{ width:18px; height:18px; }
+
+  .door .dname{
+    font-family:var(--font-d); font-weight:900; font-size:28px; margin-bottom:4px;
+  }
+  .door .ddesc{ font-size:12.5px; color:var(--ink-dim); line-height:1.6; max-width:280px; }
+  .door .denter{
+    margin-top:14px; display:inline-flex; align-items:center; gap:6px;
+    font-family:var(--font-d); font-weight:800; font-size:12.5px;
+  }
+  .door.mafia .denter{ color:var(--mafia-b); }
+  .door.oddone .denter{ color:var(--odd-b); }
+  .door .denter svg{ width:14px; height:14px; }
+
+  footer.foot{
+    margin-top:44px; text-align:center; color:var(--ink-dim); font-size:11.5px;
+    letter-spacing:.3px;
+  }
+
+  @media (max-width:360px){
+    h1.hero{ font-size:44px; }
+  }
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="noise"></div>
+
+<div class="stage">
+  <span class="kicker">جلسة اليوم</span>
+  <h1 class="hero">
+    <span class="l1">اختاروا</span>
+    <span class="l2">اللعبة</span>
+  </h1>
+  <p class="hero-sub">جمعة، عزيمة، أو سهرة أصحاب — كل شي جاهز بجوّالك. اختاروا اللعبة وابدأوا.</p>
+
+  <div class="doors">
+    <a class="door mafia" href="mafia.html">
+      <span class="dtag">توزيع أدوار</span>
+      <span class="dicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21v-6l-3-2V9a3 3 0 0 1 6 0v4l-3 2Z"/><circle cx="9" cy="5" r="2.2"/><path d="M14 9h4a2 2 0 0 1 2 2v3l-2 1.5V21"/><circle cx="17" cy="5.5" r="1.8"/></svg></span>
+      <div class="dname">لعبة المافيا</div>
+      <div class="ddesc">مافيا وسفّاح وشيخ ومواطنين — وزّعوا الأدوار واكتشفوا مين بينكم مو بصفّكم.</div>
+      <span class="denter">ادخل اللعبة <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+    </a>
+
+    <a class="door oddone" href="who-is.html">
+      <span class="dtag">جاسوس اجتماعي</span>
+      <span class="dicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
+      <div class="dname">مين الغريب</div>
+      <div class="ddesc">الكل بيعرف الكلمة إلا واحد. اسألوا، ناقشوا، وصوّتوا — قبل لا يلقّيها الغريب.</div>
+      <span class="denter">ادخل اللعبة <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+    </a>
+  </div>
+
+  <footer class="foot">ألعاب جلسات — تشتغل بدون نت</footer>
+</div>
+
+</body>
+</html>

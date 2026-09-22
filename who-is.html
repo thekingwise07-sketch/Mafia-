@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>مين الغريب</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0e1a;
+    --bg-2:#10142400;
+    --surface:#141a2b;
+    --surface-hi:#1c2438;
+    --line: rgba(230,234,255,0.09);
+    --violet:#7c5cff;
+    --violet-bright:#9b82ff;
+    --lime:#c6ff5c;
+    --pink:#ff4d7d;
+    --teal:#3ad2a0;
+    --ink:#eef0ff;
+    --ink-dim:#8b90b3;
+    --radius:20px;
+    --font-d:'Tajawal', sans-serif;
+    --font-b:'Almarai', sans-serif;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  html,body{margin:0; padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse 700px 420px at 15% -8%, rgba(124,92,255,0.28), transparent 60%),
+      radial-gradient(ellipse 600px 380px at 100% 15%, rgba(198,255,92,0.10), transparent 60%),
+      radial-gradient(ellipse 800px 500px at 50% 120%, rgba(255,77,125,0.14), transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:var(--font-b);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:22px 16px 100px;
+    position:relative;
+    overflow-x:hidden;
+  }
+  .wrap{width:100%; max-width:480px; position:relative; z-index:2;}
+
+  header.top{ text-align:center; margin-bottom:20px;}
+  .eyebrow{
+    font-family:var(--font-b); font-weight:800; font-size:12px;
+    letter-spacing:1px; color:var(--lime);
+    display:inline-block; padding:5px 14px; border:1px solid rgba(198,255,92,0.35);
+    border-radius:100px; margin-bottom:14px;
+  }
+  h1.title{
+    font-family:var(--font-d); font-weight:900; font-size:42px; margin:0;
+    line-height:1.05;
+    background:linear-gradient(95deg,#fff 10%, var(--violet-bright) 55%, var(--lime) 95%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .subtitle{ color:var(--ink-dim); font-size:14px; margin-top:8px;}
+
+  .card{
+    background:linear-gradient(180deg, var(--surface), #0f1322);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+    margin-bottom:14px;
+    box-shadow:0 20px 40px -20px rgba(0,0,0,0.55);
+  }
+  .step-label{
+    font-family:var(--font-d); font-weight:800; font-size:13px;
+    color:var(--violet-bright); letter-spacing:.5px; margin:0 0 14px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .step-label .n{
+    width:22px; height:22px; border-radius:50%; background:var(--violet);
+    color:#0b0e1a; display:inline-flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:800; font-family:var(--font-d);
+  }
+  label.f-label{ display:block; font-size:13px; color:var(--ink-dim); margin:14px 0 6px; font-weight:700;}
+  label.f-label:first-child{margin-top:0;}
+  input[type=number], input[type=text]{
+    width:100%; background:#0b0e1a; border:1px solid var(--line);
+    color:var(--ink); font-family:var(--font-b); font-weight:700; font-size:16px;
+    padding:12px 14px; border-radius:12px; outline:none; transition:.15s border-color;
+  }
+  input:focus{ border-color:var(--violet-bright); }
+  input[type=number]{-moz-appearance:textfield;}
+
+  .name-row{ display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .name-row .idx{
+    flex:0 0 26px; height:26px; border-radius:8px; background:var(--surface-hi);
+    color:var(--lime); font-size:12px; font-weight:800; font-family:var(--font-d);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .name-row input{ flex:1; padding:10px 12px;}
+
+  .btn{
+    width:100%; padding:15px 16px; border-radius:14px; border:none;
+    font-family:var(--font-d); font-weight:800; font-size:15.5px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .btn-primary{
+    background:linear-gradient(95deg, var(--violet), #5a3fe0); color:#fff;
+    box-shadow:0 10px 24px -8px rgba(124,92,255,0.55);
+  }
+  .btn-lime{
+    background:linear-gradient(95deg, var(--lime), #9fe030); color:#0b1500;
+    box-shadow:0 10px 24px -8px rgba(198,255,92,0.4);
+  }
+  .btn-primary:disabled{ opacity:0.4; box-shadow:none; }
+  .btn-ghost{ background:transparent; color:var(--ink-dim); border:1px solid var(--line); }
+  .btn-row{ display:flex; gap:10px; }
+  .btn-row .btn{ flex:1; }
+
+  .hidden{ display:none !important; }
+
+  /* Category grid */
+  .cat-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; }
+  .cat-chip{
+    background:var(--surface-hi); border:1px solid var(--line); border-radius:14px;
+    padding:16px 10px; text-align:center; cursor:pointer; transition:.15s transform,.15s border-color;
+  }
+  .cat-chip:active{ transform:scale(0.97); }
+  .cat-chip.selected{ border-color:var(--lime); box-shadow:0 0 0 1px var(--lime) inset; }
+  .cat-chip .cicon{ font-size:22px; margin-bottom:6px; }
+  .cat-chip .cname{ font-family:var(--font-d); font-weight:800; font-size:13.5px; }
+
+  /* Player grid */
+  .grid-title{ text-align:center; margin-bottom:16px; }
+  .grid-title .lbl{ font-family:var(--font-d); font-weight:800; font-size:15px; }
+  .grid-title .sub{ font-size:12.5px; color:var(--ink-dim); margin-top:3px;}
+  .player-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; }
+  .p-chip{
+    background:var(--surface); border:1px solid var(--line); border-radius:14px;
+    padding:16px 10px; text-align:center; cursor:pointer; position:relative;
+    transition:.15s transform, .15s border-color;
+  }
+  .p-chip:active{ transform:scale(0.97); }
+  .p-chip .pname{ font-family:var(--font-d); font-weight:800; font-size:14.5px; }
+  .p-chip .seen{
+    position:absolute; top:8px; left:8px; width:8px; height:8px; border-radius:50%;
+    background:var(--lime); box-shadow:0 0 8px var(--lime); display:none;
+  }
+  .p-chip.viewed .seen{ display:block; }
+  .p-chip.viewed{ border-color: rgba(198,255,92,0.35); }
+  .p-chip.voted{ border-color: var(--pink); box-shadow:0 0 0 1px var(--pink) inset; }
+
+  .footer-actions{ margin-top:18px; display:flex; gap:10px; }
+
+  /* Modal */
+  .overlay{
+    position:fixed; inset:0; background:rgba(4,4,10,0.88); backdrop-filter:blur(6px);
+    z-index:50; display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  .reveal-card{ width:100%; max-width:340px; perspective:1200px; }
+  .flip-inner{
+    position:relative; width:100%; min-height:400px; transition:transform .6s cubic-bezier(.4,.2,.2,1);
+    transform-style:preserve-3d;
+  }
+  .flip-inner.flipped{ transform:rotateY(180deg); }
+  .face{
+    position:absolute; inset:0; backface-visibility:hidden; border-radius:22px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:26px; text-align:center;
+  }
+  .face-front{
+    background:
+      radial-gradient(circle at 50% 30%, rgba(124,92,255,0.22), transparent 60%),
+      linear-gradient(180deg, var(--surface-hi), #0f1322);
+    border:1px solid var(--line);
+  }
+  .face-front .ficon{
+    width:64px; height:64px; border-radius:50%; background:var(--surface);
+    display:flex; align-items:center; justify-content:center; margin-bottom:18px;
+    border:1px solid var(--line);
+  }
+  .face-front .ficon svg{ width:28px; height:28px; color:var(--violet-bright); }
+  .face-front .fturn{ color:var(--ink-dim); font-size:13px; font-weight:700; margin-bottom:6px;}
+  .face-front .fname{ font-family:var(--font-d); font-weight:900; font-size:26px; margin-bottom:22px;}
+  .face-front .fhint{ color:var(--ink-dim); font-size:12.5px; line-height:1.6; margin-bottom:22px; }
+
+  .face-back{ transform:rotateY(180deg); border:1px solid var(--line); }
+  .face-back.normal{
+    background: radial-gradient(circle at 50% 20%, rgba(58,210,160,0.16), transparent 60%), linear-gradient(180deg, var(--surface-hi), #0f1322);
+  }
+  .face-back.odd{
+    background: radial-gradient(circle at 50% 20%, rgba(255,77,125,0.22), transparent 60%), linear-gradient(180deg, var(--surface-hi), #0f1322);
+  }
+  .seal{
+    width:74px; height:74px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    margin-bottom:16px; border:2px solid;
+  }
+  .seal.normal{ background:rgba(58,210,160,0.14); border-color:var(--teal); color:var(--teal); }
+  .seal.odd{ background:rgba(255,77,125,0.14); border-color:var(--pink); color:var(--pink); }
+  .seal svg{ width:32px; height:32px; }
+  .role-tag{
+    font-family:var(--font-d); font-weight:800; font-size:12px; letter-spacing:.5px;
+    padding:4px 12px; border-radius:100px; margin-bottom:14px;
+  }
+  .role-tag.normal{ background:rgba(58,210,160,0.14); color:var(--teal); }
+  .role-tag.odd{ background:rgba(255,77,125,0.14); color:var(--pink); }
+  .word-title{ font-family:var(--font-d); font-weight:900; font-size:30px; margin-bottom:10px; }
+  .word-title.odd-title{ font-size:20px; color:var(--ink); }
+  .role-desc{ color:var(--ink-dim); font-size:13px; line-height:1.7; padding:0 6px; }
+
+  .catlabel{ font-size:12px; color:var(--ink-dim); margin-top:16px; }
+
+  /* Voting */
+  .vote-summary{ text-align:center; margin-bottom:16px; }
+  .vote-summary .cnt{ font-family:var(--font-d); font-weight:900; font-size:34px; color:var(--lime); }
+  .vote-summary .lbl2{ font-size:12.5px; color:var(--ink-dim); margin-top:2px;}
+  .vote-bar{ background:var(--surface-hi); border-radius:100px; height:8px; overflow:hidden; margin-top:6px;}
+  .vote-bar-fill{ height:100%; background:linear-gradient(90deg, var(--violet), var(--pink)); border-radius:100px; }
+  .vresult{ text-align:center; }
+  .vresult .badge{
+    display:inline-block; font-family:var(--font-d); font-weight:800; font-size:14px;
+    padding:8px 18px; border-radius:100px; margin-bottom:14px;
+  }
+  .vresult .badge.win{ background:rgba(58,210,160,0.14); color:var(--teal); }
+  .vresult .badge.lose{ background:rgba(255,77,125,0.14); color:var(--pink); }
+  .vresult .word-reveal{ font-family:var(--font-d); font-weight:900; font-size:24px; margin:8px 0 4px; }
+  .vresult .desc-line{ color:var(--ink-dim); font-size:13px; line-height:1.7; margin-top:8px;}
+
+  .guess-list{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:14px;}
+  .guess-chip{
+    background:var(--surface-hi); border:1px solid var(--line); border-radius:12px;
+    padding:10px 8px; text-align:center; font-size:13px; font-weight:700; cursor:pointer;
+  }
+  .guess-chip:active{ transform:scale(0.97); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <span class="eyebrow">لعبة الجلسات</span>
+    <h1 class="title">مين الغريب</h1>
+    <p class="subtitle">الكل بيعرف الكلمة… إلا واحد. لقّوه قبل لا يلقّي هو الكلمة!</p>
+  </header>
+
+  <!-- SCREEN 1: player count -->
+  <section id="screen-count" class="card">
+    <p class="step-label"><span class="n">١</span> كم لاعب؟</p>
+    <label class="f-label">عدد اللاعبين (٣ - ١٢)</label>
+    <input type="number" id="playerCount" value="5" min="3" max="12">
+    <div style="margin-top:18px;">
+      <button class="btn btn-primary" onclick="goToNames()">التالي</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 2: names -->
+  <section id="screen-names" class="card hidden">
+    <p class="step-label"><span class="n">٢</span> أسماء اللاعبين</p>
+    <div id="namesList"></div>
+    <div class="btn-row" style="margin-top:14px;">
+      <button class="btn btn-ghost" onclick="showScreen('count')">رجوع</button>
+      <button class="btn btn-primary" onclick="goToCategory()">التالي</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 3: category -->
+  <section id="screen-category" class="card hidden">
+    <p class="step-label"><span class="n">٣</span> اختر الفئة</p>
+    <div class="cat-grid" id="catGrid"></div>
+    <div class="btn-row" style="margin-top:16px;">
+      <button class="btn btn-ghost" onclick="showScreen('names')">رجوع</button>
+      <button class="btn btn-lime" id="startBtn" onclick="startGame()" disabled>وزّع الأدوار</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 4: reveal (pass & play) -->
+  <section id="screen-game" class="card hidden">
+    <div class="grid-title">
+      <div class="lbl">مرّروا الجوال على الكل</div>
+      <div class="sub">كل واحد يفتح دوره لحاله وما يحكي لحد</div>
+    </div>
+    <div class="player-grid" id="playerGrid"></div>
+    <div class="footer-actions">
+      <button class="btn btn-ghost" onclick="newGame()">لعبة جديدة</button>
+      <button class="btn btn-primary" id="toVoteBtn" onclick="goToVoting()" disabled>الكل شاف دوره؟ صوّتوا</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 5: voting -->
+  <section id="screen-voting" class="card hidden">
+    <div class="grid-title">
+      <div class="lbl">مين الغريب برأيكم؟</div>
+      <div class="sub">ناقشوا وبعدين كل واحد يصوّت على شخص واحد</div>
+    </div>
+    <div class="player-grid" id="voteGrid"></div>
+    <div class="vote-summary">
+      <div class="cnt" id="voteCount">0</div>
+      <div class="lbl2">صوت من أصل <span id="voteTotal">0</span></div>
+    </div>
+    <div class="footer-actions">
+      <button class="btn btn-ghost" onclick="resetVotes()">صفّر الأصوات</button>
+      <button class="btn btn-primary" id="revealVoteBtn" onclick="revealVoteResult()" disabled>اكشف النتيجة</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 6: result -->
+  <section id="screen-result" class="card hidden">
+    <div class="vresult" id="resultBox"></div>
+    <div class="footer-actions">
+      <button class="btn btn-ghost" onclick="showScreen('category')">جولة جديدة</button>
+      <button class="btn btn-primary" onclick="newGame()">لعبة جديدة كلياً</button>
+    </div>
+  </section>
+
+</div>
+
+<!-- Reveal modal -->
+<div class="overlay hidden" id="overlay">
+  <div class="reveal-card">
+    <div class="flip-inner" id="flipInner">
+      <div class="face face-front">
+        <div class="ficon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 19 6v5c0 5-3.2 8-7 9-3.8-1-7-4-7-9V6l7-3Z"/></svg>
+        </div>
+        <div class="fturn">دور</div>
+        <div class="fname" id="frontName">—</div>
+        <div class="fhint">تأكد إنه ما حدا شايف الشاشة غيرك، وبعدين دوس تحت</div>
+        <button class="btn btn-primary" onclick="revealCard()">شوف دورك</button>
+      </div>
+      <div class="face face-back" id="backFace"></div>
+    </div>
+    <div class="btn-row hidden" id="closeBtn" style="margin-top:16px;">
+      <button class="btn btn-ghost" style="background:var(--surface-hi);color:var(--ink);" onclick="closeModal()">سكّر ومرّر للي بعدي</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---------- Categories & words (safe / family-friendly only) ----------
+const CATEGORIES = {
+  food: { name:'أكل ومطاعم', icon:'🍔', words:['بيتزا','برجر','شاورما','منسف','فلافل','كبسة','مندي','سوشي','مقلوبة','كنافة','دجاج مشوي','معكرونة'] },
+  drinks:{ name:'مشروبات', icon:'☕', words:['قهوة','شاي','عصير برتقال','ليموناضة','سموذي','كاكاو','مياه غازية','عصير مانجو'] },
+  places:{ name:'أماكن عامة', icon:'🏫', words:['مدرسة','جامعة','مستشفى','مطار','مكتبة','حديقة عامة','سوبرماركت','ملعب كرة قدم','مسجد','متحف'] },
+  animals:{ name:'حيوانات', icon:'🐾', words:['أسد','قطة','فيل','بطريق','حصان','نسر','سلحفاة','دولفين','زرافة','أرنب'] },
+  jobs:{ name:'مهن ووظائف', icon:'👨‍⚕️', words:['طبيب','معلم','مهندس','طيار','شرطي','طباخ','محامي','مصور','مزارع','مبرمج'] },
+  sports:{ name:'رياضة', icon:'⚽', words:['كرة قدم','سباحة','كرة سلة','ركض','تنس','كاراتيه','دراجة هوائية','جري ماراثون'] },
+  movies:{ name:'أفلام ومسلسلات', icon:'🎬', words:['فيلم أكشن','فيلم رعب','مسلسل كوميدي','فيلم كرتون','فيلم خيال علمي','مسلسل تاريخي'] },
+  school:{ name:'دراسة وجامعة', icon:'📚', words:['امتحان نهائي','محاضرة','واجب بيتي','مكتبة الجامعة','قاعة محاضرات','مشروع تخرج','دوام صيفي'] },
+  travel:{ name:'سفر ومواصلات', icon:'✈️', words:['طيارة','قطار','باص','سيارة أجرة','رحلة بحرية','فندق','مطار','حقيبة سفر'] },
+  tech:{ name:'تكنولوجيا', icon:'📱', words:['جوال ذكي','لابتوب','ألعاب فيديو','واي فاي','كاميرا','ساعة ذكية','سماعات لاسلكية'] }
+};
+
+let state = {
+  playerCount: 5,
+  names: [],
+  category: null,
+  word: '',
+  oddIndex: -1,
+  viewed: [],
+  votes: {}, // voterIndex -> targetIndex
+};
+
+// ---------- Screen navigation ----------
+function showScreen(id){
+  ['count','names','category','game','voting','result'].forEach(s=>{
+    document.getElementById('screen-'+s).classList.toggle('hidden', s!==id);
+  });
+}
+
+function goToNames(){
+  const val = parseInt(document.getElementById('playerCount').value, 10);
+  state.playerCount = (isNaN(val) || val < 3) ? 3 : (val > 12 ? 12 : val);
+  document.getElementById('playerCount').value = state.playerCount;
+
+  const list = document.getElementById('namesList');
+  list.innerHTML = '';
+  const prevNames = state.names;
+  state.names = [];
+  for(let i=0;i<state.playerCount;i++){
+    const defName = (prevNames[i]) ? prevNames[i] : ('لاعب ' + (i+1));
+    state.names.push(defName);
+    const row = document.createElement('div');
+    row.className = 'name-row';
+    row.innerHTML = `<span class="idx">${i+1}</span><input type="text" value="${defName}" data-idx="${i}">`;
+    list.appendChild(row);
+  }
+  list.querySelectorAll('input').forEach(inp=>{
+    inp.addEventListener('input', e=>{
+      state.names[parseInt(e.target.dataset.idx,10)] = e.target.value.trim() || ('لاعب ' + (parseInt(e.target.dataset.idx,10)+1));
+    });
+  });
+  showScreen('names');
+}
+
+function goToCategory(){
+  const grid = document.getElementById('catGrid');
+  grid.innerHTML = '';
+  Object.keys(CATEGORIES).forEach(key=>{
+    const c = CATEGORIES[key];
+    const chip = document.createElement('div');
+    chip.className = 'cat-chip' + (state.category===key ? ' selected' : '');
+    chip.innerHTML = `<div class="cicon">${c.icon}</div><div class="cname">${c.name}</div>`;
+    chip.onclick = ()=>{
+      state.category = key;
+      document.querySelectorAll('.cat-chip').forEach(el=>el.classList.remove('selected'));
+      chip.classList.add('selected');
+      document.getElementById('startBtn').disabled = false;
+    };
+    grid.appendChild(chip);
+  });
+  showScreen('category');
+}
+
+// ---------- Game start ----------
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function startGame(){
+  if(!state.category) return;
+  const words = CATEGORIES[state.category].words;
+  state.word = words[Math.floor(Math.random()*words.length)];
+  state.oddIndex = Math.floor(Math.random()*state.playerCount);
+  state.viewed = new Array(state.playerCount).fill(false);
+  state.votes = {};
+  renderGrid();
+  showScreen('game');
+}
+
+function reshuffleRound(){
+  startGame();
+}
+
+function newGame(){
+  if(!confirm('رح ترجع لإعداد اللعبة من الأول. أكيد؟')) return;
+  showScreen('count');
+}
+
+// ---------- Player grid (reveal) ----------
+function renderGrid(){
+  const grid = document.getElementById('playerGrid');
+  grid.innerHTML = '';
+  state.names.forEach((name, i)=>{
+    const chip = document.createElement('div');
+    chip.className = 'p-chip' + (state.viewed[i] ? ' viewed' : '');
+    chip.innerHTML = `<span class="seen"></span><div class="pname">${name}</div>`;
+    chip.onclick = ()=> openReveal(i);
+    grid.appendChild(chip);
+  });
+  updateToVoteBtn();
+}
+
+function updateToVoteBtn(){
+  const allSeen = state.viewed.every(v=>v);
+  document.getElementById('toVoteBtn').disabled = !allSeen;
+}
+
+let currentIdx = null;
+
+function openReveal(i){
+  currentIdx = i;
+  const name = state.names[i];
+  document.getElementById('frontName').textContent = name;
+  document.getElementById('flipInner').classList.remove('flipped');
+  document.getElementById('closeBtn').classList.add('hidden');
+
+  const isOdd = (i === state.oddIndex);
+  const back = document.getElementById('backFace');
+  back.className = 'face face-back ' + (isOdd ? 'odd' : 'normal');
+
+  if(isOdd){
+    back.innerHTML = `
+      <div class="seal odd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><circle cx="12" cy="16.2" r="0.6" fill="currentColor" stroke="none"/></svg></div>
+      <div class="role-tag odd">أنت الغريب</div>
+      <div class="word-title odd-title">ما عندك كلمة! لازم تتصنّت وتتظاهر إنك عارف</div>
+      <div class="catlabel">الفئة: ${CATEGORIES[state.category].name}</div>
+      <div class="role-desc" style="margin-top:10px;">اسمع كلام الباقيين منيح، حاول تخمّن الكلمة، وما تخلي حد يشك فيك — لو ما لقوك تفوز!</div>`;
+  } else {
+    back.innerHTML = `
+      <div class="seal normal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></div>
+      <div class="role-tag normal">من المجموعة</div>
+      <div class="word-title">${state.word}</div>
+      <div class="catlabel">الفئة: ${CATEGORIES[state.category].name}</div>
+      <div class="role-desc" style="margin-top:10px;">أعطِ تلميح عن الكلمة بذكاء، بحيث المجموعة تفهمك والغريب يضل تايه.</div>`;
+  }
+
+  document.getElementById('overlay').classList.remove('hidden');
+}
+
+function revealCard(){
+  document.getElementById('flipInner').classList.add('flipped');
+  document.getElementById('closeBtn').classList.remove('hidden');
+  if(currentIdx !== null){
+    state.viewed[currentIdx] = true;
+  }
+}
+
+function closeModal(){
+  document.getElementById('overlay').classList.add('hidden');
+  renderGrid();
+  currentIdx = null;
+}
+
+document.getElementById('overlay').addEventListener('click', (e)=>{
+  if(e.target.id === 'overlay') closeModal();
+});
+
+// ---------- Voting ----------
+function goToVoting(){
+  renderVoteGrid();
+  showScreen('voting');
+}
+
+function renderVoteGrid(){
+  const grid = document.getElementById('voteGrid');
+  grid.innerHTML = '';
+  state.names.forEach((name, i)=>{
+    const votesForThis = Object.values(state.votes).filter(v=>v===i).length;
+    const chip = document.createElement('div');
+    chip.className = 'p-chip';
+    chip.innerHTML = `<div class="pname">${name}</div><div style="font-size:11px;color:var(--ink-dim);margin-top:4px;">${votesForThis} صوت</div>`;
+    chip.onclick = ()=> castVote(i);
+    grid.appendChild(chip);
+  });
+  updateVoteSummary();
+}
+
+function castVote(targetIdx){
+  // simplified: tap adds one vote toward a player, tap tracks total taps vs player count
+  const voterKey = 'v' + Object.keys(state.votes).length;
+  state.votes[voterKey] = targetIdx;
+  renderVoteGrid();
+}
+
+function resetVotes(){
+  state.votes = {};
+  renderVoteGrid();
+}
+
+function updateVoteSummary(){
+  const total = state.playerCount;
+  const cast = Object.keys(state.votes).length;
+  document.getElementById('voteCount').textContent = cast;
+  document.getElementById('voteTotal').textContent = total;
+  document.getElementById('revealVoteBtn').disabled = cast < total;
+}
+
+function revealVoteResult(){
+  // find who got the most votes
+  const tally = new Array(state.playerCount).fill(0);
+  Object.values(state.votes).forEach(idx=> tally[idx]++);
+  let maxVotes = -1, accused = -1, tie = false;
+  tally.forEach((v,i)=>{
+    if(v > maxVotes){ maxVotes = v; accused = i; tie = false; }
+    else if(v === maxVotes){ tie = true; }
+  });
+
+  const box = document.getElementById('resultBox');
+  const correct = (!tie && accused === state.oddIndex);
+
+  if(correct){
+    box.innerHTML = `
+      <div class="badge win">فازت المجموعة! 🎉</div>
+      <div class="word-reveal">${state.names[state.oddIndex]} كان الغريب</div>
+      <div class="desc-line">الكلمة كانت: <b style="color:var(--ink);">${state.word}</b></div>
+      <div class="desc-line">بس فرصة أخيرة للغريب — لو يخمّن الكلمة الصح، يقلب النتيجة لصالحه!</div>
+      <div class="guess-list" id="guessList"></div>`;
+    renderGuessOptions(true);
+  } else {
+    const wrongName = (accused>=0 && !tie) ? state.names[accused] : 'محد بالتحديد (تعادل أصوات)';
+    box.innerHTML = `
+      <div class="badge lose">فاز الغريب! 🕵️</div>
+      <div class="word-reveal">${state.names[state.oddIndex]} كان الغريب فعلاً</div>
+      <div class="desc-line">المجموعة اتهمت: <b style="color:var(--ink);">${wrongName}</b> — غلط!</div>
+      <div class="desc-line">الكلمة كانت: <b style="color:var(--ink);">${state.word}</b></div>`;
+  }
+
+  showScreen('result');
+}
+
+function renderGuessOptions(showGuess){
+  if(!showGuess) return;
+  const listEl = document.getElementById('guessList');
+  const words = shuffle(CATEGORIES[state.category].words).slice(0,6);
+  if(!words.includes(state.word)) words[0] = state.word;
+  shuffle(words).forEach(w=>{
+    const chip = document.createElement('div');
+    chip.className = 'guess-chip';
+    chip.textContent = w;
+    chip.onclick = ()=>{
+      const box = document.getElementById('resultBox');
+      if(w === state.word){
+        box.innerHTML = `
+          <div class="badge lose">قلبها الغريب! 🔄</div>
+          <div class="word-reveal">${state.names[state.oddIndex]} خمّن الكلمة صح</div>
+          <div class="desc-line">الكلمة كانت: <b style="color:var(--ink);">${state.word}</b> — يفوز الغريب رغم إنه انكشف!</div>`;
+      } else {
+        box.innerHTML = `
+          <div class="badge win">ثبتت نتيجة المجموعة ✅</div>
+          <div class="word-reveal">تخمين غلط</div>
+          <div class="desc-line">الكلمة كانت: <b style="color:var(--ink);">${state.word}</b> — فوز المجموعة نهائي!</div>`;
+      }
+    };
+    listEl.appendChild(chip);
+  });
+}
+</script>
+</body>
+</html>
