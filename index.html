@@ -9,10 +9,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#05050a;
-    --ink:#f2f0ea;
-    --ink-dim:#8d8a99;
-    --line: rgba(242,240,234,0.08);
+    --bg:#050405;
+    --ink:#f3efe4;
+    --ink-dim:#948e97;
+    --ink-faint:#5c5762;
+    --line: rgba(243,239,228,0.09);
+    --gold:#c9a227;
+    --gold-soft: rgba(201,162,39,0.4);
     --mafia-a:#a3223e;
     --mafia-b:#c9a227;
     --odd-a:#7c5cff;
@@ -31,159 +34,245 @@
     position:relative;
   }
 
-  /* ambient glow field */
-  .glow{
-    position:fixed; inset:0; pointer-events:none; z-index:0; opacity:0.55;
+  /* ---------- Ambient atmosphere ---------- */
+  .vignette{
+    position:fixed; inset:0; pointer-events:none; z-index:0;
     background:
-      radial-gradient(520px 360px at 12% 8%, rgba(163,34,62,0.28), transparent 60%),
-      radial-gradient(520px 360px at 88% 14%, rgba(124,92,255,0.26), transparent 60%),
-      radial-gradient(600px 420px at 50% 100%, rgba(198,255,92,0.08), transparent 60%);
-    animation: drift 14s ease-in-out infinite alternate;
+      radial-gradient(900px 700px at 50% -12%, rgba(201,162,39,0.10), transparent 60%),
+      radial-gradient(600px 520px at -10% 100%, rgba(163,34,62,0.16), transparent 60%),
+      radial-gradient(600px 520px at 110% 100%, rgba(124,92,255,0.16), transparent 60%),
+      radial-gradient(1200px 900px at 50% 50%, transparent 40%, rgba(0,0,0,0.55) 100%);
   }
-  @keyframes drift{
-    0%{ transform:translateY(0px) scale(1); }
-    100%{ transform:translateY(-16px) scale(1.03); }
+
+  .embers{ position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .ember{
+    position:absolute; bottom:-10px; border-radius:50%;
+    background:radial-gradient(circle, rgba(201,162,39,0.9), rgba(201,162,39,0));
+    opacity:0; animation-name: rise; animation-timing-function: ease-in;
+    animation-iteration-count: infinite;
   }
-  @media (prefers-reduced-motion: reduce){ .glow{animation:none;} }
+  @keyframes rise{
+    0%{ transform:translateY(0) translateX(0); opacity:0; }
+    8%{ opacity:0.7; }
+    92%{ opacity:0.25; }
+    100%{ transform:translateY(-108vh) translateX(var(--drift,14px)); opacity:0; }
+  }
+  @media (prefers-reduced-motion: reduce){ .ember{ animation:none; opacity:0; } }
 
   .noise{
-    position:fixed; inset:0; pointer-events:none; z-index:1; opacity:0.035;
+    position:fixed; inset:0; pointer-events:none; z-index:1; opacity:0.035; mix-blend-mode:overlay;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
+  /* ---------- Entrance sequence ---------- */
+  @keyframes riseIn{
+    from{ opacity:0; transform:translateY(16px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .seq{ opacity:0; animation:riseIn .7s cubic-bezier(.16,.8,.24,1) forwards; }
+  .seq-1{ animation-delay:.05s; }
+  .seq-2{ animation-delay:.20s; }
+  .seq-3{ animation-delay:.34s; }
+  .seq-4{ animation-delay:.46s; }
+  .seq-5{ animation-delay:.60s; }
+  .seq-6{ animation-delay:.74s; }
+  .seq-7{ animation-delay:.88s; }
+  @media (prefers-reduced-motion: reduce){
+    .seq{ animation:none; opacity:1; transform:none; }
+  }
+
+  /* ---------- Layout ---------- */
   .stage{
     position:relative; z-index:2;
     min-height:100vh;
     display:flex; flex-direction:column; align-items:center;
-    padding:56px 20px 60px;
-    max-width:520px; margin:0 auto;
+    padding:64px 22px 50px;
+    max-width:540px; margin:0 auto;
   }
 
   .kicker{
-    font-family:var(--font-b); font-weight:800; font-size:12px; letter-spacing:1px;
-    color:var(--ink-dim); padding:6px 16px; border:1px solid var(--line); border-radius:100px;
-    margin-bottom:22px;
+    display:flex; align-items:center; gap:10px;
+    font-family:var(--font-b); font-weight:700; font-size:11.5px; letter-spacing:.5px;
+    color:var(--gold); margin-bottom:26px;
   }
+  .kicker::before, .kicker::after{ content:""; width:22px; height:1px; background:linear-gradient(90deg, transparent, var(--gold-soft)); }
+  .kicker::after{ background:linear-gradient(90deg, var(--gold-soft), transparent); }
 
   h1.hero{
-    font-family:var(--font-d); font-weight:900; font-size:56px; line-height:1.02;
-    text-align:center; margin:0 0 10px;
-    letter-spacing:0.5px;
+    font-family:var(--font-d); font-weight:900;
+    font-size:clamp(46px, 13vw, 68px);
+    line-height:0.98;
+    text-align:center; margin:0 0 6px;
+    letter-spacing:0.2px;
   }
   h1.hero .l1{ display:block; color:var(--ink); }
   h1.hero .l2{
     display:block;
-    background:linear-gradient(95deg, var(--mafia-b) 0%, var(--mafia-a) 35%, var(--odd-a) 65%, var(--odd-b) 100%);
+    background:linear-gradient(100deg, var(--mafia-b) 0%, var(--mafia-a) 32%, var(--odd-a) 62%, var(--odd-b) 100%);
     -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  .hero-sub{
-    text-align:center; color:var(--ink-dim); font-size:14.5px; max-width:320px;
-    margin:0 auto 44px; line-height:1.7;
+    padding-bottom:6px;
   }
 
-  .doors{
-    width:100%; display:flex; flex-direction:column; gap:18px;
+  .ornament{
+    display:flex; align-items:center; gap:10px; margin:18px 0 20px;
+    color:var(--gold-soft);
   }
+  .ornament .rule{ width:46px; height:1px; background:linear-gradient(90deg, transparent, var(--gold-soft)); }
+  .ornament .rule.r2{ background:linear-gradient(90deg, var(--gold-soft), transparent); }
+  .ornament .diamond{ width:6px; height:6px; transform:rotate(45deg); background:var(--gold); }
+
+  .hero-sub{
+    text-align:center; color:var(--ink-dim); font-size:14.5px; max-width:300px;
+    margin:0 auto 46px; line-height:1.85;
+  }
+
+  .doors{ width:100%; display:flex; flex-direction:column; gap:20px; }
 
   .door{
-    position:relative; border-radius:26px; overflow:hidden; cursor:pointer;
+    position:relative; border-radius:28px; overflow:hidden; cursor:pointer;
     border:1px solid var(--line);
-    padding:26px 24px;
-    min-height:168px;
+    padding:30px 26px 26px;
+    min-height:186px;
     display:flex; flex-direction:column; justify-content:flex-end;
-    transition:transform .18s ease, border-color .18s ease;
+    transition:transform .2s cubic-bezier(.2,.7,.3,1), border-color .2s ease, box-shadow .2s ease;
     text-decoration:none; color:inherit;
+    box-shadow:0 24px 50px -28px rgba(0,0,0,0.7);
   }
-  .door:active{ transform:scale(0.98); }
+  .door:active{ transform:scale(0.975); }
+
+  .door::before{
+    /* giant watermark glyph, unique per game */
+    content: attr(data-glyph);
+    position:absolute; left:-8px; bottom:-40px;
+    font-family:var(--font-d); font-weight:900; font-size:180px; line-height:1;
+    opacity:0.06; pointer-events:none; user-select:none;
+  }
 
   .door.mafia{
     background:
-      radial-gradient(360px 220px at 85% -20%, rgba(201,162,39,0.22), transparent 60%),
-      radial-gradient(320px 260px at -10% 120%, rgba(163,34,62,0.30), transparent 60%),
-      linear-gradient(160deg, #14090c, #0a0509);
+      radial-gradient(420px 260px at 88% -18%, rgba(201,162,39,0.20), transparent 60%),
+      radial-gradient(360px 300px at -14% 120%, rgba(163,34,62,0.32), transparent 60%),
+      linear-gradient(160deg, #170a0d 0%, #0a0508 70%);
+    border-color: rgba(201,162,39,0.14);
   }
-  .door.mafia:active{ border-color: rgba(201,162,39,0.5); }
+  .door.mafia::before{ color:var(--mafia-b); content:"♠"; }
+  .door.mafia:active{ border-color: rgba(201,162,39,0.55); box-shadow:0 24px 50px -24px rgba(163,34,62,0.35); }
 
   .door.oddone{
     background:
-      radial-gradient(360px 220px at 85% -20%, rgba(198,255,92,0.14), transparent 60%),
-      radial-gradient(320px 260px at -10% 120%, rgba(124,92,255,0.32), transparent 60%),
-      linear-gradient(160deg, #0d0a1a, #07060f);
+      radial-gradient(420px 260px at 88% -18%, rgba(198,255,92,0.12), transparent 60%),
+      radial-gradient(360px 300px at -14% 120%, rgba(124,92,255,0.34), transparent 60%),
+      linear-gradient(160deg, #100b1f 0%, #07060d 70%);
+    border-color: rgba(124,92,255,0.16);
   }
-  .door.oddone:active{ border-color: rgba(124,92,255,0.5); }
+  .door.oddone::before{ color:var(--odd-a); content:"؟"; }
+  .door.oddone:active{ border-color: rgba(124,92,255,0.55); box-shadow:0 24px 50px -24px rgba(124,92,255,0.35); }
 
+  .door .drow{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:16px; position:relative; z-index:2; }
   .door .dtag{
-    position:absolute; top:18px; left:18px;
-    font-family:var(--font-b); font-weight:800; font-size:11px; letter-spacing:.5px;
+    font-family:var(--font-b); font-weight:800; font-size:10.5px; letter-spacing:.6px;
     padding:5px 12px; border-radius:100px; border:1px solid;
   }
   .door.mafia .dtag{ color:var(--mafia-b); border-color:rgba(201,162,39,0.4); background:rgba(201,162,39,0.08); }
-  .door.oddone .dtag{ color:var(--odd-b); border-color:rgba(198,255,92,0.35); background:rgba(198,255,92,0.06); }
+  .door.oddone .dtag{ color:var(--odd-b); border-color:rgba(198,255,92,0.32); background:rgba(198,255,92,0.06); }
 
   .door .dicon{
-    position:absolute; top:16px; left:auto; right:18px;
-    width:38px; height:38px; border-radius:50%;
+    width:40px; height:40px; border-radius:12px;
     display:flex; align-items:center; justify-content:center;
-    border:1px solid;
+    border:1px solid; flex:0 0 auto;
   }
-  .door.mafia .dicon{ border-color:rgba(201,162,39,0.4); background:rgba(201,162,39,0.08); color:var(--mafia-b); }
-  .door.oddone .dicon{ border-color:rgba(198,255,92,0.35); background:rgba(198,255,92,0.06); color:var(--odd-b); }
-  .door .dicon svg{ width:18px; height:18px; }
+  .door.mafia .dicon{ border-color:rgba(201,162,39,0.35); background:rgba(201,162,39,0.07); color:var(--mafia-b); }
+  .door.oddone .dicon{ border-color:rgba(124,92,255,0.35); background:rgba(124,92,255,0.09); color:var(--odd-a); }
+  .door .dicon svg{ width:19px; height:19px; }
 
   .door .dname{
-    font-family:var(--font-d); font-weight:900; font-size:28px; margin-bottom:4px;
+    font-family:var(--font-d); font-weight:900; font-size:30px; margin-bottom:6px;
+    position:relative; z-index:2;
   }
-  .door .ddesc{ font-size:12.5px; color:var(--ink-dim); line-height:1.6; max-width:280px; }
+  .door .ddesc{ font-size:12.5px; color:var(--ink-dim); line-height:1.7; max-width:270px; position:relative; z-index:2; }
   .door .denter{
-    margin-top:14px; display:inline-flex; align-items:center; gap:6px;
-    font-family:var(--font-d); font-weight:800; font-size:12.5px;
+    margin-top:16px; display:inline-flex; align-items:center; gap:6px;
+    font-family:var(--font-d); font-weight:800; font-size:12.5px; position:relative; z-index:2;
   }
   .door.mafia .denter{ color:var(--mafia-b); }
-  .door.oddone .denter{ color:var(--odd-b); }
+  .door.oddone .denter{ color:var(--odd-a); }
   .door .denter svg{ width:14px; height:14px; }
 
   footer.foot{
-    margin-top:44px; text-align:center; color:var(--ink-dim); font-size:11.5px;
-    letter-spacing:.3px;
+    margin-top:50px; text-align:center; color:var(--ink-faint); font-size:11px;
+    letter-spacing:.4px; line-height:1.8;
   }
 
   @media (max-width:360px){
-    h1.hero{ font-size:44px; }
+    .door .dname{ font-size:26px; }
   }
 </style>
 </head>
 <body>
-<div class="glow"></div>
+<div class="vignette"></div>
+<div class="embers" id="embers"></div>
 <div class="noise"></div>
 
 <div class="stage">
-  <span class="kicker">جلسة اليوم</span>
+  <span class="kicker seq seq-1">جلسة الليلة</span>
+
   <h1 class="hero">
-    <span class="l1">اختاروا</span>
-    <span class="l2">اللعبة</span>
+    <span class="l1 seq seq-2">اختاروا</span>
+    <span class="l2 seq seq-3">اللعبة</span>
   </h1>
-  <p class="hero-sub">جمعة، عزيمة، أو سهرة أصحاب — كل شي جاهز بجوّالك. اختاروا اللعبة وابدأوا.</p>
+
+  <div class="ornament seq seq-4"><span class="rule"></span><span class="diamond"></span><span class="rule r2"></span></div>
+
+  <p class="hero-sub seq seq-4">جمعة، عزيمة، أو سهرة أصحاب — كل شي جاهز بجوّالك من غير نت. اختاروا اللعبة وابدأوا.</p>
 
   <div class="doors">
-    <a class="door mafia" href="mafia.html">
-      <span class="dtag">توزيع أدوار</span>
-      <span class="dicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21v-6l-3-2V9a3 3 0 0 1 6 0v4l-3 2Z"/><circle cx="9" cy="5" r="2.2"/><path d="M14 9h4a2 2 0 0 1 2 2v3l-2 1.5V21"/><circle cx="17" cy="5.5" r="1.8"/></svg></span>
+    <a class="door mafia seq seq-5" href="mafia.html" data-glyph="♠">
+      <div class="drow">
+        <span class="dtag">توزيع أدوار</span>
+        <span class="dicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21v-6l-3-2V9a3 3 0 0 1 6 0v4l-3 2Z"/><circle cx="9" cy="5" r="2.2"/><path d="M14 9h4a2 2 0 0 1 2 2v3l-2 1.5V21"/><circle cx="17" cy="5.5" r="1.8"/></svg></span>
+      </div>
       <div class="dname">لعبة المافيا</div>
       <div class="ddesc">مافيا وسفّاح وشيخ ومواطنين — وزّعوا الأدوار واكتشفوا مين بينكم مو بصفّكم.</div>
       <span class="denter">ادخل اللعبة <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
     </a>
 
-    <a class="door oddone" href="who-is.html">
-      <span class="dtag">جاسوس اجتماعي</span>
-      <span class="dicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
+    <a class="door oddone seq seq-6" href="who-is.html" data-glyph="؟">
+      <div class="drow">
+        <span class="dtag">جاسوس اجتماعي</span>
+        <span class="dicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
+      </div>
       <div class="dname">مين الغريب</div>
       <div class="ddesc">الكل بيعرف الكلمة إلا واحد. اسألوا، ناقشوا، وصوّتوا — قبل لا يلقّيها الغريب.</div>
       <span class="denter">ادخل اللعبة <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
     </a>
   </div>
 
-  <footer class="foot">ألعاب جلسات — تشتغل بدون نت</footer>
+  <footer class="foot seq seq-7">ألعاب جلسات محلية<br>تشتغل كاملة بدون إنترنت</footer>
 </div>
 
+<script>
+// Lightweight ambient embers — purely decorative, respects reduced-motion via CSS.
+(function(){
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const field = document.getElementById('embers');
+  const count = 16;
+  for(let i=0;i<count;i++){
+    const e = document.createElement('div');
+    e.className = 'ember';
+    const size = 2 + Math.random()*3;
+    const left = Math.random()*100;
+    const dur = 9 + Math.random()*9;
+    const delay = Math.random()*12;
+    const drift = (Math.random()*40 - 20) + 'px';
+    e.style.width = size+'px';
+    e.style.height = size+'px';
+    e.style.left = left+'%';
+    e.style.setProperty('--drift', drift);
+    e.style.animationDuration = dur+'s';
+    e.style.animationDelay = delay+'s';
+    field.appendChild(e);
+  }
+})();
+</script>
 </body>
 </html>
