@@ -174,19 +174,46 @@
   }
   .face-front{
     background:
-      radial-gradient(circle at 50% 30%, rgba(124,92,255,0.22), transparent 60%),
-      linear-gradient(180deg, var(--surface-hi), #0f1322);
+      repeating-linear-gradient(135deg, rgba(255,255,255,0.02) 0 2px, transparent 2px 14px),
+      linear-gradient(180deg, #1a1f33, #0d1120);
     border:1px solid var(--line);
+    overflow:hidden;
   }
-  .face-front .ficon{
-    width:64px; height:64px; border-radius:50%; background:var(--surface);
-    display:flex; align-items:center; justify-content:center; margin-bottom:18px;
-    border:1px solid var(--line);
+  .face-front::before{
+    /* envelope flap */
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:52%;
+    background:linear-gradient(180deg, rgba(124,92,255,0.16), transparent);
+    clip-path: polygon(0 0, 100% 0, 50% 62%);
+    border-bottom:1px solid rgba(230,234,255,0.06);
   }
-  .face-front .ficon svg{ width:28px; height:28px; color:var(--violet-bright); }
-  .face-front .fturn{ color:var(--ink-dim); font-size:13px; font-weight:700; margin-bottom:6px;}
-  .face-front .fname{ font-family:var(--font-d); font-weight:900; font-size:26px; margin-bottom:22px;}
-  .face-front .fhint{ color:var(--ink-dim); font-size:12.5px; line-height:1.6; margin-bottom:22px; }
+  .face-front .ficon{ display:none; }
+  .face-front .fturn{ color:var(--ink-dim); font-size:13px; font-weight:700; margin-bottom:6px; position:relative; z-index:2;}
+  .face-front .fname{ font-family:var(--font-d); font-weight:900; font-size:26px; margin-bottom:20px; position:relative; z-index:2;}
+  .face-front .fhint{ color:var(--ink-dim); font-size:12.5px; line-height:1.6; margin-bottom:6px; position:relative; z-index:2; }
+
+  /* Wax seal button */
+  .wax-seal{
+    position:relative; z-index:2;
+    width:84px; height:84px; border-radius:50%; margin-bottom:22px; cursor:pointer;
+    background:radial-gradient(circle at 32% 28%, #ff6b6f, #a3223e 55%, #6e1428 100%);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 10px 22px -6px rgba(163,34,62,0.55), inset 0 -4px 10px rgba(0,0,0,0.35), inset 0 3px 6px rgba(255,255,255,0.18);
+    border:none; padding:0;
+  }
+  .wax-seal svg{ width:34px; height:34px; color:rgba(255,255,255,0.92); }
+  .wax-seal:active{ transform:scale(0.95); }
+  .wax-seal.cracked{ animation: sealCrack .5s ease forwards; pointer-events:none; }
+  @keyframes sealCrack{
+    0%{ transform:scale(1) rotate(0deg); opacity:1; }
+    35%{ transform:scale(1.12) rotate(-6deg); opacity:1; }
+    70%{ transform:scale(0.9) rotate(8deg); opacity:0.5; }
+    100%{ transform:scale(0.4) rotate(18deg); opacity:0; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .wax-seal.cracked{ animation:none; opacity:0; }
+  }
+  .seal-tap{ font-family:var(--font-d); font-weight:800; font-size:14px; color:var(--ink); position:relative; z-index:2; margin-bottom:4px;}
 
   .face-back{ transform:rotateY(180deg); border:1px solid var(--line); }
   .face-back.normal{
@@ -325,13 +352,13 @@
   <div class="reveal-card">
     <div class="flip-inner" id="flipInner">
       <div class="face face-front">
-        <div class="ficon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 19 6v5c0 5-3.2 8-7 9-3.8-1-7-4-7-9V6l7-3Z"/></svg>
-        </div>
         <div class="fturn">دور</div>
         <div class="fname" id="frontName">—</div>
-        <div class="fhint">تأكد إنه ما حدا شايف الشاشة غيرك، وبعدين دوس تحت</div>
-        <button class="btn btn-primary" onclick="revealCard()">شوف دورك</button>
+        <button class="wax-seal" id="waxSeal" onclick="revealCard()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 19 6v5c0 5-3.2 8-7 9-3.8-1-7-4-7-9V6l7-3Z"/></svg>
+        </button>
+        <div class="seal-tap">افتح الختم</div>
+        <div class="fhint">تأكد إنه ما حدا شايف الشاشة غيرك</div>
       </div>
       <div class="face face-back" id="backFace"></div>
     </div>
@@ -495,6 +522,8 @@ function openReveal(i){
   document.getElementById('frontName').textContent = name;
   document.getElementById('flipInner').classList.remove('flipped');
   document.getElementById('closeBtn').classList.add('hidden');
+  const seal = document.getElementById('waxSeal');
+  seal.classList.remove('cracked');
 
   const isOdd = state.oddIndices.includes(i);
   const back = document.getElementById('backFace');
@@ -520,11 +549,15 @@ function openReveal(i){
 }
 
 function revealCard(){
-  document.getElementById('flipInner').classList.add('flipped');
-  document.getElementById('closeBtn').classList.remove('hidden');
-  if(currentIdx !== null){
-    state.viewed[currentIdx] = true;
-  }
+  const seal = document.getElementById('waxSeal');
+  seal.classList.add('cracked');
+  setTimeout(()=>{
+    document.getElementById('flipInner').classList.add('flipped');
+    document.getElementById('closeBtn').classList.remove('hidden');
+    if(currentIdx !== null){
+      state.viewed[currentIdx] = true;
+    }
+  }, 380);
 }
 
 function closeModal(){
