@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <title>جلسة سطح</title>
-<link rel="icon" type="image/png" href="logo.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#050405">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
@@ -179,7 +182,7 @@
       linear-gradient(160deg, #0a0e1c 0%, #070a14 70%);
     border-color: rgba(255,176,32,0.16);
   }
-  .door.jeem::before{ color:var(--jeem-a); content:"؟"; font-size:150px; }
+  .door.jeem::before{ color:var(--jeem-a); content:"ج"; font-size:190px; }
   .door.jeem:active{ border-color: rgba(255,176,32,0.55); box-shadow:0 24px 50px -24px rgba(255,176,32,0.35); }
 
   .door .drow{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:16px; position:relative; z-index:2; }
@@ -305,6 +308,13 @@
     field.appendChild(e);
   }
 })();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
 </script>
 </body>
 </html>

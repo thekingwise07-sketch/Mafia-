@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <title>جيم سين</title>
-<link rel="icon" type="image/png" href="logo.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#050405">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
@@ -348,7 +351,7 @@ input:focus{ border-color:var(--gold); }
   <div class="q-life-row" id="qLifeRow"></div>
   <div id="qAnswerWrap"></div>
   <div class="btn-row">
-    <button class="btn btn-ghost btn-full" onclick="backToBoard(null)">تخطي السؤال</button>
+    <button class="btn btn-ghost btn-full" onclick="skipQuestion()">تخطي السؤال</button>
   </div>
 </div>
 
@@ -711,6 +714,20 @@ function openQuestion(idx){
   showQuestionScreen();
 }
 
+function skipQuestion(){
+  const idx = state.currentCellIdx;
+  const cell = state.board[idx];
+  const usedTexts = new Set(state.board.map(c=>c.q));
+  const levelPool = CATS[cell.catKey].pool[cell.points].filter(([q,a])=> !usedTexts.has(q));
+  if(levelPool.length>0){
+    const pick = levelPool[Math.floor(Math.random()*levelPool.length)];
+    cell.q = pick[0]; cell.a = pick[1];
+  }
+  clearInterval(state.timer.interval);
+  renderBoard();
+  show('screen-board');
+}
+
 function showQuestionScreen(){
   const cell = state.board[state.currentCellIdx];
   document.getElementById('qCat').textContent = CATS[cell.catKey].icon+' '+CATS[cell.catKey].name;
@@ -872,6 +889,13 @@ function showResult(){
     <div class="winner">🎉 الفائز: ${winner}</div>
     <div class="result-scores">🔵 ${state.team1Name}: ${state.scores.t1} &nbsp;|&nbsp; 🔴 ${state.team2Name}: ${state.scores.t2}</div>`;
   show('screen-result');
+}
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
 }
 </script>
 </body>
