@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>جيم سين</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#070b18; --navy-2:#0d1428; --panel:#111a34; --panel-hi:#182347;
+  --line: rgba(255,255,255,0.09);
+  --gold:#ffb020; --gold-2:#ff8a00; --blue:#2e8bff; --blue-2:#5aa8ff;
+  --red:#ff4d5e; --white:#f5f7ff; --ink-dim:#8a91b8;
+  --font-d:'Tajawal', sans-serif; --font-b:'Almarai', sans-serif;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0; padding:0;}
+body{
+  min-height:100vh; background:var(--navy); color:var(--white);
+  font-family:var(--font-b); overflow-x:hidden; position:relative;
+}
+.bgfx{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(600px 380px at 50% -10%, rgba(255,176,32,0.16), transparent 60%),
+    radial-gradient(500px 380px at 100% 100%, rgba(46,139,255,0.16), transparent 60%),
+    radial-gradient(500px 380px at 0% 100%, rgba(255,77,94,0.10), transparent 60%);
+}
+.wrap{ position:relative; z-index:2; max-width:560px; margin:0 auto; padding:0 0 60px; min-height:100vh; }
+.hidden{ display:none !important; }
+
+/* ---------- Navbar ---------- */
+.nav{ display:flex; align-items:center; justify-content:space-between; padding:16px 18px; }
+.brand{ display:flex; align-items:center; gap:8px; font-family:var(--font-d); font-weight:900; font-size:20px;}
+.brand .g{ background:linear-gradient(95deg, var(--gold), var(--gold-2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.brand .s{ color:var(--white); }
+.navlinks{ display:flex; gap:16px; font-size:12.5px; font-weight:700; color:var(--ink-dim);}
+.navlinks a{ color:var(--ink-dim); text-decoration:none; cursor:pointer; }
+.navlinks a:hover{ color:var(--gold); }
+
+/* ---------- Hero ---------- */
+.hero{ text-align:center; padding:34px 22px 10px; }
+.hero .crown{ font-size:34px; margin-bottom:6px; }
+h1.h-title{ font-family:var(--font-d); font-weight:900; font-size:clamp(34px,10vw,46px); margin:0 0 8px; line-height:1.05;}
+h1.h-title .g{ background:linear-gradient(95deg, var(--gold), var(--gold-2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.hero p{ color:var(--ink-dim); font-size:14px; max-width:320px; margin:0 auto 22px; line-height:1.8;}
+.hero-btns{ display:flex; gap:10px; justify-content:center; margin-bottom:8px; }
+
+.btn{ padding:14px 22px; border-radius:14px; border:none; font-family:var(--font-d); font-weight:800; font-size:14.5px; cursor:pointer; }
+.btn-gold{ background:linear-gradient(95deg, var(--gold), var(--gold-2)); color:#1a0e00; box-shadow:0 10px 24px -10px rgba(255,176,32,0.6);}
+.btn-blue{ background:rgba(46,139,255,0.14); color:var(--blue-2); border:1px solid rgba(46,139,255,0.35);}
+.btn-ghost{ background:transparent; color:var(--ink-dim); border:1px solid var(--line);}
+.btn-full{ width:100%; }
+.btn-row{ display:flex; gap:10px; }
+.btn-row .btn{ flex:1; }
+.btn:disabled{ opacity:0.35; }
+
+/* ---------- Sections on home ---------- */
+.section{ padding:26px 18px 6px; }
+.section-title{ font-family:var(--font-d); font-weight:900; font-size:19px; text-align:center; margin-bottom:18px;}
+.steps{ display:flex; flex-direction:column; gap:10px; }
+.step{ display:flex; gap:12px; align-items:center; background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:14px 16px;}
+.step .num{ width:30px; height:30px; border-radius:10px; background:linear-gradient(135deg, var(--gold), var(--gold-2)); color:#1a0e00; display:flex; align-items:center; justify-content:center; font-family:var(--font-d); font-weight:900; flex:0 0 auto;}
+.step .txt{ font-size:13px; color:var(--ink-dim); }
+.step .txt b{ color:var(--white); display:block; font-size:14px; margin-bottom:2px;}
+
+.cat-preview{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+.cat-chip-mini{ background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:10px 4px; text-align:center; font-size:10.5px; color:var(--ink-dim);}
+.cat-chip-mini .ic{ font-size:18px; display:block; margin-bottom:4px;}
+
+.life-preview{ display:flex; flex-direction:column; gap:8px; }
+.life-row{ display:flex; gap:10px; align-items:center; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:10px 14px; font-size:12.5px; color:var(--ink-dim);}
+.life-row .ic{ font-size:18px; }
+.life-row b{ color:var(--white); }
+
+.foot{ text-align:center; color:var(--ink-dim); font-size:11px; padding:30px 18px 10px; }
+
+/* ---------- Generic screen card ---------- */
+.screen{ padding:20px 18px; }
+.card{ background:var(--panel); border:1px solid var(--line); border-radius:20px; padding:20px; margin-bottom:14px;}
+.step-label{ font-family:var(--font-d); font-weight:800; font-size:14px; color:var(--gold); margin:0 0 14px; display:flex; align-items:center; gap:8px;}
+.step-label .n{ width:22px; height:22px; border-radius:50%; background:var(--gold); color:#1a0e00; display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:900;}
+label.f-label{ display:block; font-size:13px; color:var(--ink-dim); margin:12px 0 6px; font-weight:700;}
+input[type=number], input[type=text]{
+  width:100%; background:var(--navy-2); border:1px solid var(--line); color:var(--white);
+  font-family:var(--font-b); font-weight:700; font-size:15px; padding:11px 13px; border-radius:10px; outline:none;
+}
+input:focus{ border-color:var(--gold); }
+.name-row{ display:flex; align-items:center; gap:8px; margin-bottom:9px;}
+.name-row .idx{ flex:0 0 24px; height:24px; border-radius:8px; background:var(--panel-hi); color:var(--gold); font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center;}
+.name-row input{ flex:1; padding:9px 11px;}
+
+/* team assignment */
+.assign-list{ display:flex; flex-direction:column; gap:8px; }
+.assign-row{ display:flex; align-items:center; justify-content:space-between; background:var(--navy-2); border:1px solid var(--line); border-radius:12px; padding:10px 12px;}
+.assign-row .pname{ font-weight:700; font-size:13.5px; }
+.assign-row .picks{ display:flex; gap:6px; }
+.tpick{ padding:6px 12px; border-radius:100px; font-size:11.5px; font-weight:800; border:1px solid var(--line); background:transparent; color:var(--ink-dim); cursor:pointer;}
+.tpick.t1.active{ background:rgba(46,139,255,0.18); color:var(--blue-2); border-color:var(--blue); }
+.tpick.t2.active{ background:rgba(255,77,94,0.18); color:var(--red); border-color:var(--red); }
+
+/* category grid */
+.cat-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:9px; }
+.cat-pick{ background:var(--navy-2); border:1px solid var(--line); border-radius:13px; padding:13px 8px; text-align:center; cursor:pointer; }
+.cat-pick .ic{ font-size:19px; display:block; margin-bottom:4px;}
+.cat-pick .nm{ font-family:var(--font-d); font-weight:800; font-size:12px; }
+.cat-pick.t1{ border-color:var(--blue); box-shadow:0 0 0 1px var(--blue) inset; }
+.cat-pick.t2{ border-color:var(--red); box-shadow:0 0 0 1px var(--red) inset; }
+.cat-pick.disabled{ opacity:0.35; pointer-events:none; }
+
+/* lifeline pick */
+.life-pick-row{ display:flex; align-items:center; justify-content:space-between; background:var(--navy-2); border:1px solid var(--line); border-radius:12px; padding:10px 14px; margin-bottom:8px;}
+.life-pick-row .lname{ font-size:13px; font-weight:700; display:flex; align-items:center; gap:8px;}
+.life-toggle{ display:flex; gap:8px;}
+.ltbtn{ padding:6px 12px; border-radius:8px; font-size:11px; font-weight:800; border:1px solid var(--line); background:transparent; color:var(--ink-dim); cursor:pointer;}
+.ltbtn.t1.active{ background:rgba(46,139,255,0.18); color:var(--blue-2); border-color:var(--blue);}
+.ltbtn.t2.active{ background:rgba(255,77,94,0.18); color:var(--red); border-color:var(--red);}
+
+/* confirm summary */
+.summary-block{ margin-bottom:14px; }
+.summary-block h4{ font-family:var(--font-d); font-size:13.5px; color:var(--gold); margin:0 0 8px;}
+.summary-block .line{ font-size:12.5px; color:var(--ink-dim); margin-bottom:3px;}
+
+/* intro / countdown */
+.intro-screen{ text-align:center; padding:80px 24px; }
+.intro-vs{ font-family:var(--font-d); font-weight:900; font-size:22px; margin:24px 0; }
+.intro-vs .t1{ color:var(--blue-2); } .intro-vs .t2{ color:var(--red); }
+.countdown-num{ font-family:var(--font-d); font-weight:900; font-size:80px; background:linear-gradient(95deg,var(--gold),var(--gold-2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+
+/* board */
+.score-bar{ display:flex; justify-content:space-between; align-items:center; padding:14px 18px; }
+.score-team{ text-align:center; flex:1; }
+.score-team .tname{ font-family:var(--font-d); font-weight:800; font-size:13px; }
+.score-team.t1 .tname{ color:var(--blue-2); } .score-team.t2 .tname{ color:var(--red); }
+.score-team .tscore{ font-family:var(--font-d); font-weight:900; font-size:26px; }
+.turn-indicator{ text-align:center; font-size:11.5px; color:var(--gold); font-weight:800; padding-bottom:8px;}
+.board-scroll{ overflow-x:auto; padding:0 12px 20px; }
+.board-grid{ display:grid; grid-auto-flow:column; grid-auto-columns:92px; gap:6px; }
+.board-col-head{ font-family:var(--font-d); font-weight:800; font-size:10.5px; text-align:center; padding:8px 2px; color:var(--gold); background:var(--panel); border-radius:10px 10px 0 0; }
+.board-cell{
+  height:52px; border-radius:10px; background:var(--panel-hi); border:1px solid var(--line);
+  display:flex; align-items:center; justify-content:center; font-family:var(--font-d); font-weight:900; font-size:15px;
+  cursor:pointer; color:var(--gold);
+}
+.board-cell.used{ background:transparent; color:var(--ink-dim); opacity:0.3; cursor:default; }
+
+/* question screen */
+.q-screen{ padding:22px 18px; }
+.q-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+.q-cat{ font-family:var(--font-d); font-weight:800; font-size:13px; color:var(--gold);}
+.q-points{ font-family:var(--font-d); font-weight:900; font-size:20px; }
+.q-team-tag{ text-align:center; font-size:12px; font-weight:800; margin-bottom:10px;}
+.q-team-tag.t1{ color:var(--blue-2);} .q-team-tag.t2{ color:var(--red);}
+.q-text{ background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:24px 18px; font-size:17px; font-weight:700; text-align:center; line-height:1.7; margin-bottom:16px;}
+.q-timer{ text-align:center; font-family:var(--font-d); font-weight:900; font-size:38px; margin-bottom:16px; }
+.q-timer.hot{ color:var(--red); }
+.q-life-row{ display:flex; gap:8px; justify-content:center; margin-bottom:16px; flex-wrap:wrap;}
+.q-life-btn{ width:44px; height:44px; border-radius:12px; background:var(--panel); border:1px solid var(--line); font-size:19px; cursor:pointer;}
+.q-life-btn:disabled{ opacity:0.25; }
+.q-answer-box{ background:rgba(255,176,32,0.08); border:1px solid rgba(255,176,32,0.3); border-radius:14px; padding:16px; text-align:center; margin-bottom:16px;}
+.q-answer-box .lbl{ font-size:11px; color:var(--ink-dim); margin-bottom:4px;}
+.q-answer-box .ans{ font-family:var(--font-d); font-weight:900; font-size:18px; color:var(--gold);}
+.judge-btns{ display:flex; gap:10px; }
+.judge-btns .btn{ flex:1; }
+.btn-correct{ background:linear-gradient(95deg,#3ad2a0,#22a87e); color:#052018;}
+.btn-wrong{ background:linear-gradient(95deg,var(--red),#c92c3c); color:#fff;}
+.note-badge{ display:inline-block; background:rgba(255,176,32,0.12); color:var(--gold); font-size:11px; font-weight:800; padding:5px 12px; border-radius:100px; margin-bottom:10px;}
+
+/* result */
+.result-screen{ text-align:center; padding:60px 24px; }
+.result-screen .trophy{ font-size:54px; margin-bottom:10px; }
+.result-screen .winner{ font-family:var(--font-d); font-weight:900; font-size:26px; margin-bottom:6px;}
+.result-scores{ font-family:var(--font-d); font-weight:800; font-size:15px; color:var(--ink-dim); margin-bottom:26px;}
+
+@media (max-width:360px){ h1.h-title{ font-size:32px; } }
+</style>
+</head>
+<body>
+<div class="bgfx"></div>
+<div class="wrap">
+
+<!-- ============ HOME ============ -->
+<div id="screen-home">
+  <nav class="nav">
+    <span class="brand"><span class="g">جيم</span><span class="s">سين</span></span>
+    <div class="navlinks"><a onclick="scrollToId('sec-howto')">كيف تلعب؟</a><a onclick="scrollToId('sec-cats')">الفئات</a></div>
+  </nav>
+
+  <div class="hero">
+    <div class="crown">👑</div>
+    <h1 class="h-title">جاهز <span class="g">للتحدي؟</span></h1>
+    <p>اختبر معلوماتك وتحدَّ أصدقاءك — كوّن فريقك، اختر فئاتك، استخدم وسائل المساعدة، واجمع أكبر عدد من النقاط!</p>
+    <div class="hero-btns">
+      <button class="btn btn-gold" onclick="startWizard()">🎮 ابدأ لعبة</button>
+    </div>
+  </div>
+
+  <div class="section" id="sec-howto">
+    <div class="section-title">كيف تبدأ التحدي؟</div>
+    <div class="steps">
+      <div class="step"><span class="num">١</span><span class="txt"><b>كوّن فريقك</b>أضف اللاعبين وقسّمهم إلى فريقين</span></div>
+      <div class="step"><span class="num">٢</span><span class="txt"><b>اختر الفئات</b>كل فريق يختار فئاته</span></div>
+      <div class="step"><span class="num">٣</span><span class="txt"><b>أجب واستخدم المساعدات</b>أجب عن الأسئلة واستعمل أدواتك بالوقت المناسب</span></div>
+      <div class="step"><span class="num">٤</span><span class="txt"><b>اجمع النقاط</b>الفريق الذي ينهي المباراة بأكبر عدد من النقاط يفوز</span></div>
+    </div>
+  </div>
+
+  <div class="section" id="sec-cats">
+    <div class="section-title">الفئات</div>
+    <div class="cat-preview" id="homeCatPreview"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">وسائل المساعدة</div>
+    <div class="life-preview">
+      <div class="life-row"><span class="ic">☎️</span><span><b>اتصال بصديق</b> — استعن بشخص لمساعدتك (٣٠ ثانية)</span></div>
+      <div class="life-row"><span class="ic">✌️</span><span><b>إجابتان</b> — امنح نفسك فرصة بإجابتين</span></div>
+      <div class="life-row"><span class="ic">🪤</span><span><b>الفخ</b> — حوّل السؤال إلى الفريق المنافس</span></div>
+      <div class="life-row"><span class="ic">😴</span><span><b>استراحة</b> — امنع لاعبًا من الفريق المنافس من المشاركة</span></div>
+      <div class="life-row"><span class="ic">🕳️</span><span><b>الحفرة</b> — فعّلها قبل السؤال لتأثير أقوى عند الإجابة الصحيحة</span></div>
+    </div>
+  </div>
+
+  <div class="foot">جيم سين — منصة مسابقات جماعية تشتغل بدون إنترنت</div>
+</div>
+
+<!-- ============ WIZARD: PLAYERS ============ -->
+<div id="screen-players" class="screen hidden">
+  <div class="card">
+    <p class="step-label"><span class="n">١</span> من سيلعب؟</p>
+    <label class="f-label">عدد اللاعبين (٤ - ١٢)</label>
+    <input type="number" id="playerCount" value="6" min="4" max="12">
+    <div style="margin-top:16px;"><button class="btn btn-gold btn-full" onclick="goToNames()">التالي</button></div>
+  </div>
+</div>
+
+<div id="screen-names" class="screen hidden">
+  <div class="card">
+    <p class="step-label"><span class="n">٢</span> أسماء اللاعبين</p>
+    <div id="namesList"></div>
+    <div class="btn-row" style="margin-top:12px;">
+      <button class="btn btn-ghost" onclick="show('screen-players')">رجوع</button>
+      <button class="btn btn-gold" onclick="goToTeams()">التالي</button>
+    </div>
+  </div>
+</div>
+
+<div id="screen-teams" class="screen hidden">
+  <div class="card">
+    <p class="step-label"><span class="n">٣</span> وزّع الفرق</p>
+    <label class="f-label">اسم الفريق الأول 🔵</label>
+    <input type="text" id="team1Name" value="الصقور">
+    <label class="f-label">اسم الفريق الثاني 🔴</label>
+    <input type="text" id="team2Name" value="النسور">
+    <label class="f-label">حدد فريق كل لاعب</label>
+    <div class="assign-list" id="assignList"></div>
+    <div class="btn-row" style="margin-top:14px;">
+      <button class="btn btn-ghost" onclick="show('screen-names')">رجوع</button>
+      <button class="btn btn-gold" id="teamsNextBtn" onclick="goToCategories()">التالي</button>
+    </div>
+  </div>
+</div>
+
+<div id="screen-categories" class="screen hidden">
+  <div class="card">
+    <p class="step-label"><span class="n">٤</span> اختيار الفئات</p>
+    <div class="note-badge" id="catTurnNote">دور <span id="catTurnTeam"></span> — اختر ٣ فئات</div>
+    <div class="cat-grid" id="catGrid"></div>
+    <div class="btn-row" style="margin-top:14px;">
+      <button class="btn btn-ghost" onclick="show('screen-teams')">رجوع</button>
+      <button class="btn btn-gold" id="catsNextBtn" onclick="goToLifelines()" disabled>التالي</button>
+    </div>
+  </div>
+</div>
+
+<div id="screen-lifelines" class="screen hidden">
+  <div class="card">
+    <p class="step-label"><span class="n">٥</span> اختيار وسائل المساعدة</p>
+    <div class="note-badge">كل فريق يختار ٣ من ٥</div>
+    <div id="lifeGrid"></div>
+    <div class="btn-row" style="margin-top:14px;">
+      <button class="btn btn-ghost" onclick="show('screen-categories')">رجوع</button>
+      <button class="btn btn-gold" id="lifeNextBtn" onclick="goToConfirm()" disabled>التالي</button>
+    </div>
+  </div>
+</div>
+
+<div id="screen-confirm" class="screen hidden">
+  <div class="card">
+    <p class="step-label">🏆 مباراة جديدة</p>
+    <div id="confirmBody"></div>
+    <button class="btn btn-gold btn-full" style="margin-top:16px;" onclick="startIntro()">🔥 ابدأ المباراة</button>
+  </div>
+</div>
+
+<!-- ============ INTRO ============ -->
+<div id="screen-intro" class="intro-screen hidden">
+  <div style="font-family:var(--font-d);font-weight:900;font-size:22px;color:var(--gold);">🔥 استعدوا!</div>
+  <div class="intro-vs"><span class="t1" id="introT1"></span> <span style="color:var(--ink-dim);">VS</span> <span class="t2" id="introT2"></span></div>
+  <div class="countdown-num" id="countdownNum">3</div>
+</div>
+
+<!-- ============ BOARD ============ -->
+<div id="screen-board" class="hidden">
+  <div class="score-bar">
+    <div class="score-team t1"><div class="tname" id="boardT1Name"></div><div class="tscore" id="boardT1Score">0</div></div>
+    <div class="score-team t2"><div class="tname" id="boardT2Name"></div><div class="tscore" id="boardT2Score">0</div></div>
+  </div>
+  <div class="turn-indicator">دور اختيار السؤال: <span id="turnLabel"></span></div>
+  <div class="board-scroll"><div class="board-grid" id="boardGrid"></div></div>
+</div>
+
+<!-- ============ QUESTION ============ -->
+<div id="screen-question" class="q-screen hidden">
+  <div class="q-top">
+    <span class="q-cat" id="qCat"></span>
+    <span class="q-points" id="qPoints"></span>
+  </div>
+  <div class="q-team-tag" id="qTeamTag"></div>
+  <div id="qLifelineNote"></div>
+  <div class="q-text" id="qText"></div>
+  <div class="q-timer" id="qTimer">00:00</div>
+  <div class="btn-row" style="margin-bottom:14px;">
+    <button class="btn btn-ghost" onclick="toggleTimer()" id="timerBtn">▶️ تشغيل المؤقت</button>
+  </div>
+  <div class="q-life-row" id="qLifeRow"></div>
+  <div id="qAnswerWrap"></div>
+  <div class="btn-row">
+    <button class="btn btn-ghost btn-full" onclick="backToBoard(false)">تخطي السؤال</button>
+  </div>
+</div>
+
+<!-- ============ RESULT ============ -->
+<div id="screen-result" class="result-screen hidden">
+  <div class="trophy">🏆</div>
+  <div id="resultBody"></div>
+  <div class="btn-row" style="margin-top:10px;">
+    <button class="btn btn-ghost" onclick="location.reload()">🏠 الرئيسية</button>
+    <button class="btn btn-gold" onclick="location.reload()">🔄 مباراة جديدة</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+/* ================= QUESTION BANK ================= */
+const CATS = {
+general:{name:'معلومات عامة',icon:'🧠',pool:{100:[["كم عدد أيام الأسبوع؟","سبعة"],["ما هو أكبر محيط في العالم؟","المحيط الهادئ"],["ما هو أصغر كوكب في المجموعة الشمسية؟","عطارد"],["كم عدد قارات العالم؟","سبع"],["ما هي عاصمة فرنسا؟","باريس"],["كم عدد ألوان قوس قزح؟","سبعة"],["ما هو أطول نهر في العالم؟","النيل"],["كم عدد أرجل النملة؟","ستة"],["ما هي أكبر دولة في العالم من حيث المساحة؟","روسيا"],["كم عدد فصول السنة؟","أربعة"]],300:[["ما هي أصغر دولة في العالم؟","الفاتيكان"],["من مخترع المصباح الكهربائي؟","توماس إديسون"],["ما هي عاصمة أستراليا؟","كانبرا"],["كم عدد عظام جسم الإنسان البالغ؟","206"],["ما هو أطول جبل في العالم من القاعدة للقمة؟","ماونا كيا"],["ما هي أكبر جزيرة في العالم؟","جرينلاند"],["كم عدد أسنان الإنسان البالغ؟","32"],["ما هي اللغة الأكثر انتشارًا كلغة أم؟","الصينية الماندرين"],["ما هو أعمق محيط في العالم؟","المحيط الهادئ"],["ما اسم أصغر عظمة في جسم الإنسان؟","عظمة الركاب بالأذن"]],500:[["ما هي الدولة التي تقع في قارتين؟","تركيا"],["كم عدد العضلات في جسم الإنسان تقريبًا؟","حوالي 600 عضلة"],["ما اسم أول قمر صناعي أُطلق للفضاء؟","سبوتنيك 1"],["ما هي أطول سلسلة جبال في العالم؟","الأنديز"],["كم عدد عظام الجمجمة البشرية؟","22 عظمة"],["ما هي أسرع حيوان بري؟","الفهد الصياد"],["ما اسم أكبر صحراء حارة في العالم؟","الصحراء الكبرى"],["من مؤلف نظرية النسبية؟","ألبرت أينشتاين"],["ما هي أعلى قمة جبلية في أفريقيا؟","جبل كليمنجارو"],["كم يستغرق ضوء الشمس للوصول للأرض؟","حوالي 8 دقائق"]]}},
+sports:{name:'رياضة',icon:'⚽',pool:{100:[["كم عدد لاعبي فريق كرة القدم داخل الملعب؟","11"],["في أي رياضة تُستخدم كلمة Checkmate؟","الشطرنج"],["كم عدد أشواط مباراة الملاكمة الاحترافية بحد أقصى؟","12"],["ما الرياضة المعروفة بالرياضة الملكية؟","الفروسية"],["كم عدد الحلقات في العلم الأولمبي؟","خمسة"],["أي دولة استضافت أول كأس عالم لكرة القدم؟","الأوروغواي"],["كرة الغولف كبيرة أم صغيرة؟","صغيرة"],["كم عدد لاعبي كرة السلة داخل الملعب؟","خمسة"],["ما اسم الرياضة التي تُلعب بمضرب وريشة؟","الريشة الطائرة"],["كم شوطًا يحتاج الفوز بمباراة تنس عادة؟","أفضل من 3 مجموعات"]],300:[["من الفريق الأكثر تتويجًا بكأس العالم؟","البرازيل"],["متى أقيمت أول دورة أولمبية حديثة؟","1896"],["ما اسم ملعب ريال مدريد؟","سانتياغو برنابيو"],["كم طول ملعب كرة القدم القياسي تقريبًا؟","حوالي 105 متر"],["من الملاكم الملقب بالأسطورة الأعظم؟","محمد علي كلاي"],["أي دولة استضافت كأس العالم 2022؟","قطر"],["كم عدد لاعبي الكرة الطائرة الأساسيين؟","ستة"],["ما اسم بطولة أوروبا لكرة القدم للمنتخبات؟","يورو"],["من الحائز على أكبر عدد من الكرات الذهبية؟","ليونيل ميسي"],["ما الدولة الأصلية لرياضة الجودو؟","اليابان"]],500:[["متى فازت ألمانيا الغربية بأول كأس عالم؟","1954"],["من أول لاعب يسجل هاتريك بنهائي كأس عالم؟","جيوف هيرست"],["ما أقدم بطولة كرة قدم محلية لا تزال تقام؟","كأس الاتحاد الإنجليزي"],["كم استغرقت أطول مباراة تنس فردية تقريبًا؟","أكثر من 11 ساعة"],["ما الدولة الوحيدة المشاركة بكل نسخ كأس العالم؟","البرازيل"],["كم أقصى عدد بدلاء يمكن إشراكهم بمباراة حديثة؟","خمسة"],["من فاز بأول نسخة من دوري أبطال أوروبا؟","ريال مدريد"],["ما اسم رياضة الخماسي الأولمبي المكوّن من خمس مهارات؟","الخماسي الحديث"],["أي مدينة استضافت أولمبياد 1936؟","برلين"],["كم مدة الشوط الواحد بمباراة كرة قدم قياسية؟","45 دقيقة"]]}},
+history:{name:'تاريخ',icon:'📜',pool:{100:[["من أول رئيس للولايات المتحدة؟","جورج واشنطن"],["متى انتهت الحرب العالمية الثانية؟","1945"],["من بدأ بناء سور الصين العظيم؟","الإمبراطور تشين"],["ما اسم السفينة التي غرقت عام 1912؟","تيتانيك"],["من مكتشف قارة أمريكا؟","كريستوفر كولومبوس"],["متى سقط جدار برلين؟","1989"],["من القائد الذي فتح الأندلس؟","طارق بن زياد"],["من بنى الأهرامات في مصر؟","المصريون القدماء"],["في أي قرن عاش صلاح الدين الأيوبي؟","القرن الثاني عشر"],["من مؤسس الدولة الأموية؟","معاوية بن أبي سفيان"]],300:[["متى بدأت الحرب العالمية الأولى؟","1914"],["من انتصر في معركة حطين؟","صلاح الدين الأيوبي"],["ما اسم معاهدة إنهاء الحرب العالمية الأولى؟","معاهدة فرساي"],["متى فُتحت القسطنطينية على يد العثمانيين؟","1453"],["من فتح القسطنطينية؟","محمد الفاتح"],["متى أُعلن استقلال الأردن؟","1946"],["من الخليفة الراشدي الأول؟","أبو بكر الصديق"],["ما اسم معركة هزم فيها المسلمون الفرس بشكل كبير؟","معركة القادسية"],["متى وقعت الثورة الفرنسية؟","1789"],["من هزم نابليون بمعركة واترلو؟","دوق ويلينغتون"]],500:[["متى وُقّع ميثاق ماغنا كارتا؟","1215"],["ما أول جامعة لا تزال تعمل حتى اليوم، بالمغرب؟","جامعة القرويين"],["متى سقطت بغداد على يد المغول؟","1258"],["من القائد المغولي الذي دمر بغداد؟","هولاكو خان"],["متى وقعت معركة عين جالوت؟","1260"],["من قاد المماليك في عين جالوت؟","سيف الدين قطز"],["متى بدأت الثورة العربية الكبرى؟","1916"],["من قاد الثورة العربية الكبرى؟","الشريف حسين بن علي"],["متى تأسست جامعة الدول العربية؟","1945"],["ما اسم اتفاقية تقسيم الشرق الأوسط بين بريطانيا وفرنسا؟","اتفاقية سايكس بيكو"]]}},
+geography:{name:'جغرافيا',icon:'🌍',pool:{100:[["ما عاصمة الأردن؟","عمّان"],["ما أكبر قارة من حيث المساحة؟","آسيا"],["ما أطول نهر في أفريقيا؟","النيل"],["ما عاصمة مصر؟","القاهرة"],["ما البحر بين الأردن وفلسطين المشهور بملوحته؟","البحر الميت"],["ما عاصمة السعودية؟","الرياض"],["كم عدد الدول العربية تقريبًا؟","22"],["ما أكبر محيط في العالم؟","المحيط الهادئ"],["ما عاصمة تركيا؟","أنقرة"],["ما اسم الصحراء الكبرى في شمال أفريقيا؟","الصحراء الكبرى"]],300:[["ما أطول سلسلة جبلية فوق سطح الماء؟","جبال الأنديز"],["ما النهران اللذان يشكلان شط العرب بالعراق؟","دجلة والفرات"],["ما أصغر قارة من حيث المساحة؟","أستراليا"],["ما أعلى قمة جبلية بالعالم؟","إفرست"],["ما الدولة صاحبة أكبر عدد جزر بالعالم؟","إندونيسيا"],["ما اسم المضيق الفاصل بين آسيا وأوروبا بتركيا؟","مضيق البوسفور"],["ما عاصمة اليابان؟","طوكيو"],["ما أكبر بحيرة عذبة بالعالم؟","بحيرة سوبيريور"],["ما الدولة الأفريقية التي سُميت قريبًا من خط الاستواء؟","كينيا"],["ما اسم القارة القطبية الجنوبية المتجمدة؟","أنتاركتيكا"]],500:[["ما أعمق نقطة معروفة بالمحيطات؟","خندق ماريانا"],["ما أكبر دولة حبيسة بلا سواحل؟","كازاخستان"],["أين تقع أكبر غابة استوائية مطيرة بالعالم أساسًا؟","البرازيل"],["ما أعلى شلال بالعالم؟","شلالات أنجل بفنزويلا"],["ما أكبر دولة عربية من حيث المساحة؟","الجزائر"],["ما أعمق بحيرة بالعالم، بروسيا؟","بحيرة بايكال"],["ما الدولة صاحبة أكبر عدد أهرامات بالعالم؟","السودان"],["ما اسم المضيق الفاصل بين آسيا وأمريكا الشمالية؟","مضيق بيرينغ"],["ما أصغر دولة عربية من حيث المساحة؟","البحرين"],["ما أطول سلسلة جبلية بأفريقيا؟","جبال أطلس"]]}},
+science:{name:'علوم',icon:'🔬',pool:{100:[["ما الرمز الكيميائي للماء؟","H2O"],["كم عدد كواكب المجموعة الشمسية؟","ثمانية"],["ما الغاز الذي يتنفسه الإنسان؟","الأكسجين"],["ما أقرب كوكب للشمس؟","عطارد"],["كم عدد حواس الإنسان الأساسية؟","خمسة"],["ما العضو المسؤول عن ضخ الدم؟","القلب"],["ما وحدة قياس القوة؟","نيوتن"],["ما عملية تحويل النبات ضوء الشمس لغذاء؟","التمثيل الضوئي"],["كم عدد أرجل العنكبوت؟","ثمانية"],["ما أكبر عضو بجسم الإنسان؟","الجلد"]],300:[["من واضع قوانين الحركة الثلاثة؟","إسحاق نيوتن"],["ما الغاز الذي تنتجه النباتات بالتمثيل الضوئي؟","الأكسجين"],["ما أصغر وحدة بناء بالكائن الحي؟","الخلية"],["ما الكوكب المعروف بالكوكب الأحمر؟","المريخ"],["ما القوة التي تجذب الأجسام نحو الأرض؟","الجاذبية"],["من مكتشف الجاذبية بقصة التفاحة؟","إسحاق نيوتن"],["ما رمز عنصر الحديد الكيميائي؟","Fe"],["كم عدد الكروموسومات بالخلية البشرية؟","46"],["ما الطبقة الجوية التي تحمي الأرض من الأشعة فوق البنفسجية؟","طبقة الأوزون"],["كم عدد عظام يد الإنسان الواحدة؟","27"]],500:[["من مكتشف البنسلين؟","ألكسندر فلمنغ"],["كم سرعة الضوء تقريبًا بالكيلومتر بالثانية؟","حوالي 300 ألف كم"],["ما الجسيم السالب الشحنة بالذرة؟","الإلكترون"],["من صاحب نظرية التطور بالانتقاء الطبيعي؟","تشارلز داروين"],["ما العنصر الأكثر وفرة بالكون؟","الهيدروجين"],["من العالم المسلم الرائد بعلم البصريات؟","ابن الهيثم"],["كم عدد عظام الإنسان عند الولادة تقريبًا؟","حوالي 270"],["ما الجزيء الحامل للمعلومات الوراثية؟","الحمض النووي DNA"],["من العالم المسلم مؤسس علم الجبر؟","الخوارزمي"],["ما أصغر جسيم لا يمكن تقسيمه كيميائيًا؟","الذرة"]]}},
+food:{name:'أكل وطبخ',icon:'🍽️',pool:{100:[["من أي حبوب يُصنع الخبز عادة؟","القمح"],["ما المكون الأساسي بصناعة الجبن؟","الحليب"],["ما الطبق الأردني المصنوع من اللحم والأرز واللبن؟","المنسف"],["ما لون الموز الناضج؟","أصفر"],["من أي فاكهة يُصنع عصير الليمون؟","الليمون"],["ما اسم التوابل الحمراء الحارة الشهيرة؟","الفلفل الحار"],["ما المشروب المصنوع من حبوب محمصة يُشرب ساخنًا؟","القهوة"],["ما الحلوى المصنوعة من العجين والجبن والقطر؟","الكنافة"],["من أي حيوان نحصل على العسل؟","النحل"],["ما اسم الوجبة المصنوعة من خبز محشو بلحم مشوي؟","الشاورما"]],300:[["ما التوابل الصفراء المستخدمة بالأطباق الهندية؟","الكركم"],["ما المكون الرئيسي بصناعة الزبدة؟","القشدة من الحليب"],["ما الطبق الإيطالي بعجين رقيق وصلصة طماطم وجبن؟","البيتزا"],["من أي نبات يُستخرج السكر أساسًا؟","قصب السكر"],["ما التوابل السوداء الحارة المطحونة من حبوب صغيرة؟","الفلفل الأسود"],["ما الطبق الياباني من الأرز والأسماك النيئة؟","السوشي"],["ما اسم خبز عربي رقيق يُستخدم للف الطعام؟","خبز الصاج"],["من أي نبات يُصنع زيت المطبخ العربي المتوسطي؟","الزيتون"],["ما الحلوى المصنوعة بدقيق وتمر وتشتهر بها المناسبات؟","المعمول"],["ما أصل كلمة قهوة لغويًا؟","كلمة عربية"]],500:[["ما البهار المستخرج من زهرة الزعفران؟","الزعفران"],["ما الدولة التي يُنسب لها أصل طبق الباييلا؟","إسبانيا"],["ما الفطر المستخدم لتخمير عجين الخبز؟","الخميرة"],["ما الطبق الفرنسي المصنوع من عجين محشو نصف دائري؟","الكرواسون"],["ما الدولة الأصلية لنبات الطماطم؟","أمريكا الجنوبية"],["ما اسم عملية تحويل الحليب للبن رائب؟","التخمير"],["ما التابل الأغلى وزنًا مقارنة بالذهب أحيانًا؟","الزعفران"],["من أي حبوب تُصنع الشوكولاتة؟","حبوب الكاكاو"],["ما الحلوى الشامية المصنوعة من السمسم؟","الحلاوة الطحينية"],["ما اسم الخبز المسطح المستخدم بالمطبخ الهندي عادة؟","النان"]]}},
+islamic:{name:'إسلاميات',icon:'🕌',pool:{100:[["كم عدد أركان الإسلام؟","خمسة"],["ما الشهر الذي يصوم فيه المسلمون؟","رمضان"],["كم عدد الصلوات المفروضة باليوم؟","خمس صلوات"],["ما القبلة التي يتجه إليها المسلمون بالصلاة؟","الكعبة المشرفة"],["ما الكتاب المقدس عند المسلمين؟","القرآن الكريم"],["ما اسم ركن زيارة بيت الله الحرام؟","الحج"],["كم عدد أركان الإيمان؟","ستة"],["ما أول سورة نزلت بالقرآن؟","سورة العلق"],["أين وُلد النبي محمد ﷺ؟","مكة المكرمة"],["ما اسم الزكاة المفروضة على الأموال؟","الزكاة"]],300:[["كم عدد سور القرآن الكريم؟","114"],["ما أطول سورة بالقرآن الكريم؟","سورة البقرة"],["ما السورة التي تُعادل ثلث القرآن؟","سورة الإخلاص"],["في أي شهر هجري وقعت غزوة بدر؟","رمضان"],["ما اسم رحلة النبي ﷺ الليلية من مكة للأقصى؟","الإسراء"],["إلى أي مدينة هاجر النبي ﷺ؟","المدينة المنورة"],["كم عدد أشهر السنة الهجرية؟","اثنا عشر"],["ما أقصر سورة بالقرآن الكريم؟","سورة الكوثر"],["في أي شهر هجري يقع الحج؟","ذو الحجة"],["ما اسم غزوة حُفر فيها خندق حول المدينة؟","غزوة الخندق"]],500:[["ما السورة التي لا تبدأ بالبسملة؟","سورة التوبة"],["كم عدد آيات سورة البقرة؟","286"],["من أول من أذّن بالإسلام؟","بلال بن رباح"],["ما اسم السنة التي هاجر فيها النبي ﷺ ويُبدأ منها التقويم الهجري؟","622 ميلادية"],["من جمع القرآن بمصحف واحد بعهد أبي بكر؟","زيد بن ثابت"],["في عهد أي خليفة تم توحيد المصاحف؟","عثمان بن عفان"],["في أي سنة هجرية وقع فتح مكة؟","السنة الثامنة"],["هل السور المكية أكثر عددًا أم المدنية؟","المكية أكثر"],["ما أول مسجد بُني بالإسلام؟","مسجد قباء"],["ما اسم ابن نوح الذي غرق ولم يركب السفينة؟","كنعان"]]}},
+tech:{name:'تكنولوجيا',icon:'💻',pool:{100:[["ما الشركة المصنعة لهاتف آيفون؟","آبل"],["ما اسم شبكة الإنترنت اللاسلكية اختصارًا؟","واي فاي"],["ما نظام تشغيل أغلب هواتف سامسونج؟","أندرويد"],["ما اسم موقع مشاركة الفيديوهات المملوك لجوجل؟","يوتيوب"],["ما اسم جهاز طباعة المستندات الورقية؟","الطابعة"],["ما الرمز الفاصل باسم البريد الإلكتروني والنطاق؟","@"],["ما شركة السيارات الكهربائية التي أسسها إيلون ماسك؟","تسلا"],["ما اسم جهاز تخزين الملفات يوصل بمنفذ USB؟","فلاش ميموري"],["ما متصفح الإنترنت التابع لجوجل؟","جوجل كروم"],["ما الاختصار الشائع للحاسوب المحمول؟","لابتوب"]],300:[["من مؤسس شركة مايكروسوفت؟","بيل غيتس"],["ما الشركة المطورة لأشهر محرك بحث بالعالم؟","جوجل"],["متى تأسست شركة فيسبوك؟","2004"],["ما تطبيق التواصل المعروف بمقاطع فيديو قصيرة برمز نغمة؟","تيك توك"],["من مؤسس شركة أبل؟","ستيف جوبز"],["ما لغة البرمجة المعروفة بشعار قهوة؟","جافا"],["ما الاختصار الشائع للذكاء الاصطناعي؟","AI"],["ما اسم تطبيق الدردشة الذي استحوذت عليه فيسبوك؟","واتساب"],["ما الاسم الشائع لاختراق الأنظمة غير القانوني؟","القرصنة"],["ما أول متصفح إنترنت واسع الانتشار بالتسعينيات؟","نتسكيب"]],500:[["من مخترع الشبكة العنكبوتية العالمية؟","تيم بيرنرز لي"],["ما اسم أول حاسوب إلكتروني رقمي بالتاريخ؟","إنياك"],["ما الاختصار الكامل لكلمة CPU؟","وحدة المعالجة المركزية"],["من مؤسس شركة أمازون؟","جيف بيزوس"],["من مبتكر نظام التشغيل لينكس؟","لينوس تورفالدس"],["متى أُطلق أول هاتف آيفون؟","2007"],["ما بروتوكول نقل النص التشعبي بتصفح الويب؟","HTTP"],["من مؤسس شركتي تسلا وسبيس إكس؟","إيلون ماسك"],["ما لغة تصميم هيكل صفحات الويب؟","HTML"],["ما اسم شركة الذكاء الاصطناعي المطورة لـ ChatGPT؟","OpenAI"]]}},
+games:{name:'ألعاب فيديو',icon:'🎮',pool:{100:[["ما اسم شخصية ماريو بألعاب نينتندو؟","ماريو"],["ما اللعبة المعتمدة على البناء من مكعبات؟","ماينكرافت"],["ما شركة صناعة أجهزة بلايستيشن؟","سوني"],["اختصار PUBG يعني ماذا؟","PlayerUnknown's Battlegrounds"],["ما شركة صناعة إكس بوكس؟","مايكروسوفت"],["ما لعبة البقاء المشهورة برقصاتها وبناء القلاع؟","فورتنايت"],["ما شركة صناعة نينتندو سويتش؟","نينتندو"],["ما اللعبة الرياضية لكرة القدم من شركة EA؟","فيفا"],["ما لعبة الطيور التي تُقذف لتدمير الحواجز؟","أنجري بيردز"],["ما اسم الشخصية الزرقاء السريعة بألعاب سيجا؟","سونيك"]],300:[["متى صدرت أول لعبة ماينكرافت؟","2011"],["ما لعبة العالم المفتوح للجريمة من شركة روكستار؟","GTA"],["ما الشركة المطورة للعبة فورتنايت؟","إيبك جيمز"],["اختصار PUBG يشير لأي لعبة بقاء؟","ببجي"],["ما لعبة إدارة المدن الشهيرة القديمة؟","سيم سيتي"],["ما لعبة الأدوار المبنية على روايات بولندية؟","ذا ويتشر"],["ما الشركة المطورة للعبة League of Legends؟","رايوت جيمز"],["ما أول جهاز ألعاب منزلي ناجح تجاريًا؟","أتاري"],["ما نوع لعبة Call of Duty الأساسي؟","إطلاق نار"],["ما الشركة الأم المالكة لاستوديو Blizzard؟","أكتيفيجن بليزارد"]],500:[["من الملقب بأبو ماريو مصمم اللعبة بنينتندو؟","شيغيرو مياموتو"],["ما أول لعبة فيديو تجارية بالتاريخ؟","بونج"],["متى تأسست شركة نينتندو أصلًا كشركة بطاقات؟","1889"],["ما أعلى لعبة مبيعات منفردة بالتاريخ؟","ماينكرافت"],["ما أول لعبة بسلسلة The Legend of Zelda؟","زلدا 1986"],["من مطور لعبة ماينكرافت الأصلي؟","ماركوس بيرسون"],["ما أول جهاز محمول ناجح من نينتندو؟","غيم بوي"],["ما الشركة اليابانية المطورة لسلسلة Final Fantasy؟","سكوير إنيكس"],["متى صدرت أول نسخة من لعبة FIFA؟","1993"],["ما أول لعبة استخدمت رسوميات ثلاثية الأبعاد بنجاح واسع؟","سوبر ماريو 64"]]}},
+cars:{name:'سيارات',icon:'🚗',pool:{100:[["ما الشركة المصنعة لسيارات كامري وكورولا؟","تويوتا"],["ما لون إشارة المرور الذي يعني قف؟","الأحمر"],["ما الجزء المستخدم للتحكم باتجاه السيارة؟","المقود"],["ما الشركة الألمانية برمز نجمة ثلاثية؟","مرسيدس بنز"],["ما الوقود الأكثر شيوعًا للسيارات التقليدية؟","البنزين"],["ما الجزء المسؤول عن إيقاف السيارة؟","الفرامل"],["ما الشركة الأمريكية المصنعة لسيارة موستنج؟","فورد"],["كم عدد عجلات السيارة العادية؟","أربعة"],["ما الشركة الكورية المصنعة لسيارات سوناتا؟","هيونداي"],["ما الجزء الذي يقيس سرعة السيارة؟","عداد السرعة"]],300:[["ما الشركة اليابانية المصنعة لسيارة GT-R؟","نيسان"],["ما الشركة الإيطالية بحصان أسود وسيارات رياضية حمراء؟","فيراري"],["ما أول سيارة أُنتجت بكميات كبيرة على خط تجميع؟","فورد موديل تي"],["ما الشركة الألمانية برمز أربع دوائر متشابكة؟","أودي"],["ما الشركة السويدية المعروفة بالتركيز على السلامة؟","فولفو"],["ما شركة السيارات الكهربائية التي أسسها إيلون ماسك؟","تسلا"],["ما الشركة اليابانية المصنعة لسيارتي سيفيك وأكورد؟","هوندا"],["ما نوع الوقود المستخدم بمحركات الديزل؟","السولار"],["ما الشركة البريطانية الفاخرة الملكية؟","رولز رويس"],["ما الشركة الألمانية صاحبة شعار M الرياضي؟","بي إم دبليو"]],500:[["من مخترع أول سيارة بمحرك احتراق داخلي عملي؟","كارل بنز"],["متى صُنعت أول سيارة فورد موديل تي؟","1908"],["ما رمز شركة بيجو الفرنسية الحيواني؟","الأسد"],["ما الشركة الألمانية العريقة بشعار الحصان الأسود القافز؟","بورشه"],["ما الدولة الأصلية لشركة لامبورغيني؟","إيطاليا"],["من مؤسس شركة تويوتا؟","ساكيتشي تويودا"],["ما الشركة الأولى بإنتاج سيارة هجينة ناجحة باسم بريوس؟","تويوتا"],["ما الشركة الكورية المصنعة لسيارة K5 المرتبطة بهيونداي؟","كيا"],["أي عقد بدأت السيارات الكهربائية الحديثة تنتشر تجاريًا؟","العقد الثاني من الألفية"],["ما أقدم شركة سيارات يابانية تأسست؟","ميتسوبيشي"]]}},
+animals:{name:'حيوانات وطبيعة',icon:'🐾',pool:{100:[["ما لقب الأسد الشائع؟","ملك الغابة"],["ما أطول حيوان بري بالعالم؟","الزرافة"],["ما الحيوان الأقرب للإنسان تطوريًا؟","الشمبانزي"],["ما الحيوان الذي يغيّر لون جلده للتمويه؟","الحرباء"],["ما أكبر حيوان ثديي بالعالم؟","الحوت الأزرق"],["ما أكبر طائر حي لا يطير؟","النعامة"],["ما أسرع حيوان بري بالعالم؟","الفهد الصياد"],["ما الحيوان الذي يحمل صغاره بجراب على بطنه؟","الكنغر"],["كم يمكن للجمل البقاء بدون ماء تقريبًا؟","عدة أيام"],["ما أكبر قط بري بالعالم؟","النمر"]],300:[["كم عدد قلوب الأخطبوط؟","ثلاثة"],["ما الحيوان الوحيد الذي لا يستطيع القفز رغم أربع أرجل؟","الفيل"],["أي حيوان ينام لأطول فترة يوميًا بين الثدييات؟","الكوالا"],["ما الحشرة التي تحمل أضعاف وزنها عدة مرات؟","النملة"],["كم تستغرق مدة حمل الفيلة تقريبًا؟","حوالي 22 شهرًا"],["ما الحيوان البحري الأذكى بين الحيوانات البحرية؟","الدولفين"],["ما الحيوان الذي يتنفس عبر جلده والرئتين؟","الضفدع"],["ما أسرع طائر بالعالم أثناء الانقضاض؟","الصقر الشاهين"],["أين يعيش الباندا العملاق بيئته الطبيعية؟","الصين"],["ما الحيوان المعروف بتجديد أطرافه المقطوعة؟","نجم البحر"]],500:[["ما أكبر سمكة بالعالم؟","قرش الحوت"],["أي حيوان دمه لونه أزرق؟","سرطان حدوة الحصان"],["ما الحيوان الذي يستطيع الصيام لأطول مدة بين الثدييات الكبيرة؟","الدب القطبي"],["كم تعيش السلحفاة العملاقة تقريبًا؟","أكثر من مئة عام"],["ما الحيوان صاحب أقوى عضة بين الثدييات البرية؟","التمساح"],["ما الطائر صاحب أطول رحلة هجرة سنوية؟","الخرشنة القطبية"],["ما أكبر زواحف مفترسة تعيش اليوم؟","التمساح المالح"],["أي حيوان يمتلك أكبر عين بين الكائنات الحية؟","الحبار العملاق"],["ما اسم النبات آكل الحشرات الذي يُغلق أوراقه على الفريسة؟","صائدة الذباب"],["ما اسم قنديل البحر الذي يُعتبر خالدًا نظريًا؟","توريتوبسيس دورنيي"]]}},
+arabic:{name:'أدب ولغة عربية',icon:'📖',pool:{100:[["من الشاعر الملقب بشاعر النيل؟","حافظ إبراهيم"],["كم عدد حروف اللغة العربية؟","28"],["ما الكتاب المصدر الديني الأول عند المسلمين؟","القرآن الكريم"],["ما أصل حكايات ألف ليلة وليلة الجغرافي عمومًا؟","التراث الشعبي العربي والفارسي والهندي"],["من الشاعر الملقب بأمير الشعراء؟","أحمد شوقي"],["ما علم اللغة الذي يضبط أواخر الكلمات؟","النحو"],["من مؤلف كتاب الأيام السيرة الذاتية؟","طه حسين"],["ما أول حروف الهجاء العربية؟","الألف"],["من الشاعر الجاهلي صاحب المعلقة الملقب بالملك الضليل؟","امرؤ القيس"],["ما علم أوزان الشعر العربي؟","علم العروض"]],300:[["من واضع علم العروض؟","الخليل بن أحمد الفراهيدي"],["من مؤلف معجم لسان العرب؟","ابن منظور"],["من مؤلف رواية مدن الملح؟","عبد الرحمن منيف"],["ما لقب المتنبي بين الشعراء العرب؟","أشعر الشعراء"],["من الكاتب المصري الحائز على نوبل للآداب؟","نجيب محفوظ"],["ما اسم القصيدة التي تُقال بمدح شخص بالشعر القديم؟","المديح"],["من مؤلف رواية موسم الهجرة إلى الشمال؟","الطيب صالح"],["ما الاسم القديم لعلم بنية الكلمة؟","علم الصرف"],["من الشاعر الملقب بشاعر الحزن الجميل؟","نزار قباني"],["من مؤلف رواية زينب أول رواية عربية حديثة؟","محمد حسين هيكل"]],500:[["من مؤلف مقدمة ابن خلدون؟","ابن خلدون"],["من صاحب معلقة قفا نبك من ذكرى حبيب ومنزل؟","امرؤ القيس"],["ما الكتاب الذي جمع فيه الأصفهاني أخبار الشعراء؟","كتاب الأغاني"],["من واضع أول قواعد النحو العربي؟","أبو الأسود الدؤلي"],["من الملقب بالمتنبي لادعائه النبوة بشبابه؟","أبو الطيب المتنبي"],["من مؤلف كتاب البخلاء الساخر؟","الجاحظ"],["من الشاعرة الجاهلية المعروفة برثاء أخيها صخر؟","الخنساء"],["من مؤلف مقامات الحريري؟","القاسم الحريري"],["ما علم البلاغة المهتم بالتشبيه والاستعارة؟","علم البيان"],["من الشاعر العباسي صاحب ديوان اللزوميات؟","أبو العلاء المعري"]]}},
+prophets:{name:'قصص الأنبياء',icon:'🕋',pool:{100:[["من النبي الذي بنى السفينة لنجاة قومه من الطوفان؟","نوح عليه السلام"],["من النبي الذي ابتلعه الحوت؟","يونس عليه السلام"],["من النبي الذي أُلقي بالنار فلم تحرقه؟","إبراهيم عليه السلام"],["من النبي الذي كلّمه الله على جبل الطور؟","موسى عليه السلام"],["من هو آخر الأنبياء والمرسلين؟","محمد ﷺ"],["من النبي الذي وُلد بلا أب؟","عيسى عليه السلام"],["من النبي الذي كان له علم بمنطق الطير؟","سليمان عليه السلام"],["من النبي الذي ابتُلي بمرض طويل وصبر عليه؟","أيوب عليه السلام"],["من أول الأنبياء وأبو البشر؟","آدم عليه السلام"],["من النبي الذي أُعطي التوراة؟","موسى عليه السلام"]],300:[["من النبي الذي بنى الكعبة مع ابنه إسماعيل؟","إبراهيم عليه السلام"],["من النبي المرسل لقوم ثمود؟","صالح عليه السلام"],["من النبي الذي فُقد بالجب ثم أصبح عزيز مصر؟","يوسف عليه السلام"],["من النبي المرسل لقوم عاد؟","هود عليه السلام"],["من زوجة إبراهيم التي أنجبت له إسماعيل؟","هاجر"],["من النبي الذي أُعطي الزبور؟","داود عليه السلام"],["من النبي المرسل لأهل مدين ولُقب بخطيب الأنبياء؟","شعيب عليه السلام"],["من أخو موسى الذي كان معه بالدعوة لفرعون؟","هارون عليه السلام"],["من النبي المرسل لأهل سدوم؟","لوط عليه السلام"],["من النبي الذي أُعطي الإنجيل؟","عيسى عليه السلام"]],500:[["كم عدد الأنبياء المذكورين بالاسم بالقرآن؟","25"],["من الملقب بأبو الأنبياء؟","إبراهيم عليه السلام"],["ما اسم ابن نوح الذي غرق ولم يركب السفينة؟","كنعان"],["من النبي الذي عاش أطول الأعمار بالدعوة؟","نوح عليه السلام"],["من هم أولو العزم من الرسل؟","نوح وإبراهيم وموسى وعيسى ومحمد"],["ما الجبل الذي استقرت عليه سفينة نوح؟","الجودي"],["من النبي الذي كانت له معجزة العصا التي تتحول لثعبان؟","موسى عليه السلام"],["من النبي الذي سخّر الله له الريح والجن؟","سليمان عليه السلام"],["من ملكة سبأ التي وردت قصتها مع سليمان؟","بلقيس"],["من النبي الذي أُرسل لقوم مدين ومصر معًا (أو لهما نبي مختلف)؟","شعيب عليه السلام لمدين"]]}},
+companions:{name:'قصص الصحابة',icon:'🌙',pool:{100:[["من الصحابي الملقب بالصديق؟","أبو بكر الصديق"],["من الصحابي الملقب بالفاروق؟","عمر بن الخطاب"],["من الصحابي الذي لُقب بذي النورين؟","عثمان بن عفان"],["من ابن عم النبي ﷺ وزوج ابنته فاطمة؟","علي بن أبي طالب"],["من مؤذن النبي ﷺ الذي كان عبدًا حبشيًا؟","بلال بن رباح"],["من زوجة النبي ﷺ الأولى؟","خديجة بنت خويلد"],["من ابنة النبي ﷺ التي تزوجها علي بن أبي طالب؟","فاطمة الزهراء"],["من الصحابي الملقب بسيف الله المسلول؟","خالد بن الوليد"],["من الصحابي الذي كان كاتب الوحي الأشهر؟","زيد بن ثابت"],["من عم النبي ﷺ الذي كان يحميه؟","أبو طالب"]],300:[["من الصحابي الذي استُشهد بأحد ولُقب سيد الشهداء؟","حمزة بن عبد المطلب"],["من الصحابي الذي فتح مصر بعهد عمر؟","عمرو بن العاص"],["من أول امرأة تُسلم بالإسلام؟","خديجة بنت خويلد"],["من الصحابي الذي أرسله النبي ﷺ سفيرًا للمدينة قبل الهجرة؟","مصعب بن عمير"],["من الصحابي الذي رافق النبي ﷺ بهجرته للمدينة؟","أبو بكر الصديق"],["من قائد جيش المسلمين بمعركة اليرموك؟","خالد بن الوليد"],["من أول شهيدة بالإسلام؟","سمية بنت خياط"],["من الصحابي الذي جُمع القرآن بمصحف بعهده أولًا؟","زيد بن ثابت"],["من الخليفة الذي استُشهد وهو يصلي الفجر؟","عمر بن الخطاب"],["من زوجة النبي ﷺ المعروفة بعلمها الغزير ورافقته بالهجرة؟","عائشة بنت أبي بكر"]],500:[["من الصحابي الملقب بحواري رسول الله؟","الزبير بن العوام"],["من الصحابي الذي أعتقه أبو بكر بعد إسلامه وتعذيبه؟","بلال بن رباح"],["من الصحابي الذي استُشهد بمعركة مؤتة وكان أول قادتها؟","زيد بن حارثة"],["من فُتحت بلاد فارس على يديه بعهد عمر؟","سعد بن أبي وقاص"],["من الصحابية الملقبة بأم المساكين من زوجات النبي ﷺ؟","زينب بنت خزيمة"],["من الصحابي الذي كان أمين هذه الأمة بلقب من النبي ﷺ؟","أبو عبيدة بن الجراح"],["من الصحابي الذي جمع القرآن كاملاً بصحف بأمر أبي بكر؟","زيد بن ثابت"],["كم عدد العشرة المبشرين بالجنة؟","عشرة"],["من الصحابي الملقب بترجمان القرآن؟","عبد الله بن عباس"],["بعهد أي خليفة تم جمع القرآن بمصحف موحّد وتوزيعه؟","عثمان بن عفان"]]}},
+puzzles:{name:'ألغاز وذكاء',icon:'🧩',pool:{100:[["ما الشيء الذي كلما أخذت منه كبر؟","الحفرة"],["ما الشيء الذي له عين ولا يرى؟","الإبرة"],["شيء له أسنان ولا يعض، ما هو؟","المشط"],["ما الشيء الذي كلما زاد نقص؟","العمر"],["ما الشيء الذي إذا غسلته يبتل وموجود بكل بيت؟","المنشفة"],["ما الحيوان الذي يحمل بيته على ظهره؟","الحلزون"],["كم عدد حروف كلمة قلم؟","ثلاثة"],["ما الشيء الذي نراه بالسماء نهارًا يعطينا الضوء؟","الشمس"],["ما الشيء الذي يمشي بلا أرجل؟","الماء"],["ما الشيء الذي له رأس وذيل لكنه بلا جسد؟","العملة المعدنية"]],300:[["أب وابنه بحادث سيارة، الأب مات والطبيب قال لا أستطيع لأنه ابني، كيف؟","الطبيب هو أمّه"],["رجل بالطابق العاشر ينزل بالمصعد للأرضي لكن بالعودة يصعد للسابع فقط ويكمل مشيًا، لماذا؟","لأنه قصير ولا يصل لزر الطابق العاشر"],["ما الشيء الذي يُكسر بدون أن تلمسه؟","الوعد"],["مدن بلا بيوت وغابات بلا أشجار وأنهار بلا ماء، ما أنا؟","الخريطة"],["ما الشيء الذي يزداد كلما اقتُسم؟","السر"],["ما الشيء الذي تراه مرة بالدقيقة ومرتين باللحظة ولا تراه بألف سنة؟","حرف الميم"],["ما الشيء الذي يملكه الفقير ويحتاجه الغني وإذا أكلته تموت؟","لا شيء"],["رجل بغرفة مظلمة فيها موقد وشمعة ومصباح وكبريت، أول شيء يشعله؟","الكبريت"],["كم شهرًا بالسنة عدد أيامه 28 على الأقل؟","كل الشهور"],["ما الشيء الذي يزن كيلوغرامًا من الحديد وكيلوغرامًا من القطن، أيهما أثقل؟","متساويان"]],500:[["8 كرات متشابهة وواحدة أثقل، وميزان بكفتين، كم أقل عدد وزنات لتحديدها؟","مرتان"],["رجل أمام بابين أحدهما يقول الحقيقة دومًا والآخر يكذب دومًا وله سؤال واحد، ماذا يسأل؟","يسأل أحدهما ماذا سيقول الآخر ويختار العكس"],["ما العدد الذي إذا ضربته بأي رقم يبقى الناتج نفس الرقم؟","واحد"],["أربعة إخوة يولدون بنفس اللحظة تقريبًا بلا فارق عمري، كيف؟","توأم رباعي"],["ما الشيء الذي يملأ الغرفة كاملة دون أن يأخذ مساحة؟","الضوء"],["شمعة تحترق بساعة وأخرى بساعتين بمعدل غير منتظم، كيف تقيس 45 دقيقة بالضبط؟","تشعل الأولى بطرفيها والثانية بطرف واحد معًا، وعند انطفاء الأولى بعد 30 دقيقة تشعل الطرف الثاني للثانية فتنطفئ بعد 15 دقيقة"],["ما الرقم التالي: 2، 4، 8، 16، ؟","32"],["رجل معه قطة وكلب وكيس حبوب ويعبر نهرًا بقارب يسع واحدًا فقط، القطة تأكل الحبوب والكلب يأكل القطة إن تُركا وحدهما، كيف يعبر الجميع بأمان؟","يأخذ القطة أولًا، يعود فارغًا، يأخذ الحبوب ويعيد القطة، يترك القطة ويأخذ الكلب، يعود فارغًا، يأخذ القطة أخيرًا"],["ما العدد الذي إذا جمعته مع نفسه يساوي ناتج ضربه بنفسه؟","اثنان"],["ما الشيء الذي يزداد وزنه كلما ثقبته؟","لا شيء غالبًا؛ الإجابة الشائعة: الطين المثقوب بالماء - استبدال: ما الذي كلما نقص وزنه ازداد حجمه؟ الفشار عند التحمير"]]}},
+jordan:{name:'معلومات أردنية',icon:'🇯🇴',pool:{100:[["ما عاصمة المملكة الأردنية الهاشمية؟","عمّان"],["ما النهر الذي يصب بالبحر الميت مارًا بالأردن؟","نهر الأردن"],["ما المدينة الأثرية الأردنية إحدى عجائب الدنيا السبع؟","البتراء"],["ما العملة الرسمية للأردن؟","الدينار الأردني"],["ما اسم أخفض نقطة على سطح الأرض غرب الأردن؟","البحر الميت"],["ما المدينة الساحلية الأردنية على البحر الأحمر؟","العقبة"],["من مؤسس الدولة الأردنية الحديثة؟","الملك عبدالله الأول"],["ما الجبل الذي رأى منه النبي موسى أرض فلسطين ويقع بالأردن؟","جبل نيبو"],["كم عدد محافظات الأردن؟","12 محافظة"],["ما اسم المدرج الروماني بوسط عمّان؟","المدرج الروماني"]],300:[["متى تأسست إمارة شرق الأردن؟","1921"],["ما أقدم جامعة حكومية أردنية؟","الجامعة الأردنية"],["ما القلعة التاريخية بمدينة الكرك جنوب الأردن؟","قلعة الكرك"],["من الملك الحالي للمملكة الأردنية الهاشمية؟","الملك عبدالله الثاني"],["ما المحمية الأردنية الشهيرة بصحرائها الرملية الحمراء؟","وادي رم"],["متى وُقّعت معاهدة السلام بين الأردن وإسرائيل؟","1994"],["ما اسم السد الأردني الشهير قرب إربد؟","سد الملك طلال"],["ما المدينة الأردنية الأثرية القديمة قرب عمّان؟","جرش"],["ما نهر يشكل الحدود الطبيعية بين الأردن وفلسطين؟","نهر الأردن"],["ما اسم أول جامعة رسمية بالأردن؟","الجامعة الأردنية"]],500:[["من مؤسس المملكة الأردنية الهاشمية رسميًا عام 1946؟","الملك عبدالله الأول"],["من قائد الثورة العربية الكبرى ووالد الملك عبدالله الأول؟","الشريف حسين بن علي"],["متى أُعلن استقلال الأردن رسميًا؟","1946"],["ما اسم معركة الكرامة الشهيرة عام 1968؟","معركة الكرامة"],["من الملك الذي حكم الأردن أطول فترة (1952-1999)؟","الملك الحسين بن طلال"],["من بنى مدينة البتراء؟","الأنباط"],["كم عمق البحر الميت تحت سطح البحر تقريبًا؟","حوالي 430 مترًا"],["من أول رئيس وزراء بتاريخ الأردن؟","رشيد طليع"],["ما عاصمة الأنباط التاريخية؟","البتراء"],["ما النهر الذي يُعد أهم روافد نهر الأردن ويأتي من الجولان؟","نهر اليرموك"]]}}
+};
+const CAT_KEYS = Object.keys(CATS);
+const LIFELINES = {phone:{name:'اتصال بصديق',icon:'☎️'},two:{name:'إجابتان',icon:'✌️'},trap:{name:'الفخ',icon:'🪤'},rest:{name:'استراحة',icon:'😴'},pit:{name:'الحفرة',icon:'🕳️'}};
+const LIFE_KEYS = Object.keys(LIFELINES);
+
+/* ================= STATE ================= */
+let state = {
+  playerCount:6, names:[], team1Name:'الصقور', team2Name:'النسور',
+  assign:{}, // name -> 1|2
+  catPicks:{t1:[], t2:[]},
+  lifePicks:{t1:[], t2:[]},
+  usedLife:{t1:{}, t2:{}},
+  scores:{t1:0, t2:0},
+  turn:1,
+  board:[], // {catKey, points, q, a, used, doubled}
+  currentCellIdx:null,
+  answeringTeam:1,
+  timer:{seconds:0, running:false, interval:null},
+  pitPending:false
+};
+
+function show(id){
+  ['screen-home','screen-players','screen-names','screen-teams','screen-categories','screen-lifelines','screen-confirm','screen-intro','screen-board','screen-question','screen-result']
+    .forEach(s=> document.getElementById(s).classList.toggle('hidden', s!==id));
+  window.scrollTo(0,0);
+}
+function scrollToId(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
+
+/* home preview */
+(function renderHomePreview(){
+  const el = document.getElementById('homeCatPreview');
+  CAT_KEYS.slice(0,8).forEach(k=>{
+    const c = CATS[k];
+    const d = document.createElement('div');
+    d.className='cat-chip-mini';
+    d.innerHTML = `<span class="ic">${c.icon}</span>${c.name}`;
+    el.appendChild(d);
+  });
+})();
+
+function startWizard(){ show('screen-players'); }
+
+/* ---------- players ---------- */
+function goToNames(){
+  let v = parseInt(document.getElementById('playerCount').value,10);
+  if(isNaN(v)||v<4) v=4; if(v>12) v=12;
+  state.playerCount = v;
+  document.getElementById('playerCount').value = v;
+  const list = document.getElementById('namesList');
+  list.innerHTML='';
+  const prev = state.names;
+  state.names=[];
+  for(let i=0;i<v;i++){
+    const def = prev[i] || ('لاعب '+(i+1));
+    state.names.push(def);
+    const row=document.createElement('div');
+    row.className='name-row';
+    row.innerHTML = `<span class="idx">${i+1}</span><input type="text" value="${def}" data-idx="${i}">`;
+    list.appendChild(row);
+  }
+  list.querySelectorAll('input').forEach(inp=>{
+    inp.addEventListener('input', e=>{ state.names[+e.target.dataset.idx] = e.target.value.trim() || ('لاعب '+(+e.target.dataset.idx+1)); });
+  });
+  show('screen-names');
+}
+
+/* ---------- teams ---------- */
+function goToTeams(){
+  const list = document.getElementById('assignList');
+  list.innerHTML='';
+  state.names.forEach((name,i)=>{
+    if(!(name in state.assign)) state.assign[name] = (i%2===0)?1:2;
+    const row=document.createElement('div');
+    row.className='assign-row';
+    row.innerHTML = `<span class="pname">${name}</span>
+      <span class="picks">
+        <button class="tpick t1 ${state.assign[name]===1?'active':''}" onclick="setAssign('${name.replace(/'/g,"\\'")}',1,this)">🔵</button>
+        <button class="tpick t2 ${state.assign[name]===2?'active':''}" onclick="setAssign('${name.replace(/'/g,"\\'")}',2,this)">🔴</button>
+      </span>`;
+    list.appendChild(row);
+  });
+  show('screen-teams');
+}
+function setAssign(name, team, btn){
+  state.assign[name] = team;
+  const row = btn.closest('.assign-row');
+  row.querySelectorAll('.tpick').forEach(b=>b.classList.remove('active'));
+  row.querySelector('.tpick.t'+team).classList.add('active');
+}
+
+/* ---------- categories ---------- */
+function goToCategories(){
+  state.team1Name = document.getElementById('team1Name').value.trim() || 'الصقور';
+  state.team2Name = document.getElementById('team2Name').value.trim() || 'النسور';
+  state.catPicks = {t1:[], t2:[]};
+  renderCatGrid();
+  show('screen-categories');
+}
+function currentCatTeam(){ return state.catPicks.t1.length<3 ? 1 : 2; }
+function renderCatGrid(){
+  const t = currentCatTeam();
+  document.getElementById('catTurnTeam').textContent = t===1?state.team1Name:state.team2Name;
+  document.getElementById('catTurnTeam').style.color = t===1?'var(--blue-2)':'var(--red)';
+  const grid = document.getElementById('catGrid');
+  grid.innerHTML='';
+  CAT_KEYS.forEach(k=>{
+    const c=CATS[k];
+    const picked1 = state.catPicks.t1.includes(k), picked2 = state.catPicks.t2.includes(k);
+    const div=document.createElement('div');
+    div.className='cat-pick'+(picked1?' t1':'')+(picked2?' t2':'')+((picked1||picked2)?' disabled':'');
+    div.innerHTML = `<span class="ic">${c.icon}</span><span class="nm">${c.name}</span>`;
+    div.onclick=()=>{
+      const team = currentCatTeam();
+      if(team===1 && state.catPicks.t1.length<3){ state.catPicks.t1.push(k); }
+      else if(team===2 && state.catPicks.t2.length<3){ state.catPicks.t2.push(k); }
+      renderCatGrid();
+      document.getElementById('catsNextBtn').disabled = !(state.catPicks.t1.length===3 && state.catPicks.t2.length===3);
+    };
+    grid.appendChild(div);
+  });
+}
+
+/* ---------- lifelines ---------- */
+function goToLifelines(){
+  state.lifePicks = {t1:[], t2:[]};
+  renderLifeGrid();
+  show('screen-lifelines');
+}
+function renderLifeGrid(){
+  const el = document.getElementById('lifeGrid');
+  el.innerHTML='';
+  LIFE_KEYS.forEach(k=>{
+    const l = LIFELINES[k];
+    const row=document.createElement('div');
+    row.className='life-pick-row';
+    const a1 = state.lifePicks.t1.includes(k), a2 = state.lifePicks.t2.includes(k);
+    row.innerHTML = `<span class="lname">${l.icon} ${l.name}</span>
+      <span class="life-toggle">
+        <button class="ltbtn t1 ${a1?'active':''}" onclick="toggleLife('t1','${k}')">🔵</button>
+        <button class="ltbtn t2 ${a2?'active':''}" onclick="toggleLife('t2','${k}')">🔴</button>
+      </span>`;
+    el.appendChild(row);
+  });
+}
+function toggleLife(team,key){
+  const arr = state.lifePicks[team];
+  const idx = arr.indexOf(key);
+  if(idx>=0){ arr.splice(idx,1); }
+  else { if(arr.length>=3) return; arr.push(key); }
+  renderLifeGrid();
+  document.getElementById('lifeNextBtn').disabled = !(state.lifePicks.t1.length===3 && state.lifePicks.t2.length===3);
+}
+
+/* ---------- confirm ---------- */
+function goToConfirm(){
+  const t1p = state.names.filter(n=>state.assign[n]===1);
+  const t2p = state.names.filter(n=>state.assign[n]===2);
+  const catNames = arr=> arr.map(k=>CATS[k].icon+' '+CATS[k].name).join('، ');
+  const lifeNames = arr=> arr.map(k=>LIFELINES[k].icon+' '+LIFELINES[k].name).join('، ');
+  document.getElementById('confirmBody').innerHTML = `
+    <div class="summary-block"><h4>🔵 ${state.team1Name}</h4><div class="line">${t1p.join('، ')||'—'}</div></div>
+    <div class="summary-block"><h4>🔴 ${state.team2Name}</h4><div class="line">${t2p.join('، ')||'—'}</div></div>
+    <div class="summary-block"><h4>📚 فئات ${state.team1Name}</h4><div class="line">${catNames(state.catPicks.t1)}</div></div>
+    <div class="summary-block"><h4>📚 فئات ${state.team2Name}</h4><div class="line">${catNames(state.catPicks.t2)}</div></div>
+    <div class="summary-block"><h4>🆘 مساعدات ${state.team1Name}</h4><div class="line">${lifeNames(state.lifePicks.t1)}</div></div>
+    <div class="summary-block"><h4>🆘 مساعدات ${state.team2Name}</h4><div class="line">${lifeNames(state.lifePicks.t2)}</div></div>`;
+  show('screen-confirm');
+}
+
+/* ---------- intro / board build ---------- */
+function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+
+function buildBoard(){
+  const cats = [...state.catPicks.t1, ...state.catPicks.t2];
+  const board=[];
+  cats.forEach(catKey=>{
+    [100,300,500].forEach(pts=>{
+      const pool = shuffle(CATS[catKey].pool[pts]).slice(0,2);
+      pool.forEach(([q,a])=> board.push({catKey, points:pts, q, a, used:false, doubled:false}));
+    });
+  });
+  state.board = board;
+  state.scores = {t1:0,t2:0};
+  state.turn = 1;
+  state.usedLife = {t1:{}, t2:{}};
+}
+
+function startIntro(){
+  buildBoard();
+  document.getElementById('introT1').textContent = state.team1Name;
+  document.getElementById('introT2').textContent = state.team2Name;
+  show('screen-intro');
+  let n=3;
+  document.getElementById('countdownNum').textContent = n;
+  const iv = setInterval(()=>{
+    n--;
+    if(n>0){ document.getElementById('countdownNum').textContent = n; }
+    else if(n===0){ document.getElementById('countdownNum').textContent = '🚀'; }
+    else { clearInterval(iv); renderBoard(); show('screen-board'); }
+  },700);
+}
+
+/* ---------- board render ---------- */
+function renderBoard(){
+  document.getElementById('boardT1Name').textContent = state.team1Name;
+  document.getElementById('boardT2Name').textContent = state.team2Name;
+  document.getElementById('boardT1Score').textContent = state.scores.t1;
+  document.getElementById('boardT2Score').textContent = state.scores.t2;
+  document.getElementById('turnLabel').textContent = state.turn===1?state.team1Name:state.team2Name;
+  document.getElementById('turnLabel').style.color = state.turn===1?'var(--blue-2)':'var(--red)';
+
+  const cats = [...state.catPicks.t1, ...state.catPicks.t2];
+  const grid = document.getElementById('boardGrid');
+  grid.innerHTML='';
+  cats.forEach((catKey)=>{
+    const colWrap = document.createElement('div');
+    colWrap.style.display='contents';
+    const head=document.createElement('div');
+    head.className='board-col-head';
+    head.textContent = CATS[catKey].icon+' '+CATS[catKey].name;
+    grid.appendChild(head);
+  });
+  // rows: we lay out column-major via grid-auto-flow column, so build per category a stack of 6 cells then head; easier: use explicit rows container per column
+  grid.innerHTML='';
+  cats.forEach((catKey, colIdx)=>{
+    const colDiv = document.createElement('div');
+    colDiv.style.display='flex'; colDiv.style.flexDirection='column'; colDiv.style.gap='6px';
+    const head=document.createElement('div');
+    head.className='board-col-head';
+    head.textContent = CATS[catKey].icon+' '+CATS[catKey].name;
+    colDiv.appendChild(head);
+    [100,300,500].forEach(pts=>{
+      const cellsForLevel = state.board.map((c,i)=>({c,i})).filter(o=>o.c.catKey===catKey && o.c.points===pts);
+      cellsForLevel.forEach(({c,i})=>{
+        const cell=document.createElement('div');
+        cell.className='board-cell'+(c.used?' used':'');
+        cell.textContent = c.used?'✓':(c.doubled? (pts*2):pts);
+        if(!c.used){ cell.onclick=()=> openQuestion(i); }
+        colDiv.appendChild(cell);
+      });
+    });
+    grid.appendChild(colDiv);
+  });
+}
+
+/* ---------- question flow ---------- */
+function openQuestion(idx){
+  const cell = state.board[idx];
+  state.currentCellIdx = idx;
+  state.answeringTeam = state.turn;
+  state.pitPending = false;
+  // offer الحفرة before reveal if the answering team still has it
+  const team = 't'+state.answeringTeam;
+  const hasPit = state.lifePicks[team].includes('pit') && !state.usedLife[team]['pit'];
+  if(hasPit){
+    if(confirm('عندكم وسيلة "الحفرة" — استخدامها الآن يضاعف نقاط هذا السؤال لو أجبتم صح. تفعيلها؟')){
+      state.usedLife[team]['pit']=true;
+      cell.doubled = true;
+    }
+  }
+  showQuestionScreen();
+}
+
+function showQuestionScreen(){
+  const cell = state.board[state.currentCellIdx];
+  document.getElementById('qCat').textContent = CATS[cell.catKey].icon+' '+CATS[cell.catKey].name;
+  document.getElementById('qPoints').textContent = (cell.doubled? cell.points*2 : cell.points)+' نقطة';
+  const teamName = state.answeringTeam===1?state.team1Name:state.team2Name;
+  const tag = document.getElementById('qTeamTag');
+  tag.textContent = '🎯 دور: '+teamName;
+  tag.className = 'q-team-tag '+(state.answeringTeam===1?'t1':'t2');
+  document.getElementById('qLifelineNote').innerHTML = cell.doubled? '<div class="note-badge">🕳️ الحفرة مفعّلة — نقاط مضاعفة</div>':'';
+  document.getElementById('qText').textContent = cell.q;
+  document.getElementById('qAnswerWrap').innerHTML = `<button class="btn btn-blue btn-full" onclick="revealAnswer()">👁️ إظهار الإجابة</button>`;
+  // timer reset
+  clearInterval(state.timer.interval);
+  state.timer = {seconds:0, running:false, interval:null};
+  updateTimerDisplay();
+  document.getElementById('timerBtn').textContent = '▶️ تشغيل المؤقت';
+  renderLifeButtons();
+  show('screen-question');
+}
+
+function toggleTimer(){
+  if(state.timer.running){
+    clearInterval(state.timer.interval);
+    state.timer.running=false;
+    document.getElementById('timerBtn').textContent='▶️ استئناف المؤقت';
+  } else {
+    state.timer.running=true;
+    document.getElementById('timerBtn').textContent='⏸️ إيقاف مؤقت';
+    state.timer.interval = setInterval(()=>{
+      state.timer.seconds++;
+      if(state.timer.seconds>=300){ state.timer.seconds=300; clearInterval(state.timer.interval); state.timer.running=false; }
+      updateTimerDisplay();
+    },1000);
+  }
+}
+function updateTimerDisplay(){
+  const s = state.timer.seconds;
+  const m = Math.floor(s/60), sec = s%60;
+  const el = document.getElementById('qTimer');
+  el.textContent = String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+  el.classList.toggle('hot', s>=270);
+}
+
+function renderLifeButtons(){
+  const team = 't'+state.answeringTeam;
+  const row = document.getElementById('qLifeRow');
+  row.innerHTML='';
+  state.lifePicks[team].forEach(k=>{
+    const used = state.usedLife[team][k];
+    const btn=document.createElement('button');
+    btn.className='q-life-btn';
+    btn.textContent = LIFELINES[k].icon;
+    btn.title = LIFELINES[k].name;
+    btn.disabled = !!used || k==='pit'; // pit only usable before reveal, already handled
+    btn.onclick=()=> useLifeline(k);
+    row.appendChild(btn);
+  });
+}
+
+function useLifeline(key){
+  const team = 't'+state.answeringTeam;
+  if(state.usedLife[team][key]) return;
+  state.usedLife[team][key]=true;
+  if(key==='phone'){
+    document.getElementById('qLifelineNote').innerHTML += `<div class="note-badge">☎️ اتصال بصديق — ٣٠ ثانية استشارة</div>`;
+    let s=30;
+    const noteEls = document.querySelectorAll('#qLifelineNote .note-badge');
+    const lastNote = noteEls[noteEls.length-1];
+    const iv=setInterval(()=>{
+      s--;
+      lastNote.textContent = '☎️ اتصال بصديق — '+s+' ثانية متبقية';
+      if(s<=0){ clearInterval(iv); lastNote.textContent='☎️ انتهى وقت الاتصال'; }
+    },1000);
+  } else if(key==='two'){
+    document.getElementById('qLifelineNote').innerHTML += `<div class="note-badge">✌️ مسموح إجابتان لهذا السؤال</div>`;
+  } else if(key==='rest'){
+    const opp = 't'+(state.answeringTeam===1?2:1);
+    const oppNames = state.names.filter(n=>state.assign[n]===(state.answeringTeam===1?2:1));
+    const pick = prompt('اختر لاعب من الفريق المنافس يُمنع من المشاركة بهذا السؤال:\n'+oppNames.join('\n'));
+    if(pick){ document.getElementById('qLifelineNote').innerHTML += `<div class="note-badge">😴 ${pick} ممنوع من المشاركة بهذا السؤال</div>`; }
+  } else if(key==='trap'){
+    state.answeringTeam = state.answeringTeam===1?2:1;
+    document.getElementById('qLifelineNote').innerHTML += `<div class="note-badge">🪤 تم تفعيل الفخ — السؤال الآن للفريق المنافس</div>`;
+    showQuestionScreen();
+    return;
+  }
+  renderLifeButtons();
+}
+
+function revealAnswer(){
+  const cell = state.board[state.currentCellIdx];
+  document.getElementById('qAnswerWrap').innerHTML = `
+    <div class="q-answer-box"><div class="lbl">الإجابة الصحيحة</div><div class="ans">${cell.a}</div></div>
+    <div class="judge-btns">
+      <button class="btn btn-correct" onclick="judge(true)">✅ صحيحة</button>
+      <button class="btn btn-wrong" onclick="judge(false)">❌ خاطئة</button>
+    </div>`;
+}
+
+function judge(correct){
+  const cell = state.board[state.currentCellIdx];
+  const pts = cell.doubled? cell.points*2 : cell.points;
+  if(correct){
+    state.scores['t'+state.answeringTeam] += pts;
+  }
+  clearInterval(state.timer.interval);
+  backToBoard(true);
+}
+
+function backToBoard(markUsed){
+  const cell = state.board[state.currentCellIdx];
+  if(markUsed) cell.used = true; else cell.used = true; // skipping also marks used
+  clearInterval(state.timer.interval);
+  state.turn = state.turn===1?2:1;
+  const allUsed = state.board.every(c=>c.used);
+  if(allUsed){ endMatch(); return; }
+  renderBoard();
+  show('screen-board');
+}
+
+/* ---------- end match ---------- */
+function endMatch(){
+  if(state.scores.t1===state.scores.t2){
+    // tie-breaker: pull an unused general question
+    const tieQ = CATS.general.pool[500][Math.floor(Math.random()*CATS.general.pool[500].length)];
+    if(confirm('🤝 تعادل! سيتم طرح سؤال فاصل لحسم المباراة. جاهزون؟')){
+      const ans = confirm('السؤال الفاصل:\n'+tieQ[0]+'\n\nهل أجاب الفريق '+(state.turn===1?state.team1Name:state.team2Name)+' إجابة صحيحة؟\n(الإجابة الصحيحة: '+tieQ[1]+')');
+      if(ans){ state.scores['t'+state.turn]+=1; } else { state.scores['t'+(state.turn===1?2:1)]+=1; }
+    }
+  }
+  showResult();
+}
+
+function showResult(){
+  const winner = state.scores.t1>state.scores.t2 ? state.team1Name : (state.scores.t2>state.scores.t1? state.team2Name : 'تعادل');
+  document.getElementById('resultBody').innerHTML = `
+    <div class="winner">🎉 الفائز: ${winner}</div>
+    <div class="result-scores">🔵 ${state.team1Name}: ${state.scores.t1} &nbsp;|&nbsp; 🔴 ${state.team2Name}: ${state.scores.t2}</div>`;
+  show('screen-result');
+}
+</script>
+</body>
+</html>

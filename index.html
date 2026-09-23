@@ -20,6 +20,8 @@
     --mafia-b:#c9a227;
     --odd-a:#7c5cff;
     --odd-b:#c6ff5c;
+    --jeem-a:#ffb020;
+    --jeem-b:#2e8bff;
     --font-d:'Tajawal', sans-serif;
     --font-b:'Almarai', sans-serif;
   }
@@ -77,6 +79,7 @@
   .seq-5{ animation-delay:.60s; }
   .seq-6{ animation-delay:.74s; }
   .seq-7{ animation-delay:.88s; }
+  .seq-8{ animation-delay:1.02s; }
   @media (prefers-reduced-motion: reduce){
     .seq{ animation:none; opacity:1; transform:none; }
   }
@@ -168,6 +171,16 @@
   .door.oddone::before{ color:var(--odd-a); content:"؟"; }
   .door.oddone:active{ border-color: rgba(124,92,255,0.55); box-shadow:0 24px 50px -24px rgba(124,92,255,0.35); }
 
+  .door.jeem{
+    background:
+      radial-gradient(420px 260px at 88% -18%, rgba(255,176,32,0.20), transparent 60%),
+      radial-gradient(360px 300px at -14% 120%, rgba(46,139,255,0.28), transparent 60%),
+      linear-gradient(160deg, #0a0e1c 0%, #070a14 70%);
+    border-color: rgba(255,176,32,0.16);
+  }
+  .door.jeem::before{ color:var(--jeem-a); content:"؟"; font-size:150px; }
+  .door.jeem:active{ border-color: rgba(255,176,32,0.55); box-shadow:0 24px 50px -24px rgba(255,176,32,0.35); }
+
   .door .drow{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:16px; position:relative; z-index:2; }
   .door .dtag{
     font-family:var(--font-b); font-weight:800; font-size:10.5px; letter-spacing:.6px;
@@ -175,6 +188,7 @@
   }
   .door.mafia .dtag{ color:var(--mafia-b); border-color:rgba(201,162,39,0.4); background:rgba(201,162,39,0.08); }
   .door.oddone .dtag{ color:var(--odd-b); border-color:rgba(198,255,92,0.32); background:rgba(198,255,92,0.06); }
+  .door.jeem .dtag{ color:var(--jeem-a); border-color:rgba(255,176,32,0.4); background:rgba(255,176,32,0.08); }
 
   .door .dicon{
     width:40px; height:40px; border-radius:12px;
@@ -183,6 +197,7 @@
   }
   .door.mafia .dicon{ border-color:rgba(201,162,39,0.35); background:rgba(201,162,39,0.07); color:var(--mafia-b); }
   .door.oddone .dicon{ border-color:rgba(124,92,255,0.35); background:rgba(124,92,255,0.09); color:var(--odd-a); }
+  .door.jeem .dicon{ border-color:rgba(255,176,32,0.35); background:rgba(255,176,32,0.08); color:var(--jeem-a); }
   .door .dicon svg{ width:19px; height:19px; }
 
   .door .dname{
@@ -196,6 +211,7 @@
   }
   .door.mafia .denter{ color:var(--mafia-b); }
   .door.oddone .denter{ color:var(--odd-a); }
+  .door.jeem .denter{ color:var(--jeem-a); }
   .door .denter svg{ width:14px; height:14px; }
 
   footer.foot{
@@ -245,9 +261,19 @@
       <div class="ddesc">الكل بيعرف الكلمة إلا واحد. اسألوا، ناقشوا، وصوّتوا — قبل لا يلقّيها الغريب.</div>
       <span class="denter">ادخل اللعبة <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
     </a>
+
+    <a class="door jeem seq seq-7" href="jeem-seen.html" data-glyph="👑">
+      <div class="drow">
+        <span class="dtag">مسابقة فرق</span>
+        <span class="dicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8l4 3 4-6 4 6 4-3-1.5 10h-13z"/></svg></span>
+      </div>
+      <div class="dname">جيم سين</div>
+      <div class="ddesc">فريقان، فئات، ووسائل مساعدة — أجيبوا واجمعوا النقاط قبل الفريق المنافس.</div>
+      <span class="denter">ادخل اللعبة <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+    </a>
   </div>
 
-  <footer class="foot seq seq-7">ألعاب جلسات محلية<br>تشتغل كاملة بدون إنترنت</footer>
+  <footer class="foot seq seq-8">ألعاب جلسات محلية<br>تشتغل كاملة بدون إنترنت</footer>
 </div>
 
 <script>
