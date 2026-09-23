@@ -1,374 +1,118 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<title>جيم سين</title>
-<link rel="icon" type="image/png" href="icon-192.png">
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#050405">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>جيم سين — تحدّي المعرفة</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@500;700;800;900&display=swap');
 :root{
-  --navy:#070b18; --navy-2:#0d1428; --panel:#111a34; --panel-hi:#182347;
-  --line: rgba(255,255,255,0.09);
-  --gold:#ffb020; --gold-2:#ff8a00; --blue:#2e8bff; --blue-2:#5aa8ff;
-  --red:#ff4d5e; --white:#f5f7ff; --ink-dim:#8a91b8;
-  --font-d:'Tajawal', sans-serif; --font-b:'Almarai', sans-serif;
+  --bg:#07080d;--surface:#10131c;--surface2:#171b27;--line:#272d3d;
+  --text:#f7f8fb;--muted:#9299aa;--gold:#f7b84b;--gold2:#ff8b38;
+  --blue:#4d9cff;--red:#ff6474;--green:#43d49b;
+  --shadow:0 24px 80px rgba(0,0,0,.35);
 }
-*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-html,body{margin:0; padding:0;}
-body{
-  min-height:100vh; background:var(--navy); color:var(--white);
-  font-family:var(--font-b); overflow-x:hidden; position:relative;
-}
-.bgfx{
-  position:fixed; inset:0; z-index:0; pointer-events:none;
-  background:
-    radial-gradient(600px 380px at 50% -10%, rgba(255,176,32,0.16), transparent 60%),
-    radial-gradient(500px 380px at 100% 100%, rgba(46,139,255,0.16), transparent 60%),
-    radial-gradient(500px 380px at 0% 100%, rgba(255,77,94,0.10), transparent 60%);
-}
-.wrap{ position:relative; z-index:2; max-width:560px; margin:0 auto; padding:0 0 60px; min-height:100vh; }
-.hidden{ display:none !important; }
-
-/* ---------- Navbar ---------- */
-.nav{ display:flex; align-items:center; justify-content:space-between; padding:16px 18px; }
-.brand{ display:flex; align-items:center; gap:8px; font-family:var(--font-d); font-weight:900; font-size:20px;}
-.brand .g{ background:linear-gradient(95deg, var(--gold), var(--gold-2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
-.brand .s{ color:var(--white); }
-.navlinks{ display:flex; gap:16px; font-size:12.5px; font-weight:700; color:var(--ink-dim);}
-.navlinks a{ color:var(--ink-dim); text-decoration:none; cursor:pointer; }
-.navlinks a:hover{ color:var(--gold); }
-
-/* ---------- Hero ---------- */
-.hero{ text-align:center; padding:34px 22px 10px; }
-.hero .crown{ font-size:34px; margin-bottom:6px; }
-h1.h-title{ font-family:var(--font-d); font-weight:900; font-size:clamp(34px,10vw,46px); margin:0 0 8px; line-height:1.05;}
-h1.h-title .g{ background:linear-gradient(95deg, var(--gold), var(--gold-2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
-.hero p{ color:var(--ink-dim); font-size:14px; max-width:320px; margin:0 auto 22px; line-height:1.8;}
-.hero-btns{ display:flex; gap:10px; justify-content:center; margin-bottom:8px; }
-
-.btn{ padding:14px 22px; border-radius:14px; border:none; font-family:var(--font-d); font-weight:800; font-size:14.5px; cursor:pointer; }
-.btn-gold{ background:linear-gradient(95deg, var(--gold), var(--gold-2)); color:#1a0e00; box-shadow:0 10px 24px -10px rgba(255,176,32,0.6);}
-.btn-blue{ background:rgba(46,139,255,0.14); color:var(--blue-2); border:1px solid rgba(46,139,255,0.35);}
-.btn-ghost{ background:transparent; color:var(--ink-dim); border:1px solid var(--line);}
-.btn-full{ width:100%; }
-.btn-row{ display:flex; gap:10px; }
-.btn-row .btn{ flex:1; }
-.btn:disabled{ opacity:0.35; }
-
-/* ---------- Sections on home ---------- */
-.section{ padding:26px 18px 6px; }
-.section-title{ font-family:var(--font-d); font-weight:900; font-size:19px; text-align:center; margin-bottom:18px;}
-.steps{ display:flex; flex-direction:column; gap:10px; }
-.step{ display:flex; gap:12px; align-items:center; background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:14px 16px;}
-.step .num{ width:30px; height:30px; border-radius:10px; background:linear-gradient(135deg, var(--gold), var(--gold-2)); color:#1a0e00; display:flex; align-items:center; justify-content:center; font-family:var(--font-d); font-weight:900; flex:0 0 auto;}
-.step .txt{ font-size:13px; color:var(--ink-dim); }
-.step .txt b{ color:var(--white); display:block; font-size:14px; margin-bottom:2px;}
-
-.cat-preview{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
-.cat-chip-mini{ background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:10px 4px; text-align:center; font-size:10.5px; color:var(--ink-dim);}
-.cat-chip-mini .ic{ font-size:18px; display:block; margin-bottom:4px;}
-
-.life-preview{ display:flex; flex-direction:column; gap:8px; }
-.life-row{ display:flex; gap:10px; align-items:center; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:10px 14px; font-size:12.5px; color:var(--ink-dim);}
-.life-row .ic{ font-size:18px; }
-.life-row b{ color:var(--white); }
-
-.foot{ text-align:center; color:var(--ink-dim); font-size:11px; padding:30px 18px 10px; }
-
-/* ---------- Generic screen card ---------- */
-.screen{ padding:20px 18px; }
-.card{ background:var(--panel); border:1px solid var(--line); border-radius:20px; padding:20px; margin-bottom:14px;}
-.step-label{ font-family:var(--font-d); font-weight:800; font-size:14px; color:var(--gold); margin:0 0 14px; display:flex; align-items:center; gap:8px;}
-.step-label .n{ width:22px; height:22px; border-radius:50%; background:var(--gold); color:#1a0e00; display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:900;}
-label.f-label{ display:block; font-size:13px; color:var(--ink-dim); margin:12px 0 6px; font-weight:700;}
-input[type=number], input[type=text]{
-  width:100%; background:var(--navy-2); border:1px solid var(--line); color:var(--white);
-  font-family:var(--font-b); font-weight:700; font-size:15px; padding:11px 13px; border-radius:10px; outline:none;
-}
-input:focus{ border-color:var(--gold); }
-.name-row{ display:flex; align-items:center; gap:8px; margin-bottom:9px;}
-.name-row .idx{ flex:0 0 24px; height:24px; border-radius:8px; background:var(--panel-hi); color:var(--gold); font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center;}
-.name-row input{ flex:1; padding:9px 11px;}
-
-/* team assignment */
-.assign-list{ display:flex; flex-direction:column; gap:8px; }
-.assign-row{ display:flex; align-items:center; justify-content:space-between; background:var(--navy-2); border:1px solid var(--line); border-radius:12px; padding:10px 12px;}
-.assign-row .pname{ font-weight:700; font-size:13.5px; }
-.assign-row .picks{ display:flex; gap:6px; }
-.tpick{ padding:6px 12px; border-radius:100px; font-size:11.5px; font-weight:800; border:1px solid var(--line); background:transparent; color:var(--ink-dim); cursor:pointer;}
-.tpick.t1.active{ background:rgba(46,139,255,0.18); color:var(--blue-2); border-color:var(--blue); }
-.tpick.t2.active{ background:rgba(255,77,94,0.18); color:var(--red); border-color:var(--red); }
-
-/* category grid */
-.cat-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:9px; }
-.cat-pick{ background:var(--navy-2); border:1px solid var(--line); border-radius:13px; padding:13px 8px; text-align:center; cursor:pointer; }
-.cat-pick .ic{ font-size:19px; display:block; margin-bottom:4px;}
-.cat-pick .nm{ font-family:var(--font-d); font-weight:800; font-size:12px; }
-.cat-pick.t1{ border-color:var(--blue); box-shadow:0 0 0 1px var(--blue) inset; }
-.cat-pick.t2{ border-color:var(--red); box-shadow:0 0 0 1px var(--red) inset; }
-.cat-pick.disabled{ opacity:0.35; pointer-events:none; }
-
-/* lifeline pick */
-.life-pick-row{ display:flex; align-items:center; justify-content:space-between; background:var(--navy-2); border:1px solid var(--line); border-radius:12px; padding:10px 14px; margin-bottom:8px;}
-.life-pick-row .lname{ font-size:13px; font-weight:700; display:flex; align-items:center; gap:8px;}
-.life-toggle{ display:flex; gap:8px;}
-.ltbtn{ padding:6px 12px; border-radius:8px; font-size:11px; font-weight:800; border:1px solid var(--line); background:transparent; color:var(--ink-dim); cursor:pointer;}
-.ltbtn.t1.active{ background:rgba(46,139,255,0.18); color:var(--blue-2); border-color:var(--blue);}
-.ltbtn.t2.active{ background:rgba(255,77,94,0.18); color:var(--red); border-color:var(--red);}
-
-/* confirm summary */
-.summary-block{ margin-bottom:14px; }
-.summary-block h4{ font-family:var(--font-d); font-size:13.5px; color:var(--gold); margin:0 0 8px;}
-.summary-block .line{ font-size:12.5px; color:var(--ink-dim); margin-bottom:3px;}
-
-/* intro / countdown */
-.intro-screen{ text-align:center; padding:80px 24px; }
-.intro-vs{ font-family:var(--font-d); font-weight:900; font-size:22px; margin:24px 0; }
-.intro-vs .t1{ color:var(--blue-2); } .intro-vs .t2{ color:var(--red); }
-.countdown-num{ font-family:var(--font-d); font-weight:900; font-size:80px; background:linear-gradient(95deg,var(--gold),var(--gold-2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
-
-/* board */
-.score-bar{ display:flex; justify-content:space-between; align-items:center; padding:14px 18px; }
-.score-team{ text-align:center; flex:1; }
-.score-team .tname{ font-family:var(--font-d); font-weight:800; font-size:13px; }
-.score-team.t1 .tname{ color:var(--blue-2); } .score-team.t2 .tname{ color:var(--red); }
-.score-team .tscore{ font-family:var(--font-d); font-weight:900; font-size:26px; }
-.turn-indicator{ text-align:center; font-size:11.5px; color:var(--gold); font-weight:800; padding-bottom:4px;}
-.remaining-indicator{ text-align:center; font-size:11px; color:var(--ink-dim); padding-bottom:10px;}
-.life-status-panel{ display:flex; justify-content:center; gap:18px; padding-bottom:12px; }
-.life-status-team{ display:flex; gap:5px; align-items:center; }
-.life-status-team .lbl{ font-size:10px; font-weight:800; color:var(--ink-dim); margin-left:4px;}
-.life-status-icon{ font-size:14px; opacity:1; }
-.life-status-icon.used{ opacity:0.3; filter:grayscale(1); position:relative; }
-.board-scroll{ overflow-x:auto; padding:0 12px 20px; }
-@keyframes pulseReveal{
-  0%{ box-shadow:0 0 0 0 rgba(255,176,32,0.6); }
-  70%{ box-shadow:0 0 0 16px rgba(255,176,32,0); }
-  100%{ box-shadow:0 0 0 0 rgba(255,176,32,0); }
-}
-.q-answer-box.pulse{ animation:pulseReveal .9s ease-out; }
-.board-grid{ display:grid; grid-auto-flow:column; grid-auto-columns:92px; gap:6px; }
-.board-col-head{ font-family:var(--font-d); font-weight:800; font-size:10.5px; text-align:center; padding:8px 2px; color:var(--gold); background:var(--panel); border-radius:10px 10px 0 0; }
-.board-cell{
-  height:52px; border-radius:10px; background:var(--panel-hi); border:1px solid var(--line);
-  display:flex; align-items:center; justify-content:center; font-family:var(--font-d); font-weight:900; font-size:15px;
-  cursor:pointer; color:var(--gold);
-}
-.board-cell.used{ background:transparent; color:var(--ink-dim); opacity:0.3; cursor:default; }
-
-/* question screen */
-.q-screen{ padding:22px 18px; }
-.q-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
-.q-cat{ font-family:var(--font-d); font-weight:800; font-size:13px; color:var(--gold);}
-.q-points{ font-family:var(--font-d); font-weight:900; font-size:20px; }
-.q-team-tag{ text-align:center; font-size:12px; font-weight:800; margin-bottom:10px;}
-.q-team-tag.t1{ color:var(--blue-2);} .q-team-tag.t2{ color:var(--red);}
-.q-text{ background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:24px 18px; font-size:17px; font-weight:700; text-align:center; line-height:1.7; margin-bottom:16px;}
-.q-timer{ text-align:center; font-family:var(--font-d); font-weight:900; font-size:38px; margin-bottom:16px; }
-.q-timer.hot{ color:var(--red); }
-.q-life-row{ display:flex; gap:8px; justify-content:center; margin-bottom:16px; flex-wrap:wrap;}
-.q-life-btn{ width:44px; height:44px; border-radius:12px; background:var(--panel); border:1px solid var(--line); font-size:19px; cursor:pointer;}
-.q-life-btn:disabled{ opacity:0.25; }
-.q-answer-box{ background:rgba(255,176,32,0.08); border:1px solid rgba(255,176,32,0.3); border-radius:14px; padding:16px; text-align:center; margin-bottom:16px;}
-.q-answer-box .lbl{ font-size:11px; color:var(--ink-dim); margin-bottom:4px;}
-.q-answer-box .ans{ font-family:var(--font-d); font-weight:900; font-size:18px; color:var(--gold);}
-.judge-btns{ display:flex; gap:10px; }
-.judge-btns .btn{ flex:1; }
-.btn-correct{ background:linear-gradient(95deg,#3ad2a0,#22a87e); color:#052018;}
-.btn-wrong{ background:linear-gradient(95deg,var(--red),#c92c3c); color:#fff;}
-.note-badge{ display:inline-block; background:rgba(255,176,32,0.12); color:var(--gold); font-size:11px; font-weight:800; padding:5px 12px; border-radius:100px; margin-bottom:10px;}
-
-/* result */
-.result-screen{ text-align:center; padding:60px 24px; }
-.result-screen .trophy{ font-size:54px; margin-bottom:10px; }
-.result-screen .winner{ font-family:var(--font-d); font-weight:900; font-size:26px; margin-bottom:6px;}
-.result-scores{ font-family:var(--font-d); font-weight:800; font-size:15px; color:var(--ink-dim); margin-bottom:26px;}
-
-@media (max-width:360px){ h1.h-title{ font-size:32px; } }
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:
+radial-gradient(900px 500px at 50% -10%,rgba(247,184,75,.13),transparent 65%),
+radial-gradient(700px 500px at 110% 60%,rgba(77,156,255,.09),transparent 65%),
+var(--bg);color:var(--text);font-family:Cairo,Tajawal,sans-serif;min-height:100vh}
+button,input{font:inherit}button{cursor:pointer}
+.app{width:min(100%,1100px);margin:auto;min-height:100vh;padding:0 18px 42px}
+.topbar{height:72px;display:flex;align-items:center;justify-content:space-between}
+.logo{font:900 25px Tajawal}.logo b{color:var(--gold)}.logo span{color:#fff}
+.top-actions{display:flex;gap:8px}.icon-btn{width:42px;height:42px;border:1px solid var(--line);border-radius:13px;background:#0e1118;color:#fff}
+.screen{display:none}.screen.active{display:block}
+.hero{min-height:calc(100vh - 72px);display:grid;place-items:center;text-align:center;padding:55px 0}
+.hero-inner{max-width:760px}.eyebrow{display:inline-flex;gap:8px;align-items:center;padding:7px 12px;border:1px solid #3b3325;border-radius:999px;color:var(--gold);background:#15120d;font-size:12px;font-weight:800}
+.hero h1{font:900 clamp(48px,9vw,92px)/.95 Tajawal;margin:24px 0 16px;letter-spacing:-2px}
+.hero h1 span{background:linear-gradient(110deg,var(--gold),var(--gold2));-webkit-background-clip:text;color:transparent}
+.hero p{color:var(--muted);font-size:16px;line-height:2;max-width:610px;margin:0 auto 30px}
+.cta{border:0;border-radius:15px;padding:15px 26px;font-weight:900;background:linear-gradient(110deg,var(--gold),var(--gold2));color:#171006;box-shadow:0 12px 35px rgba(247,184,75,.18)}
+.ghost{background:#11151e;color:#d9dce5;border:1px solid var(--line);box-shadow:none}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:55px}
+.feature{padding:20px;text-align:right;border:1px solid var(--line);background:rgba(16,19,28,.8);border-radius:18px}
+.feature i{font-style:normal;font-size:23px}.feature b{display:block;margin:10px 0 5px}.feature small{color:var(--muted);line-height:1.8}
+.panel{max-width:720px;margin:28px auto;background:rgba(16,19,28,.94);border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:var(--shadow)}
+.progress{height:5px;background:#202533;border-radius:99px;overflow:hidden;margin-bottom:25px}.progress div{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));width:20%;transition:.25s}
+.kicker{font-size:12px;color:var(--gold);font-weight:900}.title{font:900 27px Tajawal;margin:7px 0 20px}.muted{color:var(--muted)}
+.field{margin:15px 0}.field label{display:block;color:#aeb4c2;font-size:13px;margin-bottom:7px;font-weight:700}
+input{width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:#0b0e15;color:#fff;outline:none}
+input:focus{border-color:var(--gold)}
+.actions{display:flex;gap:10px;margin-top:22px}.actions>*{flex:1}
+.player-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.player{display:flex;gap:8px;align-items:center}.num{width:30px;height:30px;display:grid;place-items:center;background:#1c2130;border-radius:9px;color:var(--gold);font-size:12px;font-weight:900}
+.team-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.team-card{border:1px solid var(--line);padding:16px;border-radius:16px;background:#0c1018}.team-card h3{margin:0 0 10px;font-size:14px}.team-card.blue h3{color:var(--blue)}.team-card.red h3{color:var(--red)}
+.assign{display:grid;gap:8px;margin-top:14px}.assign-row{display:flex;align-items:center;justify-content:space-between;padding:10px;border:1px solid var(--line);border-radius:12px;background:#0b0e15}.pills{display:flex;gap:6px}.pill{padding:5px 9px;border:1px solid var(--line);border-radius:999px;background:none;color:var(--muted);font-size:11px}.pill.active.blue{color:var(--blue);border-color:var(--blue);background:#0e1a2b}.pill.active.red{color:var(--red);border-color:var(--red);background:#2a1117}
+.category-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.cat{padding:17px 8px;border:1px solid var(--line);border-radius:15px;background:#0b0e15;color:#fff;text-align:center}.cat .emoji{font-size:25px;display:block}.cat small{display:block;color:var(--muted);margin-top:5px}.cat.selected.blue{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}.cat.selected.red{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+.life-list{display:grid;gap:9px}.life{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;border:1px solid var(--line);border-radius:13px;background:#0b0e15}.life span{display:flex;gap:9px;align-items:center;font-size:13px}.life button{border:1px solid var(--line);background:none;color:var(--muted);border-radius:9px;padding:6px 10px}.life button.on{border-color:var(--gold);color:var(--gold);background:#21190d}
+.summary{display:grid;gap:10px}.summary .row{display:flex;justify-content:space-between;padding:12px 13px;background:#0b0e15;border-radius:12px;color:#c5c9d3}.summary strong{color:#fff}
+.countdown{text-align:center;padding:100px 20px}.countdown .versus{font:900 25px Tajawal}.count{font:900 110px Tajawal;color:var(--gold);margin:15px}
+.game-head{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding:18px 0}.score{text-align:center}.score b{display:block;font:900 30px Tajawal}.score.blue strong{color:var(--blue)}.score.red strong{color:var(--red)}.turn{text-align:center;font-size:11px;color:var(--gold);font-weight:800}
+.board-wrap{overflow:auto;padding-bottom:15px}.board{display:grid;grid-template-columns:repeat(5,minmax(115px,1fr));gap:10px;min-width:650px}.board-cat,.tile{border-radius:14px}.board-cat{padding:12px 7px;text-align:center;background:#131823;border:1px solid var(--line);font-size:12px;font-weight:800}.tile{height:68px;border:1px solid #343b4e;background:linear-gradient(145deg,#171c29,#0e1119);color:var(--gold);font:900 19px Tajawal}.tile.used{opacity:.2;pointer-events:none}.tile:hover{transform:translateY(-2px);border-color:var(--gold)}
+.question{max-width:760px;margin:35px auto}.q-meta{display:flex;justify-content:space-between;color:var(--gold);font-weight:900}.q-card{margin:16px 0;padding:30px 22px;border:1px solid var(--line);border-radius:20px;background:#11151e;text-align:center;font-size:22px;font-weight:800;line-height:1.9}.timer{text-align:center;font:900 42px Tajawal;margin:10px}.timer.hot{color:var(--red)}.answer{display:none;padding:15px;border:1px solid #5b4520;background:#21180b;border-radius:14px;text-align:center;color:var(--gold);font-weight:900}.answer.show{display:block}.judge{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.correct,.wrong{border:0;border-radius:13px;padding:13px;font-weight:900}.correct{background:#123c31;color:var(--green)}.wrong{background:#421720;color:#ff8995}
+.result{text-align:center;padding:100px 0}.trophy{font-size:62px}.result h1{font:900 38px Tajawal}.result-score{font:900 23px Tajawal;color:var(--gold)}
+@media(max-width:650px){.features{grid-template-columns:1fr}.feature{display:none}.player-grid,.team-grid{grid-template-columns:1fr}.category-grid{grid-template-columns:repeat(2,1fr)}.panel{padding:20px;border-radius:20px}.hero{padding-top:25px}.hero h1{font-size:55px}.game-head{padding-top:8px}}
 </style>
 </head>
 <body>
-<div class="bgfx"></div>
-<div class="wrap">
+<div class="app">
+<header class="topbar"><div class="logo"><b>جيم</b> سين</div><div class="top-actions"><button class="icon-btn" onclick="home()">⌂</button></div></header>
 
-<!-- ============ HOME ============ -->
-<div id="screen-home">
-  <nav class="nav">
-    <span class="brand"><span class="g">جيم</span><span class="s">سين</span></span>
-    <div class="navlinks"><a onclick="scrollToId('sec-howto')">كيف تلعب؟</a><a onclick="scrollToId('sec-cats')">الفئات</a></div>
-  </nav>
-
+<section id="home" class="screen active">
   <div class="hero">
-    <div class="crown">👑</div>
-    <h1 class="h-title">جاهز <span class="g">للتحدي؟</span></h1>
-    <p>اختبر معلوماتك وتحدَّ أصدقاءك — كوّن فريقك، اختر فئاتك، استخدم وسائل المساعدة، واجمع أكبر عدد من النقاط!</p>
-    <div id="resumeBanner" class="hidden" style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:16px;text-align:center;">
-      <div style="font-size:12.5px;color:var(--ink-dim);margin-bottom:8px;">فيه مباراة محفوظة لم تنتهِ</div>
-      <div class="btn-row"><button class="btn btn-gold" onclick="resumeGame()">▶️ استئناف</button><button class="btn btn-ghost" onclick="discardSavedGame()">حذف</button></div>
-    </div>
-    <div class="hero-btns">
-      <button class="btn btn-gold" onclick="startWizard()">🎮 ابدأ لعبة</button>
-    </div>
-  </div>
-
-  <div class="section" id="sec-howto">
-    <div class="section-title">كيف تبدأ التحدي؟</div>
-    <div class="steps">
-      <div class="step"><span class="num">١</span><span class="txt"><b>كوّن فريقك</b>أضف اللاعبين وقسّمهم إلى فريقين</span></div>
-      <div class="step"><span class="num">٢</span><span class="txt"><b>اختر الفئات</b>كل فريق يختار فئاته</span></div>
-      <div class="step"><span class="num">٣</span><span class="txt"><b>أجب واستخدم المساعدات</b>أجب عن الأسئلة واستعمل أدواتك بالوقت المناسب</span></div>
-      <div class="step"><span class="num">٤</span><span class="txt"><b>اجمع النقاط</b>الفريق الذي ينهي المباراة بأكبر عدد من النقاط يفوز</span></div>
+    <div class="hero-inner">
+      <div class="eyebrow">● لعبة جماعية • تعمل بدون إنترنت</div>
+      <h1>مين <span>يعرف أكثر؟</span></h1>
+      <p>كوّن فريقين، اختاروا الفئات، واجهوا الأسئلة وارفعوا رصيدكم. تجربة مسابقات مصممة للجلسات الحقيقية مع الأصدقاء.</p>
+      <button class="cta" onclick="go('players')">ابدأ مباراة جديدة ←</button>
+      <div class="features">
+        <div class="feature"><i>👥</i><b>من ٤ إلى ١٢ لاعب</b><small>قسّموا اللاعبين إلى فريقين بأي أسماء تختارونها.</small></div>
+        <div class="feature"><i>🎯</i><b>فئات ونقاط مختلفة</b><small>اختاروا فئاتكم ثم خاطروا بالنقاط الأعلى.</small></div>
+        <div class="feature"><i>⚡</i><b>وسائل مساعدة</b><small>استخدموا الأدوات في اللحظة المناسبة لتغيير مجرى المباراة.</small></div>
+      </div>
     </div>
   </div>
+</section>
 
-  <div class="section" id="sec-cats">
-    <div class="section-title">الفئات</div>
-    <div class="cat-preview" id="homeCatPreview"></div>
-  </div>
+<section id="players" class="screen"><div class="panel">
+<div class="progress"><div style="width:20%"></div></div><div class="kicker">الخطوة ١ من ٥</div><div class="title">مين داخل المنافسة؟</div>
+<div class="field"><label>عدد اللاعبين — من ٤ إلى ١٢</label><input id="count" type="number" min="4" max="12" value="6" oninput="buildNames()"></div>
+<div id="names" class="player-grid"></div><div class="actions"><button class="cta" onclick="toTeams()">التالي</button></div>
+</div></section>
 
-  <div class="section">
-    <div class="section-title">وسائل المساعدة</div>
-    <div class="life-preview">
-      <div class="life-row"><span class="ic">☎️</span><span><b>اتصال بصديق</b> — استعن بشخص لمساعدتك (٣٠ ثانية)</span></div>
-      <div class="life-row"><span class="ic">✌️</span><span><b>إجابتان</b> — امنح نفسك فرصة بإجابتين</span></div>
-      <div class="life-row"><span class="ic">🪤</span><span><b>الفخ</b> — حوّل السؤال إلى الفريق المنافس</span></div>
-      <div class="life-row"><span class="ic">😴</span><span><b>استراحة</b> — امنع لاعبًا من الفريق المنافس من المشاركة</span></div>
-      <div class="life-row"><span class="ic">🕳️</span><span><b>الحفرة</b> — فعّلها قبل السؤال لتأثير أقوى عند الإجابة الصحيحة</span></div>
-    </div>
-  </div>
+<section id="teams" class="screen"><div class="panel">
+<div class="progress"><div style="width:40%"></div></div><div class="kicker">الخطوة ٢ من ٥</div><div class="title">كوّنوا الفريقين</div>
+<div class="team-grid"><div class="team-card blue"><h3>🔵 الفريق الأزرق</h3><input id="team1" value="الصقور"></div><div class="team-card red"><h3>🔴 الفريق الأحمر</h3><input id="team2" value="النسور"></div></div>
+<div id="assign" class="assign"></div><div class="actions"><button class="cta" onclick="toCats()">التالي</button></div>
+</div></section>
 
-  <div class="foot">جيم سين — منصة مسابقات جماعية تشتغل بدون إنترنت</div>
-</div>
+<section id="cats" class="screen"><div class="panel">
+<div class="progress"><div style="width:60%"></div></div><div class="kicker">الخطوة ٣ من ٥</div><div class="title">اختاروا فئاتكم</div>
+<p class="muted">كل فريق يختار ٣ فئات. اضغط على الفئة لتحديدها للفريق الحالي.</p>
+<div id="catTurn" class="eyebrow">دور الفريق الأزرق</div><div id="catsGrid" class="category-grid" style="margin-top:14px"></div>
+<div class="actions"><button class="cta" id="catsNext" onclick="toLife()">التالي</button></div>
+</div></section>
 
-<!-- ============ WIZARD: PLAYERS ============ -->
-<div id="screen-players" class="screen hidden">
-  <div class="card">
-    <p class="step-label"><span class="n">١</span> من سيلعب؟</p>
-    <label class="f-label">عدد اللاعبين (٤ - ١٢)</label>
-    <input type="number" id="playerCount" value="6" min="4" max="12">
-    <div style="margin-top:16px;"><button class="btn btn-gold btn-full" onclick="goToNames()">التالي</button></div>
-  </div>
-</div>
+<section id="life" class="screen"><div class="panel">
+<div class="progress"><div style="width:80%"></div></div><div class="kicker">الخطوة ٤ من ٥</div><div class="title">اختاروا وسائل المساعدة</div>
+<p class="muted">لكل فريق ٣ أدوات من أصل ٥.</p><div id="lifeGrid" class="life-list"></div>
+<div class="actions"><button class="cta" onclick="confirmGame()">مراجعة المباراة</button></div>
+</div></section>
 
-<div id="screen-names" class="screen hidden">
-  <div class="card">
-    <p class="step-label"><span class="n">٢</span> أسماء اللاعبين</p>
-    <div id="namesList"></div>
-    <div class="btn-row" style="margin-top:12px;">
-      <button class="btn btn-ghost" onclick="show('screen-players')">رجوع</button>
-      <button class="btn btn-gold" onclick="goToTeams()">التالي</button>
-    </div>
-  </div>
-</div>
+<section id="confirm" class="screen"><div class="panel">
+<div class="progress"><div style="width:100%"></div></div><div class="kicker">الخطوة ٥ من ٥</div><div class="title">كل شيء جاهز 🔥</div>
+<div id="summary" class="summary"></div><div class="actions"><button class="cta" onclick="startGame()">ابدأ المباراة</button></div>
+</div></section>
 
-<div id="screen-teams" class="screen hidden">
-  <div class="card">
-    <p class="step-label"><span class="n">٣</span> وزّع الفرق</p>
-    <label class="f-label">اسم الفريق الأول 🔵</label>
-    <input type="text" id="team1Name" value="الصقور">
-    <label class="f-label">اسم الفريق الثاني 🔴</label>
-    <input type="text" id="team2Name" value="النسور">
-    <label class="f-label">حدد فريق كل لاعب</label>
-    <div class="assign-list" id="assignList"></div>
-    <div class="btn-row" style="margin-top:14px;">
-      <button class="btn btn-ghost" onclick="show('screen-names')">رجوع</button>
-      <button class="btn btn-gold" id="teamsNextBtn" onclick="goToCategories()">التالي</button>
-    </div>
-  </div>
-</div>
+<section id="countdown" class="screen"><div class="countdown"><div class="kicker">استعدوا!</div><div class="versus"><span id="v1"></span> <span class="muted">VS</span> <span id="v2"></span></div><div id="counter" class="count">3</div></div></section>
 
-<div id="screen-categories" class="screen hidden">
-  <div class="card">
-    <p class="step-label"><span class="n">٤</span> اختيار الفئات</p>
-    <div class="note-badge" id="catTurnNote">دور <span id="catTurnTeam"></span> — اختر ٣ فئات</div>
-    <div class="cat-grid" id="catGrid"></div>
-    <div class="btn-row" style="margin-top:14px;">
-      <button class="btn btn-ghost" onclick="show('screen-teams')">رجوع</button>
-      <button class="btn btn-gold" id="catsNextBtn" onclick="goToLifelines()" disabled>التالي</button>
-    </div>
-  </div>
-</div>
+<section id="board" class="screen"><div class="game-head"><div class="score blue"><span id="b1"></span><b id="s1">0</b></div><div class="turn">دور الاختيار<br><span id="turn"></span></div><div class="score red"><span id="b2"></span><b id="s2">0</b></div></div><div class="board-wrap"><div id="boardGrid" class="board"></div></div></section>
 
-<div id="screen-lifelines" class="screen hidden">
-  <div class="card">
-    <p class="step-label"><span class="n">٥</span> اختيار وسائل المساعدة</p>
-    <div class="note-badge">كل فريق يختار ٣ من ٥</div>
-    <div id="lifeGrid"></div>
-    <div class="btn-row" style="margin-top:14px;">
-      <button class="btn btn-ghost" onclick="show('screen-categories')">رجوع</button>
-      <button class="btn btn-gold" id="lifeNextBtn" onclick="goToConfirm()" disabled>التالي</button>
-    </div>
-  </div>
-</div>
+<section id="question" class="screen"><div class="question"><div class="q-meta"><span id="qcat"></span><span id="qpts"></span></div><div class="q-card" id="qtext"></div><div id="timer" class="timer">00:30</div><div class="actions"><button class="ghost" onclick="toggleTimer()" id="timerBtn">▶ تشغيل المؤقت</button></div><div id="answer" class="answer"></div><div id="judge" class="judge"></div></div></section>
 
-<div id="screen-confirm" class="screen hidden">
-  <div class="card">
-    <p class="step-label">🏆 مباراة جديدة</p>
-    <div id="confirmBody"></div>
-    <button class="btn btn-gold btn-full" style="margin-top:16px;" onclick="startIntro()">🔥 ابدأ المباراة</button>
-  </div>
-</div>
-
-<!-- ============ INTRO ============ -->
-<div id="screen-intro" class="intro-screen hidden">
-  <div style="font-family:var(--font-d);font-weight:900;font-size:22px;color:var(--gold);">🔥 استعدوا!</div>
-  <div class="intro-vs"><span class="t1" id="introT1"></span> <span style="color:var(--ink-dim);">VS</span> <span class="t2" id="introT2"></span></div>
-  <div class="countdown-num" id="countdownNum">3</div>
-</div>
-
-<!-- ============ BOARD ============ -->
-<div id="screen-board" class="hidden">
-  <div class="score-bar">
-    <div class="score-team t1"><div class="tname" id="boardT1Name"></div><div class="tscore" id="boardT1Score">0</div></div>
-    <div class="score-team t2"><div class="tname" id="boardT2Name"></div><div class="tscore" id="boardT2Score">0</div></div>
-  </div>
-  <div class="turn-indicator">دور اختيار السؤال: <span id="turnLabel"></span></div>
-  <div class="remaining-indicator" id="remainingLabel"></div>
-  <div class="life-status-panel" id="lifeStatusPanel"></div>
-  <div style="padding:0 18px 10px;"><button class="btn btn-ghost btn-full" id="undoBtn" onclick="undoLast()" disabled>↩️ تراجع عن آخر قرار</button></div>
-  <div class="board-scroll"><div class="board-grid" id="boardGrid"></div></div>
-</div>
-
-<!-- ============ QUESTION ============ -->
-<div id="screen-question" class="q-screen hidden">
-  <div class="q-top">
-    <span class="q-cat" id="qCat"></span>
-    <span class="q-points" id="qPoints"></span>
-  </div>
-  <div class="q-team-tag" id="qTeamTag"></div>
-  <div id="qLifelineNote"></div>
-  <div class="q-text" id="qText"></div>
-  <div class="q-timer" id="qTimer">00:00</div>
-  <div class="btn-row" style="margin-bottom:14px;">
-    <button class="btn btn-ghost" onclick="toggleTimer()" id="timerBtn">▶️ تشغيل المؤقت</button>
-  </div>
-  <div class="q-life-row" id="qLifeRow"></div>
-  <div id="qAnswerWrap"></div>
-  <div class="btn-row">
-    <button class="btn btn-ghost btn-full" onclick="skipQuestion()">تخطي السؤال</button>
-  </div>
-</div>
-
-<!-- ============ RESULT ============ -->
-<div id="screen-result" class="result-screen hidden">
-  <div class="trophy">🏆</div>
-  <div id="resultBody"></div>
-  <div class="btn-row" style="margin-top:10px;">
-    <button class="btn btn-ghost" onclick="location.reload()">🏠 الرئيسية</button>
-    <button class="btn btn-gold" onclick="location.reload()">🔄 مباراة جديدة</button>
-  </div>
-</div>
-
+<section id="result" class="screen"><div class="result"><div class="trophy">🏆</div><h1 id="winner"></h1><div class="result-score" id="finalScore"></div><div class="actions" style="max-width:500px;margin:25px auto"><button class="cta" onclick="location.reload()">مباراة جديدة</button></div></div></section>
 </div>
 
 <script>
-/* ================= QUESTION BANK ================= */
 const CATS = {
 general:{name:'معلومات عامة',icon:'🧠',pool:{100:[["كم عدد أيام الأسبوع؟","سبعة"],["ما هو أكبر محيط في العالم؟","المحيط الهادئ"],["ما هو أصغر كوكب في المجموعة الشمسية؟","عطارد"],["كم عدد قارات العالم؟","سبع"],["ما هي عاصمة فرنسا؟","باريس"],["كم عدد ألوان قوس قزح؟","سبعة"],["ما هو أطول نهر في العالم؟","النيل"],["كم عدد أرجل النملة؟","ستة"],["ما هي أكبر دولة في العالم من حيث المساحة؟","روسيا"],["كم عدد فصول السنة؟","أربعة"]],300:[["ما هي أصغر دولة في العالم؟","الفاتيكان"],["من مخترع المصباح الكهربائي؟","توماس إديسون"],["ما هي عاصمة أستراليا؟","كانبرا"],["كم عدد عظام جسم الإنسان البالغ؟","206"],["ما هو أطول جبل في العالم من القاعدة للقمة؟","ماونا كيا"],["ما هي أكبر جزيرة في العالم؟","جرينلاند"],["كم عدد أسنان الإنسان البالغ؟","32"],["ما هي اللغة الأكثر انتشارًا كلغة أم؟","الصينية الماندرين"],["ما هو أعمق محيط في العالم؟","المحيط الهادئ"],["ما اسم أصغر عظمة في جسم الإنسان؟","عظمة الركاب بالأذن"]],500:[["ما هي الدولة التي تقع في قارتين؟","تركيا"],["كم عدد العضلات في جسم الإنسان تقريبًا؟","حوالي 600 عضلة"],["ما اسم أول قمر صناعي أُطلق للفضاء؟","سبوتنيك 1"],["ما هي أطول سلسلة جبال في العالم؟","الأنديز"],["كم عدد عظام الجمجمة البشرية؟","22 عظمة"],["ما هي أسرع حيوان بري؟","الفهد الصياد"],["ما اسم أكبر صحراء حارة في العالم؟","الصحراء الكبرى"],["من مؤلف نظرية النسبية؟","ألبرت أينشتاين"],["ما هي أعلى قمة جبلية في أفريقيا؟","جبل كليمنجارو"],["كم يستغرق ضوء الشمس للوصول للأرض؟","حوالي 8 دقائق"]]}},
 sports:{name:'رياضة',icon:'⚽',pool:{100:[["كم عدد لاعبي فريق كرة القدم داخل الملعب؟","11"],["في أي رياضة تُستخدم كلمة Checkmate؟","الشطرنج"],["كم عدد أشواط مباراة الملاكمة الاحترافية بحد أقصى؟","12"],["ما الرياضة المعروفة بالرياضة الملكية؟","الفروسية"],["كم عدد الحلقات في العلم الأولمبي؟","خمسة"],["أي دولة استضافت أول كأس عالم لكرة القدم؟","الأوروغواي"],["كرة الغولف كبيرة أم صغيرة؟","صغيرة"],["كم عدد لاعبي كرة السلة داخل الملعب؟","خمسة"],["ما اسم الرياضة التي تُلعب بمضرب وريشة؟","الريشة الطائرة"],["كم شوطًا يحتاج الفوز بمباراة تنس عادة؟","أفضل من 3 مجموعات"]],300:[["من الفريق الأكثر تتويجًا بكأس العالم؟","البرازيل"],["متى أقيمت أول دورة أولمبية حديثة؟","1896"],["ما اسم ملعب ريال مدريد؟","سانتياغو برنابيو"],["كم طول ملعب كرة القدم القياسي تقريبًا؟","حوالي 105 متر"],["من الملاكم الملقب بالأسطورة الأعظم؟","محمد علي كلاي"],["أي دولة استضافت كأس العالم 2022؟","قطر"],["كم عدد لاعبي الكرة الطائرة الأساسيين؟","ستة"],["ما اسم بطولة أوروبا لكرة القدم للمنتخبات؟","يورو"],["من الحائز على أكبر عدد من الكرات الذهبية؟","ليونيل ميسي"],["ما الدولة الأصلية لرياضة الجودو؟","اليابان"]],500:[["متى فازت ألمانيا الغربية بأول كأس عالم؟","1954"],["من أول لاعب يسجل هاتريك بنهائي كأس عالم؟","جيوف هيرست"],["ما أقدم بطولة كرة قدم محلية لا تزال تقام؟","كأس الاتحاد الإنجليزي"],["كم استغرقت أطول مباراة تنس فردية تقريبًا؟","أكثر من 11 ساعة"],["ما الدولة الوحيدة المشاركة بكل نسخ كأس العالم؟","البرازيل"],["كم أقصى عدد بدلاء يمكن إشراكهم بمباراة حديثة؟","خمسة"],["من فاز بأول نسخة من دوري أبطال أوروبا؟","ريال مدريد"],["ما اسم رياضة الخماسي الأولمبي المكوّن من خمس مهارات؟","الخماسي الحديث"],["أي مدينة استضافت أولمبياد 1936؟","برلين"],["كم مدة الشوط الواحد بمباراة كرة قدم قياسية؟","45 دقيقة"]]}},
@@ -391,512 +135,58 @@ const CAT_KEYS = Object.keys(CATS);
 const LIFELINES = {phone:{name:'اتصال بصديق',icon:'☎️'},two:{name:'إجابتان',icon:'✌️'},trap:{name:'الفخ',icon:'🪤'},rest:{name:'استراحة',icon:'😴'},pit:{name:'الحفرة',icon:'🕳️'}};
 const LIFE_KEYS = Object.keys(LIFELINES);
 
-/* ================= STATE ================= */
-let state = {
-  playerCount:6, names:[], team1Name:'الصقور', team2Name:'النسور',
-  assign:{}, // name -> 1|2
-  catPicks:{t1:[], t2:[]},
-  lifePicks:{t1:[], t2:[]},
-  usedLife:{t1:{}, t2:{}},
-  scores:{t1:0, t2:0},
-  turn:1,
-  board:[], // {catKey, points, q, a, used, doubled}
-  currentCellIdx:null,
-  answeringTeam:1,
-  timer:{seconds:0, running:false, interval:null},
-  pitPending:false,
-  history:[]
-};
-const SAVE_KEY = 'jeemSeenMatch_v1';
 
-function show(id){
-  ['screen-home','screen-players','screen-names','screen-teams','screen-categories','screen-lifelines','screen-confirm','screen-intro','screen-board','screen-question','screen-result']
-    .forEach(s=> document.getElementById(s).classList.toggle('hidden', s!==id));
-  window.scrollTo(0,0);
-}
-function scrollToId(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
+const catKeys=Object.keys(CATS);
+const state={players:[],teams:[[],[]],names:['الصقور','النسور'],selected:[[],[]],life:[[],[]],turn:0,scores:[0,0],used:{},current:null,timer:30,interval:null};
 
-/* ---------- persistence ---------- */
-function saveGame(){
-  try{
-    const snap = {
-      names:state.names, team1Name:state.team1Name, team2Name:state.team2Name, assign:state.assign,
-      catPicks:state.catPicks, lifePicks:state.lifePicks, usedLife:state.usedLife, scores:state.scores,
-      turn:state.turn, board:state.board, playerCount:state.playerCount
-    };
-    localStorage.setItem(SAVE_KEY, JSON.stringify(snap));
-  }catch(e){ /* storage unavailable, ignore */ }
+function $(id){return document.getElementById(id)}
+function go(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');scrollTo(0,0)}
+function home(){location.reload()}
+function buildNames(){
+ let n=Math.max(4,Math.min(12,+$('count').value||6));$('count').value=n;
+ $('names').innerHTML=Array.from({length:n},(_,i)=>`<div class="player"><span class="num">${i+1}</span><input class="pname" placeholder="اسم اللاعب ${i+1}" value="${state.players[i]||'لاعب '+(i+1)}"></div>`).join('');
 }
-function clearSavedGame(){ try{ localStorage.removeItem(SAVE_KEY); }catch(e){} }
-function discardSavedGame(){ clearSavedGame(); document.getElementById('resumeBanner').classList.add('hidden'); }
-function checkForSavedGame(){
-  try{
-    const raw = localStorage.getItem(SAVE_KEY);
-    if(!raw) return;
-    const snap = JSON.parse(raw);
-    if(snap && snap.board && snap.board.length && snap.board.some(c=>!c.used)){
-      document.getElementById('resumeBanner').classList.remove('hidden');
-    } else { clearSavedGame(); }
-  }catch(e){}
+function toTeams(){state.players=[...document.querySelectorAll('.pname')].map(x=>x.value.trim()||'لاعب');buildAssign();go('teams')}
+function buildAssign(){
+ $('assign').innerHTML=state.players.map((p,i)=>`<div class="assign-row"><span>${p}</span><div class="pills"><button class="pill ${i%2===0?'active blue':''}" onclick="setTeam(${i},0,this)">أزرق</button><button class="pill ${i%2?'active red':''}" onclick="setTeam(${i},1,this)">أحمر</button></div></div>`).join('');
+ state.teams=[[],[]];state.players.forEach((p,i)=>state.teams[i%2].push(p));
 }
-function resumeGame(){
-  try{
-    const raw = localStorage.getItem(SAVE_KEY);
-    if(!raw) return;
-    const snap = JSON.parse(raw);
-    Object.assign(state, snap);
-    state.history=[];
-    renderBoard();
-    show('screen-board');
-  }catch(e){}
+function setTeam(i,t){state.teams[0]=[];state.teams[1]=[];document.querySelectorAll('.assign-row').forEach((r,j)=>{let active=r.querySelectorAll('.pill')[t];r.querySelectorAll('.pill').forEach(x=>x.classList.remove('active','blue','red'));active.classList.add('active',t?'red':'blue');state.teams[t].push(state.players[j])})}
+function toCats(){state.names=[$('team1').value||'الصقور',$('team2').value||'النسور'];state.selected=[[],[]];state.turn=0;renderCats();go('cats')}
+function renderCats(){
+ $('catTurn').textContent='دور '+state.names[state.turn];
+ $('catsGrid').innerHTML=catKeys.map(k=>{let c=CATS[k];let sel=state.selected[state.turn].includes(k);return `<button class="cat ${sel?'selected '+(state.turn?'red':'blue'):''}" onclick="pickCat('${k}')"><span class="emoji">${c.icon}</span>${c.name}<small>100 • 300 • 500</small></button>`}).join('');
 }
-checkForSavedGame();
-
-/* home preview */
-(function renderHomePreview(){
-  const el = document.getElementById('homeCatPreview');
-  CAT_KEYS.slice(0,8).forEach(k=>{
-    const c = CATS[k];
-    const d = document.createElement('div');
-    d.className='cat-chip-mini';
-    d.innerHTML = `<span class="ic">${c.icon}</span>${c.name}`;
-    el.appendChild(d);
-  });
-})();
-
-function startWizard(){ show('screen-players'); }
-
-/* ---------- players ---------- */
-function goToNames(){
-  let v = parseInt(document.getElementById('playerCount').value,10);
-  if(isNaN(v)||v<4) v=4; if(v>12) v=12;
-  state.playerCount = v;
-  document.getElementById('playerCount').value = v;
-  const list = document.getElementById('namesList');
-  list.innerHTML='';
-  const prev = state.names;
-  state.names=[];
-  for(let i=0;i<v;i++){
-    const def = prev[i] || ('لاعب '+(i+1));
-    state.names.push(def);
-    const row=document.createElement('div');
-    row.className='name-row';
-    row.innerHTML = `<span class="idx">${i+1}</span><input type="text" value="${def}" data-idx="${i}">`;
-    list.appendChild(row);
-  }
-  list.querySelectorAll('input').forEach(inp=>{
-    inp.addEventListener('input', e=>{ state.names[+e.target.dataset.idx] = e.target.value.trim() || ('لاعب '+(+e.target.dataset.idx+1)); });
-  });
-  show('screen-names');
+function pickCat(k){let a=state.selected[state.turn],i=a.indexOf(k);if(i>=0)a.splice(i,1);else if(a.length<3)a.push(k);renderCats();if(a.length===3){if(state.turn===0){state.turn=1;renderCats()}else $('catsNext').disabled=false}}
+function toLife(){state.life=[[],[]];renderLife();go('life')}
+const lifeNames=[['☎️','اتصال بصديق'],['✌️','إجابتان'],['🪤','الفخ'],['😴','استراحة'],['🕳️','الحفرة']];
+function renderLife(){
+ $('lifeGrid').innerHTML=lifeNames.map((x,i)=>`<div class="life"><span>${x[0]} ${x[1]}</span><div><button onclick="pickLife(0,${i})" class="${state.life[0].includes(i)?'on':''}">أزرق</button><button onclick="pickLife(1,${i})" class="${state.life[1].includes(i)?'on':''}">أحمر</button></div></div>`).join('');
 }
-
-/* ---------- teams ---------- */
-function goToTeams(){
-  const list = document.getElementById('assignList');
-  list.innerHTML='';
-  state.names.forEach((name,i)=>{
-    if(!(name in state.assign)) state.assign[name] = (i%2===0)?1:2;
-    const row=document.createElement('div');
-    row.className='assign-row';
-    row.innerHTML = `<span class="pname">${name}</span>
-      <span class="picks">
-        <button class="tpick t1 ${state.assign[name]===1?'active':''}" onclick="setAssign('${name.replace(/'/g,"\\'")}',1,this)">🔵</button>
-        <button class="tpick t2 ${state.assign[name]===2?'active':''}" onclick="setAssign('${name.replace(/'/g,"\\'")}',2,this)">🔴</button>
-      </span>`;
-    list.appendChild(row);
-  });
-  show('screen-teams');
+function pickLife(t,i){let a=state.life[t],p=a.indexOf(i);if(p>=0)a.splice(p,1);else if(a.length<3)a.push(i);renderLife()}
+function confirmGame(){
+ $('summary').innerHTML=`<div class="row"><span>الفريق الأول</span><strong>${state.names[0]}</strong></div><div class="row"><span>الفريق الثاني</span><strong>${state.names[1]}</strong></div><div class="row"><span>اللاعبون</span><strong>${state.players.length}</strong></div><div class="row"><span>فئات ${state.names[0]}</span><strong>${state.selected[0].map(k=>CATS[k].name).join('، ')}</strong></div><div class="row"><span>فئات ${state.names[1]}</span><strong>${state.selected[1].map(k=>CATS[k].name).join('، ')}</strong></div>`;
+go('confirm')
 }
-function setAssign(name, team, btn){
-  state.assign[name] = team;
-  const row = btn.closest('.assign-row');
-  row.querySelectorAll('.tpick').forEach(b=>b.classList.remove('active'));
-  row.querySelector('.tpick.t'+team).classList.add('active');
+function startGame(){
+ $('v1').textContent=state.names[0];$('v2').textContent=state.names[1];go('countdown');let n=3;$('counter').textContent=n;let x=setInterval(()=>{n--;if(n<=0){clearInterval(x);renderBoard();go('board')}else $('counter').textContent=n},700)
 }
-
-/* ---------- categories ---------- */
-function goToCategories(){
-  state.team1Name = document.getElementById('team1Name').value.trim() || 'الصقور';
-  state.team2Name = document.getElementById('team2Name').value.trim() || 'النسور';
-  state.catPicks = {t1:[], t2:[]};
-  renderCatGrid();
-  show('screen-categories');
+function renderBoard(){
+ $('b1').textContent=state.names[0];$('b2').textContent=state.names[1];$('s1').textContent=state.scores[0];$('s2').textContent=state.scores[1];$('turn').textContent=state.names[state.turn];
+ let cols=[...new Set([...state.selected[0],...state.selected[1]])];
+ $('boardGrid').innerHTML=cols.map(k=>`<div class="board-cat">${CATS[k].icon}<br>${CATS[k].name</div>`).concat([100,300,500].map(p=>`<button class="tile" onclick="openQ(${p})">${p}</button>`).repeat(cols.length)).join('');
 }
-function currentCatTeam(){ return state.catPicks.t1.length<3 ? 1 : 2; }
-function renderCatGrid(){
-  const t = currentCatTeam();
-  document.getElementById('catTurnTeam').textContent = t===1?state.team1Name:state.team2Name;
-  document.getElementById('catTurnTeam').style.color = t===1?'var(--blue-2)':'var(--red)';
-  const grid = document.getElementById('catGrid');
-  grid.innerHTML='';
-  CAT_KEYS.forEach(k=>{
-    const c=CATS[k];
-    const picked1 = state.catPicks.t1.includes(k), picked2 = state.catPicks.t2.includes(k);
-    const div=document.createElement('div');
-    div.className='cat-pick'+(picked1?' t1':'')+(picked2?' t2':'')+((picked1||picked2)?' disabled':'');
-    div.innerHTML = `<span class="ic">${c.icon}</span><span class="nm">${c.name}</span>`;
-    div.onclick=()=>{
-      const team = currentCatTeam();
-      if(team===1 && state.catPicks.t1.length<3){ state.catPicks.t1.push(k); }
-      else if(team===2 && state.catPicks.t2.length<3){ state.catPicks.t2.push(k); }
-      renderCatGrid();
-      document.getElementById('catsNextBtn').disabled = !(state.catPicks.t1.length===3 && state.catPicks.t2.length===3);
-    };
-    grid.appendChild(div);
-  });
-}
-
-/* ---------- lifelines ---------- */
-function goToLifelines(){
-  state.lifePicks = {t1:[], t2:[]};
-  renderLifeGrid();
-  show('screen-lifelines');
-}
-function renderLifeGrid(){
-  const el = document.getElementById('lifeGrid');
-  el.innerHTML='';
-  LIFE_KEYS.forEach(k=>{
-    const l = LIFELINES[k];
-    const row=document.createElement('div');
-    row.className='life-pick-row';
-    const a1 = state.lifePicks.t1.includes(k), a2 = state.lifePicks.t2.includes(k);
-    row.innerHTML = `<span class="lname">${l.icon} ${l.name}</span>
-      <span class="life-toggle">
-        <button class="ltbtn t1 ${a1?'active':''}" onclick="toggleLife('t1','${k}')">🔵</button>
-        <button class="ltbtn t2 ${a2?'active':''}" onclick="toggleLife('t2','${k}')">🔴</button>
-      </span>`;
-    el.appendChild(row);
-  });
-}
-function toggleLife(team,key){
-  const arr = state.lifePicks[team];
-  const idx = arr.indexOf(key);
-  if(idx>=0){ arr.splice(idx,1); }
-  else { if(arr.length>=3) return; arr.push(key); }
-  renderLifeGrid();
-  document.getElementById('lifeNextBtn').disabled = !(state.lifePicks.t1.length===3 && state.lifePicks.t2.length===3);
-}
-
-/* ---------- confirm ---------- */
-function goToConfirm(){
-  const t1p = state.names.filter(n=>state.assign[n]===1);
-  const t2p = state.names.filter(n=>state.assign[n]===2);
-  const catNames = arr=> arr.map(k=>CATS[k].icon+' '+CATS[k].name).join('، ');
-  const lifeNames = arr=> arr.map(k=>LIFELINES[k].icon+' '+LIFELINES[k].name).join('، ');
-  document.getElementById('confirmBody').innerHTML = `
-    <div class="summary-block"><h4>🔵 ${state.team1Name}</h4><div class="line">${t1p.join('، ')||'—'}</div></div>
-    <div class="summary-block"><h4>🔴 ${state.team2Name}</h4><div class="line">${t2p.join('، ')||'—'}</div></div>
-    <div class="summary-block"><h4>📚 فئات ${state.team1Name}</h4><div class="line">${catNames(state.catPicks.t1)}</div></div>
-    <div class="summary-block"><h4>📚 فئات ${state.team2Name}</h4><div class="line">${catNames(state.catPicks.t2)}</div></div>
-    <div class="summary-block"><h4>🆘 مساعدات ${state.team1Name}</h4><div class="line">${lifeNames(state.lifePicks.t1)}</div></div>
-    <div class="summary-block"><h4>🆘 مساعدات ${state.team2Name}</h4><div class="line">${lifeNames(state.lifePicks.t2)}</div></div>`;
-  show('screen-confirm');
-}
-
-/* ---------- intro / board build ---------- */
-function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
-
-function buildBoard(){
-  const cats = [...state.catPicks.t1, ...state.catPicks.t2];
-  const board=[];
-  cats.forEach(catKey=>{
-    [100,300,500].forEach(pts=>{
-      const pool = shuffle(CATS[catKey].pool[pts]).slice(0,2);
-      pool.forEach(([q,a])=> board.push({catKey, points:pts, q, a, used:false, doubled:false}));
-    });
-  });
-  state.board = board;
-  state.scores = {t1:0,t2:0};
-  state.turn = 1;
-  state.usedLife = {t1:{}, t2:{}};
-  state.history = [];
-  clearSavedGame();
-}
-
-function startIntro(){
-  buildBoard();
-  document.getElementById('introT1').textContent = state.team1Name;
-  document.getElementById('introT2').textContent = state.team2Name;
-  show('screen-intro');
-  let n=3;
-  document.getElementById('countdownNum').textContent = n;
-  const iv = setInterval(()=>{
-    n--;
-    if(n>0){ document.getElementById('countdownNum').textContent = n; }
-    else if(n===0){ document.getElementById('countdownNum').textContent = '🚀'; }
-    else { clearInterval(iv); renderBoard(); show('screen-board'); }
-  },700);
-}
-
-/* ---------- board render ---------- */
-function animateNumber(el, from, to){
-  if(from===to){ el.textContent = to; return; }
-  const dur = 500, start = performance.now();
-  function step(now){
-    const p = Math.min(1, (now-start)/dur);
-    el.textContent = Math.round(from + (to-from)*p);
-    if(p<1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
-}
-function renderBoard(prevScores){
-  document.getElementById('boardT1Name').textContent = state.team1Name;
-  document.getElementById('boardT2Name').textContent = state.team2Name;
-  const t1el = document.getElementById('boardT1Score'), t2el = document.getElementById('boardT2Score');
-  if(prevScores){ animateNumber(t1el, prevScores.t1, state.scores.t1); animateNumber(t2el, prevScores.t2, state.scores.t2); }
-  else { t1el.textContent = state.scores.t1; t2el.textContent = state.scores.t2; }
-  document.getElementById('turnLabel').textContent = state.turn===1?state.team1Name:state.team2Name;
-  document.getElementById('turnLabel').style.color = state.turn===1?'var(--blue-2)':'var(--red)';
-
-  const remaining = state.board.filter(c=>!c.used).length;
-  document.getElementById('remainingLabel').textContent = 'متبقي '+remaining+' سؤال من '+state.board.length;
-
-  const lifePanel = document.getElementById('lifeStatusPanel');
-  lifePanel.innerHTML='';
-  [1,2].forEach(team=>{
-    const key='t'+team;
-    const wrap=document.createElement('div');
-    wrap.className='life-status-team';
-    wrap.innerHTML = `<span class="lbl" style="color:${team===1?'var(--blue-2)':'var(--red)'}">${team===1?state.team1Name:state.team2Name}</span>`;
-    state.lifePicks[key].forEach(k=>{
-      const used = !!state.usedLife[key][k];
-      const s=document.createElement('span');
-      s.className='life-status-icon'+(used?' used':'');
-      s.textContent = LIFELINES[k].icon + (used?'🔒':'');
-      s.title = LIFELINES[k].name+(used?' — مستخدمة':'');
-      wrap.appendChild(s);
-    });
-    lifePanel.appendChild(wrap);
-  });
-
-  document.getElementById('undoBtn').disabled = state.history.length===0;
-
-  const cats = [...state.catPicks.t1, ...state.catPicks.t2];
-  const grid = document.getElementById('boardGrid');
-  grid.innerHTML='';
-  cats.forEach((catKey, colIdx)=>{
-    const colDiv = document.createElement('div');
-    colDiv.style.display='flex'; colDiv.style.flexDirection='column'; colDiv.style.gap='6px';
-    const head=document.createElement('div');
-    head.className='board-col-head';
-    head.textContent = CATS[catKey].icon+' '+CATS[catKey].name;
-    colDiv.appendChild(head);
-    [100,300,500].forEach(pts=>{
-      const cellsForLevel = state.board.map((c,i)=>({c,i})).filter(o=>o.c.catKey===catKey && o.c.points===pts);
-      cellsForLevel.forEach(({c,i})=>{
-        const cell=document.createElement('div');
-        cell.className='board-cell'+(c.used?' used':'');
-        cell.textContent = c.used?'✓':(c.doubled? (pts*2):pts);
-        if(!c.used){ cell.onclick=()=> openQuestion(i); }
-        colDiv.appendChild(cell);
-      });
-    });
-    grid.appendChild(colDiv);
-  });
-  saveGame();
-}
-
-/* ---------- question flow ---------- */
-function openQuestion(idx){
-  const cell = state.board[idx];
-  state.currentCellIdx = idx;
-  state.answeringTeam = state.turn;
-  state.pitPending = false;
-  // offer الحفرة before reveal if the answering team still has it
-  const team = 't'+state.answeringTeam;
-  const hasPit = state.lifePicks[team].includes('pit') && !state.usedLife[team]['pit'];
-  if(hasPit){
-    if(confirm('عندكم وسيلة "الحفرة" — استخدامها الآن يضاعف نقاط هذا السؤال لو أجبتم صح. تفعيلها؟')){
-      state.usedLife[team]['pit']=true;
-      cell.doubled = true;
-    }
-  }
-  showQuestionScreen();
-}
-
-function skipQuestion(){
-  const idx = state.currentCellIdx;
-  const cell = state.board[idx];
-  const usedTexts = new Set(state.board.map(c=>c.q));
-  const levelPool = CATS[cell.catKey].pool[cell.points].filter(([q,a])=> !usedTexts.has(q));
-  if(levelPool.length>0){
-    const pick = levelPool[Math.floor(Math.random()*levelPool.length)];
-    cell.q = pick[0]; cell.a = pick[1];
-  }
-  clearInterval(state.timer.interval);
-  renderBoard();
-  show('screen-board');
-}
-
-function showQuestionScreen(){
-  const cell = state.board[state.currentCellIdx];
-  document.getElementById('qCat').textContent = CATS[cell.catKey].icon+' '+CATS[cell.catKey].name;
-  document.getElementById('qPoints').textContent = (cell.doubled? cell.points*2 : cell.points)+' نقطة';
-  const teamName = state.answeringTeam===1?state.team1Name:state.team2Name;
-  const tag = document.getElementById('qTeamTag');
-  tag.textContent = '🎯 دور: '+teamName;
-  tag.className = 'q-team-tag '+(state.answeringTeam===1?'t1':'t2');
-  document.getElementById('qLifelineNote').innerHTML = cell.doubled? '<div class="note-badge">🕳️ الحفرة مفعّلة — نقاط مضاعفة</div>':'';
-  document.getElementById('qText').textContent = cell.q;
-  document.getElementById('qAnswerWrap').innerHTML = `<button class="btn btn-blue btn-full" onclick="revealAnswer()">👁️ إظهار الإجابة</button>`;
-  // timer: reset then auto-start
-  clearInterval(state.timer.interval);
-  state.timer = {seconds:0, running:false, interval:null};
-  updateTimerDisplay();
-  renderLifeButtons();
-  show('screen-question');
-  toggleTimer(); // auto-start the stopwatch as soon as the question is shown
-}
-
-function toggleTimer(){
-  if(state.timer.running){
-    clearInterval(state.timer.interval);
-    state.timer.running=false;
-    document.getElementById('timerBtn').textContent='▶️ استئناف المؤقت';
-  } else {
-    state.timer.running=true;
-    document.getElementById('timerBtn').textContent='⏸️ إيقاف مؤقت';
-    state.timer.interval = setInterval(()=>{
-      state.timer.seconds++;
-      if(state.timer.seconds>=300){ state.timer.seconds=300; clearInterval(state.timer.interval); state.timer.running=false; }
-      updateTimerDisplay();
-    },1000);
-  }
-}
-function updateTimerDisplay(){
-  const s = state.timer.seconds;
-  const m = Math.floor(s/60), sec = s%60;
-  const el = document.getElementById('qTimer');
-  el.textContent = String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
-  el.classList.toggle('hot', s>=270);
-}
-
-function renderLifeButtons(){
-  const team = 't'+state.answeringTeam;
-  const row = document.getElementById('qLifeRow');
-  row.innerHTML='';
-  state.lifePicks[team].forEach(k=>{
-    const used = state.usedLife[team][k];
-    const btn=document.createElement('button');
-    btn.className='q-life-btn';
-    btn.textContent = LIFELINES[k].icon;
-    btn.title = LIFELINES[k].name;
-    btn.disabled = !!used || k==='pit'; // pit only usable before reveal, already handled
-    btn.onclick=()=> useLifeline(k);
-    row.appendChild(btn);
-  });
-}
-
-function useLifeline(key){
-  const team = 't'+state.answeringTeam;
-  if(state.usedLife[team][key]) return;
-  state.usedLife[team][key]=true;
-  if(key==='phone'){
-    document.getElementById('qLifelineNote').innerHTML += `<div class="note-badge">☎️ اتصال بصديق — ٣٠ ثانية استشارة</div>`;
-    let s=30;
-    const noteEls = document.querySelectorAll('#qLifelineNote .note-badge');
-    const lastNote = noteEls[noteEls.length-1];
-    const iv=setInterval(()=>{
-      s--;
-      lastNote.textContent = '☎️ اتصال بصديق — '+s+' ثانية متبقية';
-      if(s<=0){ clearInterval(iv); lastNote.textContent='☎️ انتهى وقت الاتصال'; }
-    },1000);
-  } else if(key==='two'){
-    document.getElementById('qLifelineNote').innerHTML += `<div class="note-badge">✌️ مسموح إجابتان لهذا السؤال</div>`;
-  } else if(key==='rest'){
-    const opp = 't'+(state.answeringTeam===1?2:1);
-    const oppNames = state.names.filter(n=>state.assign[n]===(state.answeringTeam===1?2:1));
-    const pick = prompt('اختر لاعب من الفريق المنافس يُمنع من المشاركة بهذا السؤال:\n'+oppNames.join('\n'));
-    if(pick){ document.getElementById('qLifelineNote').innerHTML += `<div class="note-badge">😴 ${pick} ممنوع من المشاركة بهذا السؤال</div>`; }
-  } else if(key==='trap'){
-    state.answeringTeam = state.answeringTeam===1?2:1;
-    document.getElementById('qLifelineNote').innerHTML += `<div class="note-badge">🪤 تم تفعيل الفخ — السؤال الآن للفريق المنافس</div>`;
-    showQuestionScreen();
-    return;
-  }
-  renderLifeButtons();
-}
-
-function revealAnswer(){
-  const cell = state.board[state.currentCellIdx];
-  document.getElementById('qAnswerWrap').innerHTML = `
-    <div class="q-answer-box pulse"><div class="lbl">الإجابة الصحيحة</div><div class="ans">${cell.a}</div></div>
-    <div class="note-badge" style="display:block;text-align:center;margin-bottom:10px;">مين جاوب صح؟</div>
-    <div class="judge-btns">
-      <button class="btn" style="background:rgba(46,139,255,0.16);color:var(--blue-2);border:1px solid var(--blue);" onclick="judge(1)">🔵 ${state.team1Name}</button>
-      <button class="btn" style="background:rgba(255,77,94,0.16);color:var(--red);border:1px solid var(--red);" onclick="judge(2)">🔴 ${state.team2Name}</button>
-    </div>
-    <button class="btn btn-ghost btn-full" style="margin-top:10px;" onclick="judge(0)">ولا فريق (خطأ الاثنين)</button>`;
-}
-
-function judge(winningTeam){
-  const cell = state.board[state.currentCellIdx];
-  const pts = cell.doubled? cell.points*2 : cell.points;
-  let awarded = 0, awardedPts = 0;
-  if(winningTeam===1 || winningTeam===2){
-    state.scores['t'+winningTeam] += pts;
-    awarded = winningTeam; awardedPts = pts;
-  }
-  clearInterval(state.timer.interval);
-  backToBoard({awardedTeam:awarded, pts:awardedPts});
-}
-
-function backToBoard(entry){
-  const idx = state.currentCellIdx;
-  const cell = state.board[idx];
-  const prevScores = {t1:state.scores.t1, t2:state.scores.t2};
-  const prevTurn = state.turn;
-  cell.used = true;
-  state.history.push({cellIdx:idx, awardedTeam: entry? entry.awardedTeam:0, pts: entry? entry.pts:0, prevTurn});
-  clearInterval(state.timer.interval);
-  state.turn = state.turn===1?2:1;
-  const allUsed = state.board.every(c=>c.used);
-  if(allUsed){ endMatch(); return; }
-  renderBoard(prevScores);
-  show('screen-board');
-}
-
-function undoLast(){
-  const entry = state.history.pop();
-  if(!entry) return;
-  const cell = state.board[entry.cellIdx];
-  const prevScores = {t1:state.scores.t1, t2:state.scores.t2};
-  cell.used = false;
-  if(entry.awardedTeam===1 || entry.awardedTeam===2){
-    state.scores['t'+entry.awardedTeam] -= entry.pts;
-  }
-  state.turn = entry.prevTurn;
-  renderBoard(prevScores);
-}
-
-/* ---------- end match ---------- */
-function endMatch(){
-  clearSavedGame();
-  if(state.scores.t1===state.scores.t2){
-    // tie-breaker: pull an unused general question
-    const tieQ = CATS.general.pool[500][Math.floor(Math.random()*CATS.general.pool[500].length)];
-    if(confirm('🤝 تعادل! سيتم طرح سؤال فاصل لحسم المباراة. جاهزون؟')){
-      const ans = confirm('السؤال الفاصل:\n'+tieQ[0]+'\n\nهل أجاب الفريق '+(state.turn===1?state.team1Name:state.team2Name)+' إجابة صحيحة؟\n(الإجابة الصحيحة: '+tieQ[1]+')');
-      if(ans){ state.scores['t'+state.turn]+=1; } else { state.scores['t'+(state.turn===1?2:1)]+=1; }
-    }
-  }
-  showResult();
-}
-
-function showResult(){
-  const winner = state.scores.t1>state.scores.t2 ? state.team1Name : (state.scores.t2>state.scores.t1? state.team2Name : 'تعادل');
-  document.getElementById('resultBody').innerHTML = `
-    <div class="winner">🎉 الفائز: ${winner}</div>
-    <div class="result-scores">🔵 ${state.team1Name}: ${state.scores.t1} &nbsp;|&nbsp; 🔴 ${state.team2Name}: ${state.scores.t2}</div>`;
-  show('screen-result');
-}
-</script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
-  });
-}
+Array.prototype.repeat=function(n){let a=[];for(let i=0;i<n;i++)a.push(...this);return a}
+function openQ(points){
+ let eligible=state.selected[state.turn];if(!eligible.length)eligible=catKeys.slice(0,3);let key=eligible[Math.floor(Math.random()*eligible.length)],pool=CATS[key].pool[points]||[];let q=pool[Math.floor(Math.random()*pool.length)];
+ state.current={key,points,q};$('qcat').textContent=CATS[key].icon+' '+CATS[key].name;$('qpts').textContent=points+' نقطة';$('qtext').textContent=q[0];$('answer').textContent='الإجابة: '+q[1];$('answer').classList.remove('show');$('judge').innerHTML='';resetTimer();go('question')}
+function resetTimer(){clearInterval(state.interval);state.timer=30;renderTimer();$('timerBtn').textContent='▶ تشغيل المؤقت'}
+function renderTimer(){$('timer').textContent='00:'+String(state.timer).padStart(2,'0');$('timer').classList.toggle('hot',state.timer<=8)}
+function toggleTimer(){if(state.interval){clearInterval(state.interval);state.interval=null;$('timerBtn').textContent='▶ تشغيل المؤقت';return} $('timerBtn').textContent='⏸ إيقاف';state.interval=setInterval(()=>{state.timer--;renderTimer();if(state.timer<=0){clearInterval(state.interval);state.interval=null;$('timerBtn').textContent='انتهى الوقت';revealAnswer()}},1000)}
+function revealAnswer(){$('answer').classList.add('show');$('judge').innerHTML=`<button class="correct" onclick="judge(true)">✓ إجابة صحيحة</button><button class="wrong" onclick="judge(false)">✕ إجابة خاطئة</button>`}
+function judge(ok){clearInterval(state.interval);if(ok)state.scores[state.turn]+=state.current.points;state.turn=state.turn?0:1;if(state.scores[0]+state.scores[1]>=3000)return finish();renderBoard();go('board')}
+function finish(){go('result');$('winner').textContent=state.scores[0]===state.scores[1]?'تعادل!':state.scores[0]>state.scores[1]?'🎉 '+state.names[0]+' يفوز!':'🎉 '+state.names[1]+' يفوز!';$('finalScore').textContent=`${state.names[0]} ${state.scores[0]} — ${state.scores[1]} ${state.names[1]}`}
+buildNames();
 </script>
 </body>
 </html>
