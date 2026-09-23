@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <title>جيم سين</title>
+<link rel="icon" type="image/png" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
@@ -135,8 +136,20 @@ input:focus{ border-color:var(--gold); }
 .score-team .tname{ font-family:var(--font-d); font-weight:800; font-size:13px; }
 .score-team.t1 .tname{ color:var(--blue-2); } .score-team.t2 .tname{ color:var(--red); }
 .score-team .tscore{ font-family:var(--font-d); font-weight:900; font-size:26px; }
-.turn-indicator{ text-align:center; font-size:11.5px; color:var(--gold); font-weight:800; padding-bottom:8px;}
+.turn-indicator{ text-align:center; font-size:11.5px; color:var(--gold); font-weight:800; padding-bottom:4px;}
+.remaining-indicator{ text-align:center; font-size:11px; color:var(--ink-dim); padding-bottom:10px;}
+.life-status-panel{ display:flex; justify-content:center; gap:18px; padding-bottom:12px; }
+.life-status-team{ display:flex; gap:5px; align-items:center; }
+.life-status-team .lbl{ font-size:10px; font-weight:800; color:var(--ink-dim); margin-left:4px;}
+.life-status-icon{ font-size:14px; opacity:1; }
+.life-status-icon.used{ opacity:0.3; filter:grayscale(1); position:relative; }
 .board-scroll{ overflow-x:auto; padding:0 12px 20px; }
+@keyframes pulseReveal{
+  0%{ box-shadow:0 0 0 0 rgba(255,176,32,0.6); }
+  70%{ box-shadow:0 0 0 16px rgba(255,176,32,0); }
+  100%{ box-shadow:0 0 0 0 rgba(255,176,32,0); }
+}
+.q-answer-box.pulse{ animation:pulseReveal .9s ease-out; }
 .board-grid{ display:grid; grid-auto-flow:column; grid-auto-columns:92px; gap:6px; }
 .board-col-head{ font-family:var(--font-d); font-weight:800; font-size:10.5px; text-align:center; padding:8px 2px; color:var(--gold); background:var(--panel); border-radius:10px 10px 0 0; }
 .board-cell{
@@ -192,6 +205,10 @@ input:focus{ border-color:var(--gold); }
     <div class="crown">👑</div>
     <h1 class="h-title">جاهز <span class="g">للتحدي؟</span></h1>
     <p>اختبر معلوماتك وتحدَّ أصدقاءك — كوّن فريقك، اختر فئاتك، استخدم وسائل المساعدة، واجمع أكبر عدد من النقاط!</p>
+    <div id="resumeBanner" class="hidden" style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:16px;text-align:center;">
+      <div style="font-size:12.5px;color:var(--ink-dim);margin-bottom:8px;">فيه مباراة محفوظة لم تنتهِ</div>
+      <div class="btn-row"><button class="btn btn-gold" onclick="resumeGame()">▶️ استئناف</button><button class="btn btn-ghost" onclick="discardSavedGame()">حذف</button></div>
+    </div>
     <div class="hero-btns">
       <button class="btn btn-gold" onclick="startWizard()">🎮 ابدأ لعبة</button>
     </div>
@@ -309,6 +326,9 @@ input:focus{ border-color:var(--gold); }
     <div class="score-team t2"><div class="tname" id="boardT2Name"></div><div class="tscore" id="boardT2Score">0</div></div>
   </div>
   <div class="turn-indicator">دور اختيار السؤال: <span id="turnLabel"></span></div>
+  <div class="remaining-indicator" id="remainingLabel"></div>
+  <div class="life-status-panel" id="lifeStatusPanel"></div>
+  <div style="padding:0 18px 10px;"><button class="btn btn-ghost btn-full" id="undoBtn" onclick="undoLast()" disabled>↩️ تراجع عن آخر قرار</button></div>
   <div class="board-scroll"><div class="board-grid" id="boardGrid"></div></div>
 </div>
 
@@ -328,7 +348,7 @@ input:focus{ border-color:var(--gold); }
   <div class="q-life-row" id="qLifeRow"></div>
   <div id="qAnswerWrap"></div>
   <div class="btn-row">
-    <button class="btn btn-ghost btn-full" onclick="backToBoard(false)">تخطي السؤال</button>
+    <button class="btn btn-ghost btn-full" onclick="backToBoard(null)">تخطي السؤال</button>
   </div>
 </div>
 
@@ -381,8 +401,10 @@ let state = {
   currentCellIdx:null,
   answeringTeam:1,
   timer:{seconds:0, running:false, interval:null},
-  pitPending:false
+  pitPending:false,
+  history:[]
 };
+const SAVE_KEY = 'jeemSeenMatch_v1';
 
 function show(id){
   ['screen-home','screen-players','screen-names','screen-teams','screen-categories','screen-lifelines','screen-confirm','screen-intro','screen-board','screen-question','screen-result']
@@ -390,6 +412,42 @@ function show(id){
   window.scrollTo(0,0);
 }
 function scrollToId(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
+
+/* ---------- persistence ---------- */
+function saveGame(){
+  try{
+    const snap = {
+      names:state.names, team1Name:state.team1Name, team2Name:state.team2Name, assign:state.assign,
+      catPicks:state.catPicks, lifePicks:state.lifePicks, usedLife:state.usedLife, scores:state.scores,
+      turn:state.turn, board:state.board, playerCount:state.playerCount
+    };
+    localStorage.setItem(SAVE_KEY, JSON.stringify(snap));
+  }catch(e){ /* storage unavailable, ignore */ }
+}
+function clearSavedGame(){ try{ localStorage.removeItem(SAVE_KEY); }catch(e){} }
+function discardSavedGame(){ clearSavedGame(); document.getElementById('resumeBanner').classList.add('hidden'); }
+function checkForSavedGame(){
+  try{
+    const raw = localStorage.getItem(SAVE_KEY);
+    if(!raw) return;
+    const snap = JSON.parse(raw);
+    if(snap && snap.board && snap.board.length && snap.board.some(c=>!c.used)){
+      document.getElementById('resumeBanner').classList.remove('hidden');
+    } else { clearSavedGame(); }
+  }catch(e){}
+}
+function resumeGame(){
+  try{
+    const raw = localStorage.getItem(SAVE_KEY);
+    if(!raw) return;
+    const snap = JSON.parse(raw);
+    Object.assign(state, snap);
+    state.history=[];
+    renderBoard();
+    show('screen-board');
+  }catch(e){}
+}
+checkForSavedGame();
 
 /* home preview */
 (function renderHomePreview(){
@@ -548,6 +606,8 @@ function buildBoard(){
   state.scores = {t1:0,t2:0};
   state.turn = 1;
   state.usedLife = {t1:{}, t2:{}};
+  state.history = [];
+  clearSavedGame();
 }
 
 function startIntro(){
@@ -566,26 +626,50 @@ function startIntro(){
 }
 
 /* ---------- board render ---------- */
-function renderBoard(){
+function animateNumber(el, from, to){
+  if(from===to){ el.textContent = to; return; }
+  const dur = 500, start = performance.now();
+  function step(now){
+    const p = Math.min(1, (now-start)/dur);
+    el.textContent = Math.round(from + (to-from)*p);
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+function renderBoard(prevScores){
   document.getElementById('boardT1Name').textContent = state.team1Name;
   document.getElementById('boardT2Name').textContent = state.team2Name;
-  document.getElementById('boardT1Score').textContent = state.scores.t1;
-  document.getElementById('boardT2Score').textContent = state.scores.t2;
+  const t1el = document.getElementById('boardT1Score'), t2el = document.getElementById('boardT2Score');
+  if(prevScores){ animateNumber(t1el, prevScores.t1, state.scores.t1); animateNumber(t2el, prevScores.t2, state.scores.t2); }
+  else { t1el.textContent = state.scores.t1; t2el.textContent = state.scores.t2; }
   document.getElementById('turnLabel').textContent = state.turn===1?state.team1Name:state.team2Name;
   document.getElementById('turnLabel').style.color = state.turn===1?'var(--blue-2)':'var(--red)';
 
+  const remaining = state.board.filter(c=>!c.used).length;
+  document.getElementById('remainingLabel').textContent = 'متبقي '+remaining+' سؤال من '+state.board.length;
+
+  const lifePanel = document.getElementById('lifeStatusPanel');
+  lifePanel.innerHTML='';
+  [1,2].forEach(team=>{
+    const key='t'+team;
+    const wrap=document.createElement('div');
+    wrap.className='life-status-team';
+    wrap.innerHTML = `<span class="lbl" style="color:${team===1?'var(--blue-2)':'var(--red)'}">${team===1?state.team1Name:state.team2Name}</span>`;
+    state.lifePicks[key].forEach(k=>{
+      const used = !!state.usedLife[key][k];
+      const s=document.createElement('span');
+      s.className='life-status-icon'+(used?' used':'');
+      s.textContent = LIFELINES[k].icon + (used?'🔒':'');
+      s.title = LIFELINES[k].name+(used?' — مستخدمة':'');
+      wrap.appendChild(s);
+    });
+    lifePanel.appendChild(wrap);
+  });
+
+  document.getElementById('undoBtn').disabled = state.history.length===0;
+
   const cats = [...state.catPicks.t1, ...state.catPicks.t2];
   const grid = document.getElementById('boardGrid');
-  grid.innerHTML='';
-  cats.forEach((catKey)=>{
-    const colWrap = document.createElement('div');
-    colWrap.style.display='contents';
-    const head=document.createElement('div');
-    head.className='board-col-head';
-    head.textContent = CATS[catKey].icon+' '+CATS[catKey].name;
-    grid.appendChild(head);
-  });
-  // rows: we lay out column-major via grid-auto-flow column, so build per category a stack of 6 cells then head; easier: use explicit rows container per column
   grid.innerHTML='';
   cats.forEach((catKey, colIdx)=>{
     const colDiv = document.createElement('div');
@@ -606,6 +690,7 @@ function renderBoard(){
     });
     grid.appendChild(colDiv);
   });
+  saveGame();
 }
 
 /* ---------- question flow ---------- */
@@ -637,13 +722,13 @@ function showQuestionScreen(){
   document.getElementById('qLifelineNote').innerHTML = cell.doubled? '<div class="note-badge">🕳️ الحفرة مفعّلة — نقاط مضاعفة</div>':'';
   document.getElementById('qText').textContent = cell.q;
   document.getElementById('qAnswerWrap').innerHTML = `<button class="btn btn-blue btn-full" onclick="revealAnswer()">👁️ إظهار الإجابة</button>`;
-  // timer reset
+  // timer: reset then auto-start
   clearInterval(state.timer.interval);
   state.timer = {seconds:0, running:false, interval:null};
   updateTimerDisplay();
-  document.getElementById('timerBtn').textContent = '▶️ تشغيل المؤقت';
   renderLifeButtons();
   show('screen-question');
+  toggleTimer(); // auto-start the stopwatch as soon as the question is shown
 }
 
 function toggleTimer(){
@@ -718,36 +803,58 @@ function useLifeline(key){
 function revealAnswer(){
   const cell = state.board[state.currentCellIdx];
   document.getElementById('qAnswerWrap').innerHTML = `
-    <div class="q-answer-box"><div class="lbl">الإجابة الصحيحة</div><div class="ans">${cell.a}</div></div>
+    <div class="q-answer-box pulse"><div class="lbl">الإجابة الصحيحة</div><div class="ans">${cell.a}</div></div>
+    <div class="note-badge" style="display:block;text-align:center;margin-bottom:10px;">مين جاوب صح؟</div>
     <div class="judge-btns">
-      <button class="btn btn-correct" onclick="judge(true)">✅ صحيحة</button>
-      <button class="btn btn-wrong" onclick="judge(false)">❌ خاطئة</button>
-    </div>`;
+      <button class="btn" style="background:rgba(46,139,255,0.16);color:var(--blue-2);border:1px solid var(--blue);" onclick="judge(1)">🔵 ${state.team1Name}</button>
+      <button class="btn" style="background:rgba(255,77,94,0.16);color:var(--red);border:1px solid var(--red);" onclick="judge(2)">🔴 ${state.team2Name}</button>
+    </div>
+    <button class="btn btn-ghost btn-full" style="margin-top:10px;" onclick="judge(0)">ولا فريق (خطأ الاثنين)</button>`;
 }
 
-function judge(correct){
+function judge(winningTeam){
   const cell = state.board[state.currentCellIdx];
   const pts = cell.doubled? cell.points*2 : cell.points;
-  if(correct){
-    state.scores['t'+state.answeringTeam] += pts;
+  let awarded = 0, awardedPts = 0;
+  if(winningTeam===1 || winningTeam===2){
+    state.scores['t'+winningTeam] += pts;
+    awarded = winningTeam; awardedPts = pts;
   }
   clearInterval(state.timer.interval);
-  backToBoard(true);
+  backToBoard({awardedTeam:awarded, pts:awardedPts});
 }
 
-function backToBoard(markUsed){
-  const cell = state.board[state.currentCellIdx];
-  if(markUsed) cell.used = true; else cell.used = true; // skipping also marks used
+function backToBoard(entry){
+  const idx = state.currentCellIdx;
+  const cell = state.board[idx];
+  const prevScores = {t1:state.scores.t1, t2:state.scores.t2};
+  const prevTurn = state.turn;
+  cell.used = true;
+  state.history.push({cellIdx:idx, awardedTeam: entry? entry.awardedTeam:0, pts: entry? entry.pts:0, prevTurn});
   clearInterval(state.timer.interval);
   state.turn = state.turn===1?2:1;
   const allUsed = state.board.every(c=>c.used);
   if(allUsed){ endMatch(); return; }
-  renderBoard();
+  renderBoard(prevScores);
   show('screen-board');
+}
+
+function undoLast(){
+  const entry = state.history.pop();
+  if(!entry) return;
+  const cell = state.board[entry.cellIdx];
+  const prevScores = {t1:state.scores.t1, t2:state.scores.t2};
+  cell.used = false;
+  if(entry.awardedTeam===1 || entry.awardedTeam===2){
+    state.scores['t'+entry.awardedTeam] -= entry.pts;
+  }
+  state.turn = entry.prevTurn;
+  renderBoard(prevScores);
 }
 
 /* ---------- end match ---------- */
 function endMatch(){
+  clearSavedGame();
   if(state.scores.t1===state.scores.t2){
     // tie-breaker: pull an unused general question
     const tieQ = CATS.general.pool[500][Math.floor(Math.random()*CATS.general.pool[500].length)];
