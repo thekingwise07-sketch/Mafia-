@@ -33,6 +33,15 @@ body{
     radial-gradient(500px 380px at 0% 100%, rgba(255,77,94,0.10), transparent 60%);
 }
 .wrap{ position:relative; z-index:2; max-width:560px; margin:0 auto; padding:0 0 60px; min-height:100vh; }
+@media (min-width:900px){
+  .wrap{ max-width:820px; }
+  .hero{ padding-top:56px; }
+  h1.h-title{ font-size:56px; }
+  .cat-preview{ grid-template-columns:repeat(6,1fr); }
+  .cat-grid{ grid-template-columns:repeat(4,1fr); }
+  .board-scroll{ display:flex; justify-content:center; }
+  .card{ padding:28px; }
+}
 .hidden{ display:none !important; }
 
 /* ---------- Navbar ---------- */
@@ -85,6 +94,9 @@ h1.h-title .g{ background:linear-gradient(95deg, var(--gold), var(--gold-2)); -w
 .screen{ padding:20px 18px; }
 .card{ background:var(--panel); border:1px solid var(--line); border-radius:20px; padding:20px; margin-bottom:14px;}
 .step-label{ font-family:var(--font-d); font-weight:800; font-size:14px; color:var(--gold); margin:0 0 14px; display:flex; align-items:center; gap:8px;}
+.progress-bar{ height:4px; background:var(--navy-2); border-radius:100px; overflow:hidden; margin-bottom:16px; }
+.progress-bar-fill{ height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-2)); border-radius:100px; transition:width .3s ease; }
+.progress-step-lbl{ font-size:10.5px; color:var(--ink-dim); margin-bottom:6px; font-weight:700; }
 .step-label .n{ width:22px; height:22px; border-radius:50%; background:var(--gold); color:#1a0e00; display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:900;}
 label.f-label{ display:block; font-size:13px; color:var(--ink-dim); margin:12px 0 6px; font-weight:700;}
 input[type=number], input[type=text]{
@@ -115,7 +127,7 @@ input:focus{ border-color:var(--gold); }
 .cat-pick.disabled{ opacity:0.35; pointer-events:none; }
 
 /* lifeline pick */
-.life-pick-row{ display:flex; align-items:center; justify-content:space-between; background:var(--navy-2); border:1px solid var(--line); border-radius:12px; padding:10px 14px; margin-bottom:8px;}
+.life-pick-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--navy-2); border:1px solid var(--line); border-radius:12px; padding:10px 14px; margin-bottom:8px;}
 .life-pick-row .lname{ font-size:13px; font-weight:700; display:flex; align-items:center; gap:8px;}
 .life-toggle{ display:flex; gap:8px;}
 .ltbtn{ padding:6px 12px; border-radius:8px; font-size:11px; font-weight:800; border:1px solid var(--line); background:transparent; color:var(--ink-dim); cursor:pointer;}
@@ -139,6 +151,9 @@ input:focus{ border-color:var(--gold); }
 .score-team .tname{ font-family:var(--font-d); font-weight:800; font-size:13px; }
 .score-team.t1 .tname{ color:var(--blue-2); } .score-team.t2 .tname{ color:var(--red); }
 .score-team .tscore{ font-family:var(--font-d); font-weight:900; font-size:26px; }
+.score-row{ display:flex; align-items:center; justify-content:center; gap:8px; }
+.score-adj{ width:26px; height:26px; border-radius:8px; border:1px solid var(--line); background:var(--panel-hi); color:var(--ink-dim); font-weight:900; font-size:15px; cursor:pointer; line-height:1; }
+.score-adj:active{ transform:scale(0.92); }
 .turn-indicator{ text-align:center; font-size:11.5px; color:var(--gold); font-weight:800; padding-bottom:4px;}
 .remaining-indicator{ text-align:center; font-size:11px; color:var(--ink-dim); padding-bottom:10px;}
 .life-status-panel{ display:flex; justify-content:center; gap:18px; padding-bottom:12px; }
@@ -163,7 +178,9 @@ input:focus{ border-color:var(--gold); }
 .board-cell.used{ background:transparent; color:var(--ink-dim); opacity:0.3; cursor:default; }
 
 /* question screen */
-.q-screen{ padding:22px 18px; }
+.q-screen{ padding:22px 18px; border:2px solid transparent; border-radius:16px; transition:border-color .3s ease; }
+.q-screen.trap-t1{ border-color:var(--blue); box-shadow:0 0 0 1px var(--blue), 0 0 24px -6px rgba(46,139,255,0.5); }
+.q-screen.trap-t2{ border-color:var(--red); box-shadow:0 0 0 1px var(--red), 0 0 24px -6px rgba(255,77,94,0.5); }
 .q-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
 .q-cat{ font-family:var(--font-d); font-weight:800; font-size:13px; color:var(--gold);}
 .q-points{ font-family:var(--font-d); font-weight:900; font-size:20px; }
@@ -206,7 +223,7 @@ input:focus{ border-color:var(--gold); }
 
   <div class="hero">
     <div class="crown">👑</div>
-    <h1 class="h-title">جاهز <span class="g">للتحدي؟</span></h1>
+    <h1 class="h-title">مين <span class="g">يعرف أكثر؟</span></h1>
     <p>اختبر معلوماتك وتحدَّ أصدقاءك — كوّن فريقك، اختر فئاتك، استخدم وسائل المساعدة، واجمع أكبر عدد من النقاط!</p>
     <div id="resumeBanner" class="hidden" style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:16px;text-align:center;">
       <div style="font-size:12.5px;color:var(--ink-dim);margin-bottom:8px;">فيه مباراة محفوظة لم تنتهِ</div>
@@ -237,9 +254,10 @@ input:focus{ border-color:var(--gold); }
     <div class="life-preview">
       <div class="life-row"><span class="ic">☎️</span><span><b>اتصال بصديق</b> — استعن بشخص لمساعدتك (٣٠ ثانية)</span></div>
       <div class="life-row"><span class="ic">✌️</span><span><b>إجابتان</b> — امنح نفسك فرصة بإجابتين</span></div>
-      <div class="life-row"><span class="ic">🪤</span><span><b>الفخ</b> — حوّل السؤال إلى الفريق المنافس</span></div>
+      <div class="life-row"><span class="ic">🪤</span><span><b>الفخ</b> — حوّل السؤال للمنافس، ولو غلط تنخصم نقاطه</span></div>
       <div class="life-row"><span class="ic">😴</span><span><b>استراحة</b> — امنع لاعبًا من الفريق المنافس من المشاركة</span></div>
-      <div class="life-row"><span class="ic">🕳️</span><span><b>الحفرة</b> — فعّلها قبل السؤال لتأثير أقوى عند الإجابة الصحيحة</span></div>
+      <div class="life-row"><span class="ic">🕳️</span><span><b>الحفرة</b> — فعّلها قبل السؤال؛ لو جاوبت صح تاخذ النقاط وتخصمها من المنافس</span></div>
+      <div class="life-row"><span class="ic">✖️2️⃣</span><span><b>×2</b> — فعّلها قبل السؤال لمضاعفة نقاطكم بس عند الإجابة الصحيحة</span></div>
     </div>
   </div>
 
@@ -249,6 +267,8 @@ input:focus{ border-color:var(--gold); }
 <!-- ============ WIZARD: PLAYERS ============ -->
 <div id="screen-players" class="screen hidden">
   <div class="card">
+    <div class="progress-step-lbl">الخطوة ١ من ٥</div>
+    <div class="progress-bar"><div class="progress-bar-fill" style="width:20%"></div></div>
     <p class="step-label"><span class="n">١</span> من سيلعب؟</p>
     <label class="f-label">عدد اللاعبين (٤ - ١٢)</label>
     <input type="number" id="playerCount" value="6" min="4" max="12">
@@ -258,6 +278,8 @@ input:focus{ border-color:var(--gold); }
 
 <div id="screen-names" class="screen hidden">
   <div class="card">
+    <div class="progress-step-lbl">الخطوة ٢ من ٥</div>
+    <div class="progress-bar"><div class="progress-bar-fill" style="width:40%"></div></div>
     <p class="step-label"><span class="n">٢</span> أسماء اللاعبين</p>
     <div id="namesList"></div>
     <div class="btn-row" style="margin-top:12px;">
@@ -269,6 +291,8 @@ input:focus{ border-color:var(--gold); }
 
 <div id="screen-teams" class="screen hidden">
   <div class="card">
+    <div class="progress-step-lbl">الخطوة ٣ من ٥</div>
+    <div class="progress-bar"><div class="progress-bar-fill" style="width:60%"></div></div>
     <p class="step-label"><span class="n">٣</span> وزّع الفرق</p>
     <label class="f-label">اسم الفريق الأول 🔵</label>
     <input type="text" id="team1Name" value="الصقور">
@@ -285,6 +309,8 @@ input:focus{ border-color:var(--gold); }
 
 <div id="screen-categories" class="screen hidden">
   <div class="card">
+    <div class="progress-step-lbl">الخطوة ٤ من ٥</div>
+    <div class="progress-bar"><div class="progress-bar-fill" style="width:80%"></div></div>
     <p class="step-label"><span class="n">٤</span> اختيار الفئات</p>
     <div class="note-badge" id="catTurnNote">دور <span id="catTurnTeam"></span> — اختر ٣ فئات</div>
     <div class="cat-grid" id="catGrid"></div>
@@ -297,8 +323,10 @@ input:focus{ border-color:var(--gold); }
 
 <div id="screen-lifelines" class="screen hidden">
   <div class="card">
+    <div class="progress-step-lbl">الخطوة ٥ من ٥</div>
+    <div class="progress-bar"><div class="progress-bar-fill" style="width:100%"></div></div>
     <p class="step-label"><span class="n">٥</span> اختيار وسائل المساعدة</p>
-    <div class="note-badge">كل فريق يختار ٣ من ٥</div>
+    <div class="note-badge">كل فريق يختار ٣ من ٦</div>
     <div id="lifeGrid"></div>
     <div class="btn-row" style="margin-top:14px;">
       <button class="btn btn-ghost" onclick="show('screen-categories')">رجوع</button>
@@ -325,8 +353,14 @@ input:focus{ border-color:var(--gold); }
 <!-- ============ BOARD ============ -->
 <div id="screen-board" class="hidden">
   <div class="score-bar">
-    <div class="score-team t1"><div class="tname" id="boardT1Name"></div><div class="tscore" id="boardT1Score">0</div></div>
-    <div class="score-team t2"><div class="tname" id="boardT2Name"></div><div class="tscore" id="boardT2Score">0</div></div>
+    <div class="score-team t1">
+      <div class="tname" id="boardT1Name"></div>
+      <div class="score-row"><button class="score-adj" onclick="adjustScore(1,-100)">−</button><div class="tscore" id="boardT1Score">0</div><button class="score-adj" onclick="adjustScore(1,100)">+</button></div>
+    </div>
+    <div class="score-team t2">
+      <div class="tname" id="boardT2Name"></div>
+      <div class="score-row"><button class="score-adj" onclick="adjustScore(2,-100)">−</button><div class="tscore" id="boardT2Score">0</div><button class="score-adj" onclick="adjustScore(2,100)">+</button></div>
+    </div>
   </div>
   <div class="turn-indicator">دور اختيار السؤال: <span id="turnLabel"></span></div>
   <div class="remaining-indicator" id="remainingLabel"></div>
@@ -388,7 +422,14 @@ puzzles:{name:'ألغاز وذكاء',icon:'🧩',pool:{100:[["ما الشيء �
 jordan:{name:'معلومات أردنية',icon:'🇯🇴',pool:{100:[["ما عاصمة المملكة الأردنية الهاشمية؟","عمّان"],["ما النهر الذي يصب بالبحر الميت مارًا بالأردن؟","نهر الأردن"],["ما المدينة الأثرية الأردنية إحدى عجائب الدنيا السبع؟","البتراء"],["ما العملة الرسمية للأردن؟","الدينار الأردني"],["ما اسم أخفض نقطة على سطح الأرض غرب الأردن؟","البحر الميت"],["ما المدينة الساحلية الأردنية على البحر الأحمر؟","العقبة"],["من مؤسس الدولة الأردنية الحديثة؟","الملك عبدالله الأول"],["ما الجبل الذي رأى منه النبي موسى أرض فلسطين ويقع بالأردن؟","جبل نيبو"],["كم عدد محافظات الأردن؟","12 محافظة"],["ما اسم المدرج الروماني بوسط عمّان؟","المدرج الروماني"]],300:[["متى تأسست إمارة شرق الأردن؟","1921"],["ما أقدم جامعة حكومية أردنية؟","الجامعة الأردنية"],["ما القلعة التاريخية بمدينة الكرك جنوب الأردن؟","قلعة الكرك"],["من الملك الحالي للمملكة الأردنية الهاشمية؟","الملك عبدالله الثاني"],["ما المحمية الأردنية الشهيرة بصحرائها الرملية الحمراء؟","وادي رم"],["متى وُقّعت معاهدة السلام بين الأردن وإسرائيل؟","1994"],["ما اسم السد الأردني الشهير قرب إربد؟","سد الملك طلال"],["ما المدينة الأردنية الأثرية القديمة قرب عمّان؟","جرش"],["ما نهر يشكل الحدود الطبيعية بين الأردن وفلسطين؟","نهر الأردن"],["ما اسم أول جامعة رسمية بالأردن؟","الجامعة الأردنية"]],500:[["من مؤسس المملكة الأردنية الهاشمية رسميًا عام 1946؟","الملك عبدالله الأول"],["من قائد الثورة العربية الكبرى ووالد الملك عبدالله الأول؟","الشريف حسين بن علي"],["متى أُعلن استقلال الأردن رسميًا؟","1946"],["ما اسم معركة الكرامة الشهيرة عام 1968؟","معركة الكرامة"],["من الملك الذي حكم الأردن أطول فترة (1952-1999)؟","الملك الحسين بن طلال"],["من بنى مدينة البتراء؟","الأنباط"],["كم عمق البحر الميت تحت سطح البحر تقريبًا؟","حوالي 430 مترًا"],["من أول رئيس وزراء بتاريخ الأردن؟","رشيد طليع"],["ما عاصمة الأنباط التاريخية؟","البتراء"],["ما النهر الذي يُعد أهم روافد نهر الأردن ويأتي من الجولان؟","نهر اليرموك"]]}}
 };
 const CAT_KEYS = Object.keys(CATS);
-const LIFELINES = {phone:{name:'اتصال بصديق',icon:'☎️'},two:{name:'إجابتان',icon:'✌️'},trap:{name:'الفخ',icon:'🪤'},rest:{name:'استراحة',icon:'😴'},pit:{name:'الحفرة',icon:'🕳️'}};
+const LIFELINES = {
+  phone:{name:'اتصال بصديق',icon:'☎️',desc:'استعن بشخص خارج اللعبة لمدة ٣٠ ثانية قبل ما تجاوبوا'},
+  two:{name:'إجابتان',icon:'✌️',desc:'تقدروا تجاوبوا بإجابتين بدل إجابة وحدة على نفس السؤال'},
+  trap:{name:'الفخ',icon:'🪤',desc:'حوّل السؤال للفريق المنافس — لو غلطوا فيه، تُخصم نقاط السؤال من رصيدهم'},
+  rest:{name:'استراحة',icon:'😴',desc:'اختاروا أذكى لاعب بالفريق المنافس وامنعوه من المشاركة بهالسؤال'},
+  pit:{name:'الحفرة',icon:'🕳️',desc:'فعّلها قبل ما تشوفوا السؤال — لو جاوبتوا صح، تاخذوا نقاط السؤال وتُخصم نفس القيمة من رصيد المنافس'},
+  x2:{name:'×2',icon:'✖️2️⃣',desc:'فعّلها قبل ما تشوفوا السؤال — لو جاوبتوا صح، نقاط السؤال تتضاعف لصالحكم بس (بدون أي تأثير على المنافس)'}
+};
 const LIFE_KEYS = Object.keys(LIFELINES);
 
 /* ================= STATE ================= */
@@ -560,7 +601,10 @@ function renderLifeGrid(){
     const row=document.createElement('div');
     row.className='life-pick-row';
     const a1 = state.lifePicks.t1.includes(k), a2 = state.lifePicks.t2.includes(k);
-    row.innerHTML = `<span class="lname">${l.icon} ${l.name}</span>
+    row.innerHTML = `<div style="flex:1;min-width:0;">
+        <span class="lname">${l.icon} ${l.name}</span>
+        <div style="font-size:10.5px;color:var(--ink-dim);margin-top:3px;line-height:1.5;">${l.desc}</div>
+      </div>
       <span class="life-toggle">
         <button class="ltbtn t1 ${a1?'active':''}" onclick="toggleLife('t1','${k}')">🔵</button>
         <button class="ltbtn t2 ${a2?'active':''}" onclick="toggleLife('t2','${k}')">🔴</button>
@@ -602,7 +646,7 @@ function buildBoard(){
   cats.forEach(catKey=>{
     [100,300,500].forEach(pts=>{
       const pool = shuffle(CATS[catKey].pool[pts]).slice(0,2);
-      pool.forEach(([q,a])=> board.push({catKey, points:pts, q, a, used:false, doubled:false}));
+      pool.forEach(([q,a])=> board.push({catKey, points:pts, q, a, used:false, pitActive:false, x2Active:false, trapActive:false, trapOriginalTeam:null}));
     });
   });
   state.board = board;
@@ -626,6 +670,11 @@ function startIntro(){
     else if(n===0){ document.getElementById('countdownNum').textContent = '🚀'; }
     else { clearInterval(iv); renderBoard(); show('screen-board'); }
   },700);
+}
+
+function adjustScore(team, delta){
+  state.scores['t'+team] += delta;
+  renderBoard();
 }
 
 /* ---------- board render ---------- */
@@ -686,7 +735,7 @@ function renderBoard(prevScores){
       cellsForLevel.forEach(({c,i})=>{
         const cell=document.createElement('div');
         cell.className='board-cell'+(c.used?' used':'');
-        cell.textContent = c.used?'✓':(c.doubled? (pts*2):pts);
+        cell.textContent = c.used?'✓':pts;
         if(!c.used){ cell.onclick=()=> openQuestion(i); }
         colDiv.appendChild(cell);
       });
@@ -701,20 +750,24 @@ function openQuestion(idx){
   const cell = state.board[idx];
   state.currentCellIdx = idx;
   state.answeringTeam = state.turn;
-  state.pitPending = false;
-  // offer الحفرة before reveal if the answering team still has it
+  cell.pitActive = false; cell.x2Active = false; cell.trapActive = false; cell.trapOriginalTeam = null;
+
   const team = 't'+state.answeringTeam;
   const hasPit = state.lifePicks[team].includes('pit') && !state.usedLife[team]['pit'];
-  if(hasPit){
-    if(confirm('عندكم وسيلة "الحفرة" — استخدامها الآن يضاعف نقاط هذا السؤال لو أجبتم صح. تفعيلها؟')){
-      state.usedLife[team]['pit']=true;
-      cell.doubled = true;
-    }
+  if(hasPit && confirm('عندكم وسيلة "الحفرة" — لو فعّلتوها وجاوبتوا صح، تاخذوا نقاط السؤال وكمان تُخصم نفس القيمة من رصيد الفريق المنافس. تفعيلها الآن؟')){
+    state.usedLife[team]['pit'] = true;
+    cell.pitActive = true;
+  }
+  const hasX2 = state.lifePicks[team].includes('x2') && !state.usedLife[team]['x2'];
+  if(hasX2 && confirm('عندكم وسيلة "×2" — لو فعّلتوها وجاوبتوا صح، نقاط السؤال تتضاعف لصالحكم بس. تفعيلها الآن؟')){
+    state.usedLife[team]['x2'] = true;
+    cell.x2Active = true;
   }
   showQuestionScreen();
 }
 
 function skipQuestion(){
+  if(!confirm('تخطي السؤال رح يبدّله بسؤال ثاني عشوائي من نفس الفئة والمستوى، وترجعوا للوحة تختاروا من جديد. أكيد بدك تكمل؟')) return;
   const idx = state.currentCellIdx;
   const cell = state.board[idx];
   const usedTexts = new Set(state.board.map(c=>c.q));
@@ -730,13 +783,24 @@ function skipQuestion(){
 
 function showQuestionScreen(){
   const cell = state.board[state.currentCellIdx];
+  const effPts = cell.x2Active ? cell.points*2 : cell.points;
   document.getElementById('qCat').textContent = CATS[cell.catKey].icon+' '+CATS[cell.catKey].name;
-  document.getElementById('qPoints').textContent = (cell.doubled? cell.points*2 : cell.points)+' نقطة';
+  document.getElementById('qPoints').textContent = effPts+' نقطة';
   const teamName = state.answeringTeam===1?state.team1Name:state.team2Name;
   const tag = document.getElementById('qTeamTag');
   tag.textContent = '🎯 دور: '+teamName;
   tag.className = 'q-team-tag '+(state.answeringTeam===1?'t1':'t2');
-  document.getElementById('qLifelineNote').innerHTML = cell.doubled? '<div class="note-badge">🕳️ الحفرة مفعّلة — نقاط مضاعفة</div>':'';
+
+  let badges = '';
+  if(cell.pitActive) badges += '<div class="note-badge">🕳️ الحفرة مفعّلة — لو جاوبتوا صح تُخصم نقاط السؤال من المنافس</div>';
+  if(cell.x2Active) badges += '<div class="note-badge">✖️2️⃣ ×2 مفعّلة — نقاط مضاعفة لكم</div>';
+  if(cell.trapActive) badges += '<div class="note-badge">🪤 فخ مفعّل — لو غلط هالفريق تُخصم نقاط السؤال من رصيده</div>';
+  document.getElementById('qLifelineNote').innerHTML = badges;
+
+  const qScreen = document.getElementById('screen-question');
+  qScreen.classList.remove('trap-t1','trap-t2');
+  if(cell.trapActive){ qScreen.classList.add('trap-t'+state.answeringTeam); }
+
   document.getElementById('qText').textContent = cell.q;
   document.getElementById('qAnswerWrap').innerHTML = `<button class="btn btn-blue btn-full" onclick="revealAnswer()">👁️ إظهار الإجابة</button>`;
   // timer: reset then auto-start
@@ -781,7 +845,7 @@ function renderLifeButtons(){
     btn.className='q-life-btn';
     btn.textContent = LIFELINES[k].icon;
     btn.title = LIFELINES[k].name;
-    btn.disabled = !!used || k==='pit'; // pit only usable before reveal, already handled
+    btn.disabled = !!used || k==='pit' || k==='x2'; // pit/x2 only usable before reveal, already handled in openQuestion
     btn.onclick=()=> useLifeline(k);
     row.appendChild(btn);
   });
@@ -790,7 +854,19 @@ function renderLifeButtons(){
 function useLifeline(key){
   const team = 't'+state.answeringTeam;
   if(state.usedLife[team][key]) return;
-  state.usedLife[team][key]=true;
+  const cell = state.board[state.currentCellIdx];
+
+  if(key==='trap'){
+    if(!confirm('استخدام "الفخ" رح يحوّل السؤال للفريق المنافس — لو غلطوا بالإجابة، بتنخصم نقاط السؤال من رصيدهم. أكيد بدك تفعّله؟')) return;
+    state.usedLife[team][key] = true;
+    cell.trapActive = true;
+    cell.trapOriginalTeam = state.answeringTeam;
+    state.answeringTeam = state.answeringTeam===1?2:1;
+    showQuestionScreen();
+    return;
+  }
+
+  state.usedLife[team][key] = true;
   if(key==='phone'){
     document.getElementById('qLifelineNote').innerHTML += `<div class="note-badge">☎️ اتصال بصديق — ٣٠ ثانية استشارة</div>`;
     let s=30;
@@ -804,15 +880,9 @@ function useLifeline(key){
   } else if(key==='two'){
     document.getElementById('qLifelineNote').innerHTML += `<div class="note-badge">✌️ مسموح إجابتان لهذا السؤال</div>`;
   } else if(key==='rest'){
-    const opp = 't'+(state.answeringTeam===1?2:1);
     const oppNames = state.names.filter(n=>state.assign[n]===(state.answeringTeam===1?2:1));
     const pick = prompt('اختر لاعب من الفريق المنافس يُمنع من المشاركة بهذا السؤال:\n'+oppNames.join('\n'));
     if(pick){ document.getElementById('qLifelineNote').innerHTML += `<div class="note-badge">😴 ${pick} ممنوع من المشاركة بهذا السؤال</div>`; }
-  } else if(key==='trap'){
-    state.answeringTeam = state.answeringTeam===1?2:1;
-    document.getElementById('qLifelineNote').innerHTML += `<div class="note-badge">🪤 تم تفعيل الفخ — السؤال الآن للفريق المنافس</div>`;
-    showQuestionScreen();
-    return;
   }
   renderLifeButtons();
 }
@@ -831,14 +901,30 @@ function revealAnswer(){
 
 function judge(winningTeam){
   const cell = state.board[state.currentCellIdx];
-  const pts = cell.doubled? cell.points*2 : cell.points;
-  let awarded = 0, awardedPts = 0;
+  const pts = cell.x2Active ? cell.points*2 : cell.points;
+  let awarded = 0, awardedPts = 0, penalizedTeam = 0, penaltyPts = 0, pitOpponent = 0, pitOpponentPts = 0;
+
   if(winningTeam===1 || winningTeam===2){
     state.scores['t'+winningTeam] += pts;
     awarded = winningTeam; awardedPts = pts;
   }
+
+  if(cell.trapActive){
+    const trappedTeam = state.answeringTeam; // team the question was transferred to
+    if(winningTeam !== trappedTeam){
+      state.scores['t'+trappedTeam] -= cell.points;
+      penalizedTeam = trappedTeam; penaltyPts = cell.points;
+    }
+  }
+
+  if(cell.pitActive && winningTeam===state.answeringTeam){
+    const opp = state.answeringTeam===1?2:1;
+    state.scores['t'+opp] -= pts;
+    pitOpponent = opp; pitOpponentPts = pts;
+  }
+
   clearInterval(state.timer.interval);
-  backToBoard({awardedTeam:awarded, pts:awardedPts});
+  backToBoard({awardedTeam:awarded, pts:awardedPts, penalizedTeam, penaltyPts, pitOpponent, pitOpponentPts});
 }
 
 function backToBoard(entry){
@@ -847,7 +933,7 @@ function backToBoard(entry){
   const prevScores = {t1:state.scores.t1, t2:state.scores.t2};
   const prevTurn = state.turn;
   cell.used = true;
-  state.history.push({cellIdx:idx, awardedTeam: entry? entry.awardedTeam:0, pts: entry? entry.pts:0, prevTurn});
+  state.history.push(Object.assign({cellIdx:idx, prevTurn}, entry || {awardedTeam:0,pts:0,penalizedTeam:0,penaltyPts:0,pitOpponent:0,pitOpponentPts:0}));
   clearInterval(state.timer.interval);
   state.turn = state.turn===1?2:1;
   const allUsed = state.board.every(c=>c.used);
@@ -864,6 +950,12 @@ function undoLast(){
   cell.used = false;
   if(entry.awardedTeam===1 || entry.awardedTeam===2){
     state.scores['t'+entry.awardedTeam] -= entry.pts;
+  }
+  if(entry.penalizedTeam===1 || entry.penalizedTeam===2){
+    state.scores['t'+entry.penalizedTeam] += entry.penaltyPts;
+  }
+  if(entry.pitOpponent===1 || entry.pitOpponent===2){
+    state.scores['t'+entry.pitOpponent] += entry.pitOpponentPts;
   }
   state.turn = entry.prevTurn;
   renderBoard(prevScores);
