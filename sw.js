@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jalsat-satih-v1';
+const CACHE_NAME = 'jalsat-satih-v2';
 const ASSETS = [
   './',
   'index.html',
@@ -27,15 +27,33 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
+const isHTML = (req) =>
+  req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html');
+
 self.addEventListener('fetch', (event) => {
+  const req = event.request;
+
+  if (isHTML(req)) {
+    // Network-first for pages: always get the latest version when online,
+    // fall back to the cached copy only when offline.
+    event.respondWith(
+      fetch(req).then((resp) => {
+        const clone = resp.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(req, clone));
+        return resp;
+      }).catch(() => caches.match(req))
+    );
+    return;
+  }
+
+  // Cache-first for static assets (icons, manifest, etc.)
   event.respondWith(
-    caches.match(event.request).then((cached) => {
+    caches.match(req).then((cached) => {
       if (cached) return cached;
-      return fetch(event.request).then((resp) => {
-        // cache newly fetched same-origin files for next time offline
-        if (event.request.method === 'GET' && resp && resp.status === 200 && resp.type === 'basic') {
+      return fetch(req).then((resp) => {
+        if (req.method === 'GET' && resp && resp.status === 200 && resp.type === 'basic') {
           const clone = resp.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, clone));
         }
         return resp;
       }).catch(() => cached);
