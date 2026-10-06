@@ -211,6 +211,7 @@
     transform-style:preserve-3d;
   }
   .flip-inner.flipped{ transform:rotateY(180deg); }
+  .flip-inner.no-anim{ transition:none !important; }
   .face{
     position:absolute; inset:0; backface-visibility:hidden; border-radius:20px;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -962,6 +963,16 @@ function presenterOpenNext(){
 
 // ---------- Reveal modal ----------
 let currentIdx = null;
+let pendingBackHTML = '';
+let nextOpenTimer = null;
+
+function resetFlipInstant(){
+  const fi = document.getElementById('flipInner');
+  fi.classList.add('no-anim');
+  fi.classList.remove('flipped');
+  void fi.offsetWidth; // force reflow so the reset happens with no animation
+  fi.classList.remove('no-anim');
+}
 
 function openReveal(i){
   currentIdx = i;
@@ -969,7 +980,7 @@ function openReveal(i){
   document.querySelector('#overlay .reveal-card').classList.add('photo-reveal');
   document.getElementById('turnName').textContent = p.name;
   document.getElementById('frontName').textContent = p.name;
-  document.getElementById('flipInner').classList.remove('flipped');
+  resetFlipInstant();
   document.getElementById('closeBtn').classList.add('hidden');
 
   const role = ROLES[p.roleKey];
@@ -978,7 +989,8 @@ function openReveal(i){
   const vc = state.vip ? VIP_CARDS[p.roleKey] : NORMAL_CARDS[p.roleKey];
   const imgSrc = Array.isArray(vc) ? vc[p.citizenVariant] : vc;
   back.className = 'face face-back photo-back';
-  back.innerHTML = `<img src="${imgSrc}" alt="${role.name}" class="card-photo">`;
+  back.innerHTML = ''; // the role image is only inserted when the player taps reveal
+  pendingBackHTML = `<img src="${imgSrc}" alt="${role.name}" class="card-photo">`;
 
   document.getElementById('overlay').classList.remove('hidden');
   renderProgressList();
@@ -1000,7 +1012,8 @@ function playRevealEffect(){
 }
 
 function revealCard(){
-  document.getElementById('flipInner').classList.add('flipped');
+  document.getElementById('backFace').innerHTML = pendingBackHTML;
+  requestAnimationFrame(()=>document.getElementById('flipInner').classList.add('flipped'));
   document.getElementById('closeBtn').classList.remove('hidden');
   playRevealEffect();
   if(currentIdx !== null){
@@ -1011,9 +1024,13 @@ function revealCard(){
 function closeModal(){
   document.getElementById('overlay').classList.add('hidden');
   currentIdx = null;
+  pendingBackHTML = '';
+  document.getElementById('backFace').innerHTML = ''; // clear the role immediately
+  resetFlipInstant();
   const nextIdx = state.viewed.indexOf(false);
   if(nextIdx !== -1 && !state.presenterMode){
-    openReveal(nextIdx); // auto-advance to the next player's card
+    clearTimeout(nextOpenTimer);
+    nextOpenTimer = setTimeout(()=>openReveal(nextIdx), 350); // short pause before the next player's card
   } else {
     renderProgressList(); // presenter mode (or finished): wait for presenter / show completion
   }
