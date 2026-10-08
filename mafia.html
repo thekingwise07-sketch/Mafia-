@@ -196,11 +196,12 @@
   .progress-row.current .pg-name{ color:var(--ink); }
   .progress-row.done .pg-name{ color:var(--gold-dim); }
 
-  .footer-actions{ margin-top:18px; display:flex; gap:10px; }
+  .footer-actions{ margin-top:18px; display:flex; flex-wrap:wrap; gap:10px; }
+  .footer-actions .btn{ flex:1 1 calc(50% - 10px); width:auto; min-width:0; padding:13px 10px; font-size:14px; }
 
   /* Modal */
   .overlay{
-    position:fixed; inset:0; background:rgba(4,4,7,0.88); backdrop-filter:blur(6px);
+    position:fixed; inset:0; background:rgba(4,4,7,0.95);
     z-index:50; display:flex; align-items:center; justify-content:center; padding:20px;
   }
   .reveal-card{
@@ -497,7 +498,7 @@
   @keyframes cardClose{ to{ opacity:0; transform:translateY(-10px) scale(.55); } }
   .reveal-card{ position:relative; }
   .flip-inner.flipped .card-photo{ animation:photoZoom .9s cubic-bezier(.2,.8,.2,1) .2s both; }
-  @keyframes photoZoom{ from{ transform:scale(1.14); filter:brightness(1.5); } to{ transform:scale(1); filter:none; } }
+  @keyframes photoZoom{ from{ transform:scale(1.1); } to{ transform:scale(1); } }
   .face-back.photo-back::after{
     content:""; position:absolute; inset:0; pointer-events:none; border-radius:20px; opacity:0;
     background:linear-gradient(115deg, transparent 35%, rgba(255,226,140,.55) 50%, transparent 65%);
@@ -515,14 +516,14 @@
 
   /* night / day transition + background */
   #narBg{
-    position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0; transition:opacity 1.4s ease;
+    overflow:hidden; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0; transition:opacity 1.4s ease;
     background:linear-gradient(180deg, rgba(12,18,52,.9), rgba(8,8,22,.35) 65%, transparent);
   }
   #narBg.on{ opacity:1; }
   #narBg .star{ position:absolute; border-radius:50%; background:#fff; animation:twinkle 3s ease-in-out infinite; }
   @keyframes twinkle{ 0%,100%{ opacity:.15; } 50%{ opacity:.95; } }
   #narBg .fog{
-    position:absolute; left:-30%; width:160%; height:38%; filter:blur(38px); opacity:.35;
+    position:absolute; left:-30%; width:160%; height:38%; opacity:.4; will-change:transform;
     background:radial-gradient(ellipse at center, rgba(160,170,210,.55), transparent 70%);
     animation:fogDrift 16s ease-in-out infinite alternate;
   }
@@ -633,26 +634,25 @@
   /* ---------- Card effects ---------- */
   body:not(.vip-mode) .vip-block{ display:none !important; }
   .reveal-card{ perspective:none !important; }
+  #overlay{ overflow-x:hidden !important; }
+  html{ overflow-x:clip; } body{ overflow-x:clip; max-width:100vw; }
+  .wrap, .wrap *{ min-width:0; }
+  .wrap .btn, .wrap input[type=number]{ max-width:100%; }
   .card-stage{ position:relative; perspective:1700px; }
   .breathe{ position:relative; z-index:1; transform-style:preserve-3d; }
-  .tilt-wrap{ transform-style:preserve-3d; border-radius:20px; transition:transform .16s ease-out; will-change:transform; }
+  .tilt-wrap{ transform-style:preserve-3d; border-radius:20px; transition:transform .12s linear; will-change:transform; }
   .reveal-card.revealed .breathe{ animation:breathe 5s ease-in-out infinite; }
   @keyframes breathe{ 0%,100%{ transform:translateY(0) scale(1); } 50%{ transform:translateY(-6px) scale(1.012); } }
-  .reveal-card.glow-red .tilt-wrap{ animation:glowRed 2.6s ease-in-out infinite; }
-  .reveal-card.glow-green .tilt-wrap{ animation:glowGreen 2.6s ease-in-out infinite; }
-  @keyframes glowRed{
-    0%,100%{ box-shadow:0 0 18px rgba(209,48,90,.45), 0 0 46px rgba(163,34,62,.25); }
-    50%{ box-shadow:0 0 30px rgba(209,48,90,.85), 0 0 84px rgba(163,34,62,.5); }
-  }
-  @keyframes glowGreen{
-    0%,100%{ box-shadow:0 0 18px rgba(95,195,165,.4), 0 0 46px rgba(95,195,165,.2); }
-    50%{ box-shadow:0 0 30px rgba(95,195,165,.8), 0 0 84px rgba(95,195,165,.42); }
-  }
+  .tilt-wrap{ position:relative; }
+  .tilt-wrap::before{ content:""; position:absolute; inset:0; border-radius:20px; pointer-events:none; opacity:0; will-change:opacity; }
+  .reveal-card.glow-red .tilt-wrap::before{ box-shadow:0 0 28px rgba(209,48,90,.8), 0 0 64px rgba(163,34,62,.45); animation:glowPulse 2.6s ease-in-out infinite; }
+  .reveal-card.glow-green .tilt-wrap::before{ box-shadow:0 0 28px rgba(95,195,165,.75), 0 0 64px rgba(95,195,165,.4); animation:glowPulse 2.6s ease-in-out infinite; }
+  @keyframes glowPulse{ 0%,100%{ opacity:.4; } 50%{ opacity:1; } }
   /* moving sheen that follows the tilt */
   .face-back.photo-back::before{
     content:""; position:absolute; inset:0; z-index:2; pointer-events:none; border-radius:20px; opacity:0;
     background:linear-gradient(115deg, transparent 35%, rgba(255,226,140,.3) 50%, transparent 65%);
-    background-size:260% 100%; background-position:calc(50% + var(--sx, 0%)) 0; mix-blend-mode:screen;
+    background-size:260% 100%; background-position:calc(50% + var(--sx, 0%)) 0;
     transition:opacity .4s;
   }
   .reveal-card.tilting .face-back.photo-back::before{ opacity:1; }
@@ -695,16 +695,16 @@
   .ac-pill.hot{ color:#fff; border-color:var(--crimson-bright); background:rgba(163,34,62,.75); animation:cntPulse .5s ease infinite; }
 
   /* role effects (VIP) */
-  .role-fx{ position:absolute; inset:-70px -50px; pointer-events:none; z-index:0; }
+  .role-fx{ position:absolute; inset:-50px -30px; pointer-events:none; z-index:0; }
   .role-fx.front{ z-index:3; }
   .role-fx span{ position:absolute; display:block; }
   .smoke{
-    width:var(--s); height:var(--s); margin-left:calc(var(--s) / -2); border-radius:50%; filter:blur(11px); opacity:0;
-    background:radial-gradient(circle, rgba(200,30,64,.6), rgba(120,10,30,.28) 50%, transparent 70%);
+    width:var(--s); height:var(--s); margin-left:calc(var(--s) / -2); border-radius:50%; opacity:0; will-change:transform,opacity;
+    background:radial-gradient(circle, rgba(200,30,64,.5), rgba(120,10,30,.22) 40%, transparent 68%);
     animation:smokeUp linear infinite;
   }
   @keyframes smokeUp{ 0%{ transform:translate(0,40px) scale(.6); opacity:0; } 25%{ opacity:.95; } 100%{ transform:translate(var(--dx),-280px) scale(1.7); opacity:0; } }
-  .ember{ width:5px; height:5px; border-radius:50%; background:#ff9a4a; box-shadow:0 0 9px #ff6a2a; opacity:0; animation:emberUp ease-out infinite; }
+  .ember{ width:5px; height:5px; border-radius:50%; background:#ff9a4a; box-shadow:0 0 6px #ff6a2a; opacity:0; will-change:transform,opacity; animation:emberUp ease-out infinite; }
   @keyframes emberUp{ 0%{ transform:translate(0,0); opacity:0; } 15%{ opacity:1; } 100%{ transform:translate(var(--dx),-240px) scale(.3); opacity:0; } }
   .slash{
     left:-12%; top:72%; width:124%; height:4px; border-radius:4px; transform-origin:left center; opacity:0;
@@ -720,7 +720,9 @@
   @keyframes sparkFly{ 0%{ opacity:1; transform:translate(0,0); } 100%{ opacity:0; transform:translate(var(--dx),var(--dy)) scale(.3); } }
   .shield{ left:0; top:0; width:100%; height:100%; overflow:visible; }
   .shield svg{ width:100%; height:100%; overflow:visible; animation:shieldPulse 3s ease-in-out infinite; transform-origin:center; }
-  .shield path{ fill:rgba(95,195,165,.07); stroke:#5fc3a5; stroke-width:2; filter:drop-shadow(0 0 10px rgba(95,195,165,.85)); }
+  .shield path{ fill:rgba(95,195,165,.07); stroke:#5fc3a5; stroke-width:2; }
+  .shield path.sh-glow{ fill:none; stroke-width:9; stroke-opacity:.22; }
+  .shield svg{ will-change:transform,opacity; }
   @keyframes shieldPulse{ 0%,100%{ transform:scale(.97); opacity:.7; } 50%{ transform:scale(1.03); opacity:1; } }
   .orbg{
     width:9px; height:9px; border-radius:50%; opacity:0; animation:orbUp ease-in-out infinite;
@@ -728,11 +730,11 @@
   }
   @keyframes orbUp{ 0%{ transform:translate(0,30px) scale(.5); opacity:0; } 30%{ opacity:1; } 100%{ transform:translate(var(--dx),-230px) scale(1); opacity:0; } }
   .halo{
-    left:50%; top:50%; width:560px; height:560px; margin:-280px 0 0 -280px; border-radius:50%;
+    left:50%; top:50%; width:480px; height:480px; margin:-240px 0 0 -240px; border-radius:50%;
     background:repeating-conic-gradient(from 0deg, rgba(255,214,102,.42) 0 5deg, transparent 5deg 15deg);
     -webkit-mask-image:radial-gradient(circle, transparent 30%, #000 42%, transparent 72%);
     mask-image:radial-gradient(circle, transparent 30%, #000 42%, transparent 72%);
-    animation:haloSpin 22s linear infinite;
+    animation:haloSpin 22s linear infinite; will-change:transform;
   }
   .halo-glow{
     left:50%; top:50%; width:460px; height:520px; margin:-260px 0 0 -230px; border-radius:50%;
@@ -741,7 +743,8 @@
   }
   @keyframes haloSpin{ to{ transform:rotate(360deg); } }
   .ghost{ right:4px; top:32%; width:116px; animation:ghostPeek 8s ease-in-out infinite; }
-  .ghost svg{ width:100%; overflow:visible; filter:drop-shadow(0 0 9px rgba(160,130,255,.75)); }
+  .ghost svg{ width:100%; overflow:visible; }
+  .ghost{ will-change:transform; }
   .ghost .g-arm{ transform-origin:68px 62px; animation:armReach 8s ease-in-out infinite; }
   @keyframes ghostPeek{
     0%{ transform:translateX(-76px); } 12%{ transform:translateX(16px); }
@@ -2036,7 +2039,7 @@ function narEnsureBg(){
   if(bg) return bg;
   bg = document.createElement('div'); bg.id = 'narBg';
   let h = '<div class="fog f1"></div><div class="fog f2"></div>';
-  for(let i=0;i<38;i++){
+  for(let i=0;i<22;i++){
     const sz = (1 + Math.random()*2.2).toFixed(1);
     h += `<span class="star" style="left:${(Math.random()*100).toFixed(1)}%;top:${(Math.random()*70).toFixed(1)}%;width:${sz}px;height:${sz}px;animation-delay:${(Math.random()*3).toFixed(2)}s;animation-duration:${(2+Math.random()*3).toFixed(1)}s"></span>`;
   }
@@ -2079,7 +2082,7 @@ function narVictoryFx(winner){
     setTimeout(()=>d.remove(), 3700);
   } else {
     const colors = ['#c9a227','#5fc3a5','#d1305a','#6aa8ff','#ede7da','#f6cf6a'];
-    for(let i=0;i<70;i++){
+    for(let i=0;i<44;i++){
       const c = document.createElement('div');
       c.className = 'confetti';
       c.style.left = (Math.random()*100) + 'vw';
@@ -2536,10 +2539,17 @@ function holdDone(){
 }
 
 // ---------- tilt (phone orientation, or mouse on desktop) ----------
+var tiltRaf = 0, tiltNext = null;
 function tiltApply(rx, ry){
-  const w = document.getElementById('tiltWrap');
-  w.style.transform = `rotateX(${rx.toFixed(1)}deg) rotateY(${ry.toFixed(1)}deg)`;
-  w.style.setProperty('--sx', (ry * 3.2).toFixed(1) + '%');
+  tiltNext = [rx, ry];
+  if(tiltRaf) return;
+  tiltRaf = requestAnimationFrame(()=>{
+    tiltRaf = 0;
+    if(!tiltNext || !tiltWanted) return;
+    const w = document.getElementById('tiltWrap'), a = tiltNext; tiltNext = null;
+    w.style.transform = `rotateX(${a[0].toFixed(1)}deg) rotateY(${a[1].toFixed(1)}deg)`;
+    w.style.setProperty('--sx', (a[1] * 3.2).toFixed(1) + '%');
+  });
 }
 function onOrient(e){
   if(e.gamma == null || e.beta == null) return;
@@ -2563,7 +2573,7 @@ function startTilt(){
   try{ if(matchMedia('(pointer:fine)').matches) document.addEventListener('pointermove', onPtr); }catch(e){}
 }
 function stopTilt(){
-  tiltWanted = false;
+  tiltWanted = false; tiltNext = null;
   window.removeEventListener('deviceorientation', onOrient);
   document.removeEventListener('pointermove', onPtr);
   const w = document.getElementById('tiltWrap');
@@ -2580,7 +2590,7 @@ function slashOnce(){
   const front = document.getElementById('roleFxFront'); if(!front) return;
   front.innerHTML = '';
   front.appendChild(fxEl('slash', ''));
-  for(let i=0;i<14;i++){
+  for(let i=0;i<9;i++){
     const t = rnd(.22, .78), a = rnd(0, Math.PI*2), d = rnd(30, 90);
     front.appendChild(fxEl('spark', `left:${(t*100).toFixed(1)}%;top:${(73 - 45.7*t).toFixed(1)}%;--dx:${(Math.cos(a)*d).toFixed(0)}px;--dy:${(Math.sin(a)*d).toFixed(0)}px;animation-delay:${rnd(.15,.45).toFixed(2)}s`));
   }
@@ -2590,20 +2600,20 @@ function roleFxStart(key){
   if(reducedMotion()) return;
   const back = document.getElementById('roleFx'), front = document.getElementById('roleFxFront');
   if(key === 'mafia'){
-    for(let i=0;i<14;i++) back.appendChild(fxEl('smoke', `left:${rnd(5,95).toFixed(0)}%;bottom:${rnd(-6,22).toFixed(0)}%;--s:${rnd(70,130).toFixed(0)}px;--dx:${rnd(-45,45).toFixed(0)}px;animation-duration:${rnd(3.8,6.5).toFixed(1)}s;animation-delay:${rnd(0,4).toFixed(1)}s`));
-    for(let i=0;i<14;i++) front.appendChild(fxEl('ember', `left:${rnd(8,92).toFixed(0)}%;bottom:${rnd(0,18).toFixed(0)}%;--dx:${rnd(-35,35).toFixed(0)}px;animation-duration:${rnd(2.2,4.2).toFixed(1)}s;animation-delay:${rnd(0,3).toFixed(1)}s`));
+    for(let i=0;i<8;i++) back.appendChild(fxEl('smoke', `left:${rnd(5,95).toFixed(0)}%;bottom:${rnd(-6,22).toFixed(0)}%;--s:${rnd(70,130).toFixed(0)}px;--dx:${rnd(-45,45).toFixed(0)}px;animation-duration:${rnd(3.8,6.5).toFixed(1)}s;animation-delay:${rnd(0,4).toFixed(1)}s`));
+    for(let i=0;i<8;i++) front.appendChild(fxEl('ember', `left:${rnd(8,92).toFixed(0)}%;bottom:${rnd(0,18).toFixed(0)}%;--dx:${rnd(-35,35).toFixed(0)}px;animation-duration:${rnd(2.2,4.2).toFixed(1)}s;animation-delay:${rnd(0,3).toFixed(1)}s`));
   } else if(key === 'slasher'){
     slashOnce(); fxTimers.push(setInterval(slashOnce, 6000));
   } else if(key === 'girl'){
-    back.appendChild(fxEl('shield', '', '<svg viewBox="0 0 100 120" preserveAspectRatio="none"><path d="M50 4 L92 20 V58 C92 86 72 106 50 116 C28 106 8 86 8 58 V20 Z"/></svg>'));
-    for(let i=0;i<14;i++) front.appendChild(fxEl('orbg', `left:${rnd(6,94).toFixed(0)}%;bottom:${rnd(0,20).toFixed(0)}%;--dx:${rnd(-30,30).toFixed(0)}px;animation-duration:${rnd(3.5,6).toFixed(1)}s;animation-delay:${rnd(0,4).toFixed(1)}s`));
+    back.appendChild(fxEl('shield', '', '<svg viewBox="0 0 100 120" preserveAspectRatio="none"><path class="sh-glow" d="M50 4 L92 20 V58 C92 86 72 106 50 116 C28 106 8 86 8 58 V20 Z"/><path d="M50 4 L92 20 V58 C92 86 72 106 50 116 C28 106 8 86 8 58 V20 Z"/></svg>'));
+    for(let i=0;i<8;i++) front.appendChild(fxEl('orbg', `left:${rnd(6,94).toFixed(0)}%;bottom:${rnd(0,20).toFixed(0)}%;--dx:${rnd(-30,30).toFixed(0)}px;animation-duration:${rnd(3.5,6).toFixed(1)}s;animation-delay:${rnd(0,4).toFixed(1)}s`));
   } else if(key === 'sheikh'){
     back.appendChild(fxEl('halo-glow', ''));
     back.appendChild(fxEl('halo', ''));
   } else if(key === 'boy'){
     back.appendChild(fxEl('ghost', '', GHOST_SVG));
   } else {
-    for(let i=0;i<24;i++) back.appendChild(fxEl('dust', `left:${rnd(0,100).toFixed(0)}%;bottom:${rnd(0,30).toFixed(0)}%;--dx:${rnd(-30,30).toFixed(0)}px;animation-duration:${rnd(5,9).toFixed(1)}s;animation-delay:${rnd(0,6).toFixed(1)}s`));
+    for(let i=0;i<14;i++) back.appendChild(fxEl('dust', `left:${rnd(0,100).toFixed(0)}%;bottom:${rnd(0,30).toFixed(0)}%;--dx:${rnd(-30,30).toFixed(0)}px;animation-duration:${rnd(5,9).toFixed(1)}s;animation-delay:${rnd(0,6).toFixed(1)}s`));
   }
 }
 
