@@ -421,6 +421,339 @@
     font-family:var(--font-d); font-weight:800; font-size:14.5px; cursor:pointer;
     margin-bottom:12px;
   }
+
+  /* ---------- Narrator console (presenter mode) ---------- */
+  #narratorConsole{ width:100%; display:flex; flex-direction:column; gap:12px; margin-bottom:14px; }
+  .nar-head{ text-align:center; padding:4px 0; }
+  .nar-phase{ font-family:var(--font-d); font-weight:900; font-size:24px; color:var(--gold); }
+  .nar-stats{ font-size:13px; color:var(--ink-dim); margin-top:4px; }
+  .nar-opt{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    font-size:12.5px; color:var(--ink-dim); padding:9px 12px;
+    border:1px dashed var(--line); border-radius:12px;
+  }
+  .nar-opt input{ width:18px; height:18px; accent-color:var(--gold); flex:none; }
+  .nar-fold summary{ cursor:pointer; font-family:var(--font-d); font-weight:800; color:var(--gold); padding:2px 0; font-size:14px; }
+  .nar-rrow{ display:flex; align-items:center; gap:10px; padding:8px 2px; border-bottom:1px solid var(--line); font-size:15px; }
+  .nar-rrow:last-child{ border-bottom:0; }
+  .nar-rrow .ic{ width:20px; height:20px; flex:none; }
+  .nar-rrow .ic svg{ width:100%; height:100%; }
+  .nar-rrow .nm{ flex:1; font-weight:700; }
+  .nar-rrow .rl{ font-size:12px; font-weight:700; }
+  .nar-rrow.dead{ opacity:.5; }
+  .nar-rrow.dead .nm{ text-decoration:line-through; }
+  .t-mafia{ color:var(--crimson-bright); }
+  .t-citizen{ color:#5fc3a5; }
+  .nar-script{
+    background:rgba(201,162,39,.08); border:1px solid var(--gold-dim); border-radius:14px;
+    padding:12px 14px; font-size:14.5px; line-height:1.9; margin-bottom:6px;
+  }
+  .nar-script b{ color:var(--gold); }
+  .nar-sub{ font-size:13px; color:var(--ink-dim); margin:14px 0 8px; font-weight:800; }
+  .nar-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+  .nar-chip{
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+    padding:10px 8px; border-radius:12px; border:1.5px solid var(--line);
+    background:var(--surface-hi); color:var(--ink); cursor:pointer;
+    font-family:var(--font-d); font-weight:800; font-size:14.5px;
+  }
+  .nar-chip small{ font-size:11px; font-weight:700; }
+  .nar-chip.sel{ border-color:var(--gold); background:rgba(201,162,39,.16); }
+  .nar-chip.sel-kill{ border-color:var(--crimson-bright); background:rgba(209,48,90,.2); }
+  .nar-chip.sel-silence{ border-color:#8a8794; background:rgba(138,135,148,.2); }
+  .nar-chip.sel-protect{ border-color:#5fc3a5; background:rgba(95,195,165,.18); }
+  .nar-chip.sel-inspect{ border-color:#6aa8ff; background:rgba(106,168,255,.18); }
+  .nar-result{
+    margin-top:12px; padding:14px; border-radius:14px; text-align:center;
+    font-family:var(--font-d); font-weight:900; font-size:19px;
+  }
+  .nar-result.bad{ background:rgba(209,48,90,.18); border:1px solid var(--crimson-bright); color:var(--crimson-bright); }
+  .nar-result.good{ background:rgba(95,195,165,.15); border:1px solid #5fc3a5; color:#5fc3a5; }
+  .nar-fake{ text-align:center; color:var(--ink-dim); font-size:14px; line-height:1.9; padding:8px 4px; }
+  .nar-fake b{ color:var(--gold); }
+  .nar-actions{ display:flex; flex-direction:column; gap:8px; margin-top:14px; }
+  .nar-news{ text-align:center; font-family:var(--font-d); font-weight:900; font-size:18px; line-height:1.8; padding:6px 0; }
+  .nar-note{ font-size:13px; color:var(--ink-dim); line-height:1.8; margin-top:8px; text-align:center; }
+  .nar-vrow{
+    display:flex; align-items:center; gap:10px; padding:9px 2px; border-bottom:1px solid var(--line);
+  }
+  .nar-vrow:last-child{ border-bottom:0; }
+  .nar-vrow .nm{ flex:1; font-weight:700; font-size:15px; }
+  .nar-vrow .nm small{ display:block; font-size:11px; }
+  .nar-vrow button{
+    width:36px; height:36px; border-radius:50%; border:1px solid var(--line);
+    background:var(--surface-hi); color:var(--ink); font-size:20px; font-weight:800; cursor:pointer;
+  }
+  .nar-vrow .cnt{ min-width:26px; text-align:center; font-family:var(--font-d); font-weight:900; font-size:20px; color:var(--gold); }
+  .nar-win{ text-align:center; padding:10px 0; }
+  .nar-win .big{ font-family:var(--font-d); font-weight:900; font-size:28px; margin:8px 0; }
+  .nar-logline{ font-size:13px; color:var(--ink-dim); padding:5px 0; border-bottom:1px solid var(--line); line-height:1.7; }
+
+  /* ---------- Animations ---------- */
+  /* player card: open / reveal / close */
+  .reveal-card.opening{ animation:cardOpen .38s cubic-bezier(.2,.9,.3,1.15) both; }
+  .reveal-card.closing{ animation:cardClose .26s ease-in both; }
+  @keyframes cardOpen{ from{ opacity:0; transform:translateY(24px) scale(.88); } to{ opacity:1; transform:none; } }
+  @keyframes cardClose{ to{ opacity:0; transform:translateY(-10px) scale(.55); } }
+  .reveal-card{ position:relative; }
+  .flip-inner.flipped .card-photo{ animation:photoZoom .9s cubic-bezier(.2,.8,.2,1) .2s both; }
+  @keyframes photoZoom{ from{ transform:scale(1.14); filter:brightness(1.5); } to{ transform:scale(1); filter:none; } }
+  .face-back.photo-back::after{
+    content:""; position:absolute; inset:0; pointer-events:none; border-radius:20px; opacity:0;
+    background:linear-gradient(115deg, transparent 35%, rgba(255,226,140,.55) 50%, transparent 65%);
+    background-size:250% 100%; background-position:120% 0;
+  }
+  .flip-inner.flipped .face-back.photo-back::after{ animation:goldSweep 1s ease .45s 1 both; }
+  @keyframes goldSweep{ 0%{ opacity:1; background-position:120% 0; } 100%{ opacity:0; background-position:-60% 0; } }
+  .glow-burst{
+    position:absolute; left:50%; top:50%; width:60px; height:60px; margin:-30px 0 0 -30px; border-radius:50%;
+    pointer-events:none; z-index:5;
+    background:radial-gradient(circle, rgba(255,226,140,.85), rgba(201,162,39,.35) 45%, transparent 70%);
+    animation:burst .9s ease-out forwards;
+  }
+  @keyframes burst{ from{ transform:scale(.3); opacity:1; } to{ transform:scale(9); opacity:0; } }
+
+  /* night / day transition + background */
+  #narBg{
+    position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0; transition:opacity 1.4s ease;
+    background:linear-gradient(180deg, rgba(12,18,52,.9), rgba(8,8,22,.35) 65%, transparent);
+  }
+  #narBg.on{ opacity:1; }
+  #narBg .star{ position:absolute; border-radius:50%; background:#fff; animation:twinkle 3s ease-in-out infinite; }
+  @keyframes twinkle{ 0%,100%{ opacity:.15; } 50%{ opacity:.95; } }
+  #narBg .fog{
+    position:absolute; left:-30%; width:160%; height:38%; filter:blur(38px); opacity:.35;
+    background:radial-gradient(ellipse at center, rgba(160,170,210,.55), transparent 70%);
+    animation:fogDrift 16s ease-in-out infinite alternate;
+  }
+  #narBg .fog.f1{ top:8%; } #narBg .fog.f2{ top:52%; animation-duration:22s; animation-direction:alternate-reverse; }
+  @keyframes fogDrift{ from{ transform:translateX(-8%); } to{ transform:translateX(8%); } }
+
+  .nar-fx{
+    position:fixed; inset:0; z-index:70; pointer-events:none; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:10px; overflow:hidden;
+    animation:fxInOut 1.9s ease both;
+  }
+  .nar-fx.night{ background:radial-gradient(circle at 50% 35%, #1b2760, #070913 75%); }
+  .nar-fx.dawn{ background:linear-gradient(180deg, #2b3b7a 0%, #e0813a 60%, #f6cf6a 100%); }
+  .nar-fx .orb{ font-size:96px; line-height:1; }
+  .nar-fx.night .orb{ animation:moonRise 1.9s ease both; filter:drop-shadow(0 0 28px rgba(220,230,255,.6)); }
+  .nar-fx.dawn .orb{ animation:sunRise 1.9s ease both; filter:drop-shadow(0 0 34px rgba(255,210,90,.8)); }
+  .nar-fx .cap{ font-family:var(--font-d); font-weight:900; font-size:22px; color:#fff; text-shadow:0 2px 12px rgba(0,0,0,.5); }
+  @keyframes fxInOut{ 0%{ opacity:0; } 20%{ opacity:1; } 75%{ opacity:1; } 100%{ opacity:0; } }
+  @keyframes moonRise{ from{ transform:translateY(60px) scale(.7); opacity:0; } 40%{ opacity:1; } to{ transform:translateY(-10px) scale(1); } }
+  @keyframes sunRise{ from{ transform:translateY(140px) scale(.7); opacity:.2; } to{ transform:translateY(-14px) scale(1.1); opacity:1; } }
+  .nar-flash{ position:fixed; inset:0; z-index:65; pointer-events:none; animation:flashFade .9s ease-out both; }
+  .nar-flash.red{ background:radial-gradient(circle, transparent 20%, rgba(209,48,90,.6)); }
+  .nar-flash.green{ background:radial-gradient(circle, transparent 20%, rgba(95,195,165,.5)); }
+  @keyframes flashFade{ 0%{ opacity:0; } 25%{ opacity:1; } 100%{ opacity:0; } }
+
+  /* console: step slide-in, chip pop, victim / saved reveal, sheikh result flip */
+  .nar-slide{ animation:slideIn .45s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes slideIn{ from{ opacity:0; transform:translateY(22px); } to{ opacity:1; transform:none; } }
+  .nar-chip.sel{ animation:chipPop .32s ease; }
+  @keyframes chipPop{ 0%{ transform:scale(.9); } 55%{ transform:scale(1.07); box-shadow:0 0 18px currentColor; } 100%{ transform:scale(1); } }
+  .nar-result{ animation:resultFlip .65s cubic-bezier(.2,.8,.2,1) both; transform-origin:center; }
+  @keyframes resultFlip{ from{ opacity:0; transform:perspective(500px) rotateX(-90deg); } to{ opacity:1; transform:perspective(500px) rotateX(0); } }
+  .nar-news.fx-victim{ animation:victimIn 1s ease 1.2s both; text-shadow:0 0 18px rgba(209,48,90,.8); color:var(--crimson-bright); }
+  @keyframes victimIn{
+    0%{ opacity:0; transform:scale(1.8); } 35%{ opacity:1; transform:scale(.95); }
+    50%{ transform:translateX(-9px); } 62%{ transform:translateX(9px); } 74%{ transform:translateX(-6px); }
+    86%{ transform:translateX(6px); } 100%{ transform:none; }
+  }
+  .nar-news.fx-saved{ animation:savedIn 1s ease 1.2s both; color:#5fc3a5; }
+  @keyframes savedIn{
+    0%{ opacity:0; transform:scale(.7); text-shadow:0 0 0 rgba(95,195,165,0); }
+    60%{ opacity:1; transform:scale(1.06); text-shadow:0 0 30px rgba(95,195,165,.95); }
+    100%{ transform:none; text-shadow:0 0 14px rgba(95,195,165,.5); }
+  }
+  /* voting */
+  .nar-vrow{ transition:background .3s, box-shadow .3s; border-radius:10px; }
+  .nar-vrow.lead{ background:rgba(201,162,39,.12); box-shadow:0 0 0 1.5px var(--gold), 0 0 16px rgba(201,162,39,.35); }
+  .nar-vrow .cnt.pulse{ animation:cntPulse .45s ease; }
+  @keyframes cntPulse{ 0%{ transform:scale(1); } 40%{ transform:scale(1.7); color:#fff; } 100%{ transform:scale(1); } }
+  /* elimination */
+  .nar-rrow.just-died{ animation:dieRow 1.2s ease both; }
+  @keyframes dieRow{ 0%{ background:rgba(209,48,90,.4); } 100%{ background:transparent; } }
+  .nar-rrow .skull{ display:inline-block; }
+  .nar-rrow.just-died .skull{ animation:skullPop .9s cubic-bezier(.2,1.6,.4,1) both; }
+  @keyframes skullPop{ from{ transform:scale(0) rotate(-40deg); } to{ transform:scale(1) rotate(0); } }
+  .nar-rrow.dead{ filter:grayscale(1); }
+  /* victory */
+  .nar-win .big{ animation:winPop .9s cubic-bezier(.2,1.5,.4,1) both; }
+  @keyframes winPop{ from{ transform:scale(.2); opacity:0; } to{ transform:scale(1); opacity:1; } }
+  .confetti{ position:fixed; top:-16px; z-index:80; pointer-events:none; width:9px; height:14px; animation:confFall linear forwards; }
+  @keyframes confFall{ to{ transform:translateY(112vh) rotate(720deg); opacity:.9; } }
+  .nar-fx.mafia-win{ background:radial-gradient(circle at 50% 50%, rgba(163,34,62,.0), rgba(60,0,12,.92) 70%); animation:redSpread 3.6s ease both; }
+  .nar-fx.mafia-win .orb{ animation:winPop 1s ease both; filter:drop-shadow(0 0 30px rgba(209,48,90,.9)); }
+  @keyframes redSpread{ 0%{ opacity:0; transform:scale(.2); } 25%{ opacity:1; transform:scale(1.2); } 80%{ opacity:1; } 100%{ opacity:0; transform:scale(1.2); } }
+
+  @media (prefers-reduced-motion: reduce){
+    #narratorConsole *, .nar-fx, .nar-fx *, .reveal-card, .reveal-card *, .glow-burst, #narBg *{
+      animation-duration:.01ms !important; animation-delay:0s !important; transition-duration:.01ms !important;
+    }
+  }
+
+  /* ---------- Extra tools / rules / public screen / scores ---------- */
+  .nar-tools{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; justify-content:center; }
+  .nar-tools .btn{ width:auto; flex:1 1 44%; padding:10px 8px; font-size:13px; }
+  .nar-tools .btn:disabled{ opacity:.35; }
+  .nar-chip:disabled{ opacity:.35; cursor:not-allowed; }
+  .roles-hidden .secret, .roles-hidden .rl, .roles-hidden .nar-chip small,
+  .roles-hidden .nar-vrow small, .roles-hidden .nar-rrow .ic{ filter:blur(7px); user-select:none; }
+  #rulesCard .presenter-toggle{ margin-top:10px; }
+  #resumeBox{ text-align:center; margin-bottom:16px; }
+  .sc-row{ display:flex; align-items:center; gap:10px; padding:9px 2px; border-bottom:1px solid var(--line); font-size:15px; }
+  .sc-row:last-child{ border-bottom:0; }
+  .sc-row .nm{ flex:1; font-weight:700; }
+  .sc-row .w{ font-family:var(--font-d); font-weight:900; color:var(--gold); }
+  .sc-row .g{ font-size:12px; color:var(--ink-dim); min-width:54px; text-align:left; }
+  .sc-teams{ display:flex; gap:10px; margin-bottom:12px; }
+  .sc-teams div{ flex:1; text-align:center; padding:12px 6px; border-radius:12px; border:1px solid var(--line); background:var(--surface-hi); font-family:var(--font-d); font-weight:900; }
+  .sc-teams b{ display:block; font-size:26px; }
+  /* public (audience) screen */
+  body.display-mode{ padding:0; }
+  body.display-mode .wrap, body.display-mode .overlay, body.display-mode #vipBgLayer{ display:none !important; }
+  #publicScreen{
+    position:fixed; inset:0; z-index:5; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; text-align:center; padding:28px; overflow:auto; gap:14px;
+  }
+  .pub-in{ display:flex; flex-direction:column; align-items:center; gap:14px; animation:slideIn .7s cubic-bezier(.2,.8,.2,1) both; }
+  .pub-icon{ font-size:min(24vw,150px); line-height:1; animation:pubFloat 4s ease-in-out infinite; }
+  @keyframes pubFloat{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-10px); } }
+  .pub-title{ font-family:var(--font-d); font-weight:900; font-size:clamp(30px,7vw,64px); color:var(--gold); }
+  .pub-line{ font-family:var(--font-d); font-weight:800; font-size:clamp(20px,4.6vw,40px); line-height:1.6; }
+  .pub-line.bad{ color:var(--crimson-bright); } .pub-line.good{ color:#5fc3a5; }
+  .pub-timer{ font-family:var(--font-d); font-weight:900; font-size:clamp(36px,9vw,84px); color:var(--ink); }
+  .pub-list{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; max-width:900px; margin-top:8px; }
+  .pub-chip{ padding:6px 14px; border-radius:100px; border:1px solid var(--line); background:var(--surface-hi); font-weight:700; font-size:clamp(13px,2.4vw,20px); }
+  .pub-chip.dead{ opacity:.4; text-decoration:line-through; }
+  .pub-chip.sil::after{ content:' 🤐'; }
+
+  /* ---------- Card effects ---------- */
+  body:not(.vip-mode) .vip-block{ display:none !important; }
+  .reveal-card{ perspective:none !important; }
+  .card-stage{ position:relative; perspective:1700px; }
+  .breathe{ position:relative; z-index:1; transform-style:preserve-3d; }
+  .tilt-wrap{ transform-style:preserve-3d; border-radius:20px; transition:transform .16s ease-out; will-change:transform; }
+  .reveal-card.revealed .breathe{ animation:breathe 5s ease-in-out infinite; }
+  @keyframes breathe{ 0%,100%{ transform:translateY(0) scale(1); } 50%{ transform:translateY(-6px) scale(1.012); } }
+  .reveal-card.glow-red .tilt-wrap{ animation:glowRed 2.6s ease-in-out infinite; }
+  .reveal-card.glow-green .tilt-wrap{ animation:glowGreen 2.6s ease-in-out infinite; }
+  @keyframes glowRed{
+    0%,100%{ box-shadow:0 0 18px rgba(209,48,90,.45), 0 0 46px rgba(163,34,62,.25); }
+    50%{ box-shadow:0 0 30px rgba(209,48,90,.85), 0 0 84px rgba(163,34,62,.5); }
+  }
+  @keyframes glowGreen{
+    0%,100%{ box-shadow:0 0 18px rgba(95,195,165,.4), 0 0 46px rgba(95,195,165,.2); }
+    50%{ box-shadow:0 0 30px rgba(95,195,165,.8), 0 0 84px rgba(95,195,165,.42); }
+  }
+  /* moving sheen that follows the tilt */
+  .face-back.photo-back::before{
+    content:""; position:absolute; inset:0; z-index:2; pointer-events:none; border-radius:20px; opacity:0;
+    background:linear-gradient(115deg, transparent 35%, rgba(255,226,140,.3) 50%, transparent 65%);
+    background-size:260% 100%; background-position:calc(50% + var(--sx, 0%)) 0; mix-blend-mode:screen;
+    transition:opacity .4s;
+  }
+  .reveal-card.tilting .face-back.photo-back::before{ opacity:1; }
+
+  /* wax seal + hold-to-reveal */
+  .wax-seal{ position:relative; width:84px; height:84px; margin:0 auto 14px; filter:drop-shadow(0 5px 7px rgba(0,0,0,.55)); }
+  .seal-half{
+    position:absolute; inset:0; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:32px;
+    background:radial-gradient(circle at 35% 30%, #e0476f, #a3223e 55%, #5a0f20);
+    box-shadow:inset 0 0 0 6px rgba(0,0,0,.16), inset 0 0 0 7px rgba(255,255,255,.08);
+  }
+  .seal-half.l{ clip-path:polygon(0 0, 53% 0, 46% 20%, 55% 38%, 45% 60%, 54% 80%, 49% 100%, 0 100%); }
+  .seal-half.r{ clip-path:polygon(53% 0, 100% 0, 100% 100%, 49% 100%, 54% 80%, 45% 60%, 55% 38%, 46% 20%); }
+  .wax-seal.holding{ animation:sealShake .11s linear infinite; filter:drop-shadow(0 0 14px rgba(224,71,111,.9)); }
+  @keyframes sealShake{ 0%{ transform:translate(0,0) rotate(0); } 25%{ transform:translate(-1.5px,1px) rotate(-1.5deg); } 50%{ transform:translate(1.5px,-1px) rotate(1.5deg); } 75%{ transform:translate(-1px,-1.5px) rotate(-1deg); } 100%{ transform:translate(0,0); } }
+  .wax-seal.cracked .seal-half.l{ animation:sealL .5s cubic-bezier(.5,0,.9,.5) forwards; }
+  .wax-seal.cracked .seal-half.r{ animation:sealR .5s cubic-bezier(.5,0,.9,.5) forwards; }
+  @keyframes sealL{ to{ transform:translate(-46px,52px) rotate(-38deg); opacity:0; } }
+  @keyframes sealR{ to{ transform:translate(46px,58px) rotate(36deg); opacity:0; } }
+  .hold-btn{ width:auto; padding:12px 30px; touch-action:none; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+  .ring-svg{
+    position:absolute; left:-9px; top:-9px; width:calc(100% + 18px); height:calc(100% + 18px);
+    pointer-events:none; overflow:visible; z-index:4;
+  }
+  .ring-svg rect{
+    fill:none; stroke:#c9a227; stroke-width:1.8; stroke-linecap:round;
+    stroke-dasharray:1; stroke-dashoffset:1; filter:drop-shadow(0 0 4px rgba(201,162,39,.9));
+  }
+  .ring-svg.hold.run rect{ animation:ringFill var(--dur, .85s) linear forwards; }
+  @keyframes ringFill{ from{ stroke-dashoffset:1; } to{ stroke-dashoffset:0; } }
+  .ring-svg.auto rect{ stroke-dashoffset:0; }
+  .ring-svg.auto:not(.run){ visibility:hidden; }
+  .ring-svg.auto.run rect{ animation:ringDrain var(--dur, 8s) linear forwards, ringColor var(--dur, 8s) linear forwards; }
+  @keyframes ringDrain{ from{ stroke-dashoffset:0; } to{ stroke-dashoffset:1; } }
+  @keyframes ringColor{ 0%,65%{ stroke:#c9a227; } 100%{ stroke:#d1305a; } }
+  .ac-pill{
+    position:absolute; top:10px; right:10px; z-index:5; padding:4px 11px; border-radius:100px; pointer-events:none;
+    background:rgba(8,8,14,.72); border:1px solid var(--gold-dim); color:var(--gold); font-family:var(--font-d); font-weight:800; font-size:14px;
+  }
+  .ac-pill.hot{ color:#fff; border-color:var(--crimson-bright); background:rgba(163,34,62,.75); animation:cntPulse .5s ease infinite; }
+
+  /* role effects (VIP) */
+  .role-fx{ position:absolute; inset:-70px -50px; pointer-events:none; z-index:0; }
+  .role-fx.front{ z-index:3; }
+  .role-fx span{ position:absolute; display:block; }
+  .smoke{
+    width:var(--s); height:var(--s); margin-left:calc(var(--s) / -2); border-radius:50%; filter:blur(11px); opacity:0;
+    background:radial-gradient(circle, rgba(200,30,64,.6), rgba(120,10,30,.28) 50%, transparent 70%);
+    animation:smokeUp linear infinite;
+  }
+  @keyframes smokeUp{ 0%{ transform:translate(0,40px) scale(.6); opacity:0; } 25%{ opacity:.95; } 100%{ transform:translate(var(--dx),-280px) scale(1.7); opacity:0; } }
+  .ember{ width:5px; height:5px; border-radius:50%; background:#ff9a4a; box-shadow:0 0 9px #ff6a2a; opacity:0; animation:emberUp ease-out infinite; }
+  @keyframes emberUp{ 0%{ transform:translate(0,0); opacity:0; } 15%{ opacity:1; } 100%{ transform:translate(var(--dx),-240px) scale(.3); opacity:0; } }
+  .slash{
+    left:-12%; top:72%; width:124%; height:4px; border-radius:4px; transform-origin:left center; opacity:0;
+    transform:rotate(-34deg) scaleX(0);
+    background:linear-gradient(90deg, transparent, #fff 20%, #ff4d6d 62%, transparent);
+    box-shadow:0 0 18px 4px rgba(255,77,109,.85); animation:slashCut .6s cubic-bezier(.2,.9,.3,1) forwards;
+  }
+  @keyframes slashCut{
+    0%{ opacity:1; transform:rotate(-34deg) scaleX(0); } 45%{ opacity:1; transform:rotate(-34deg) scaleX(1); }
+    100%{ opacity:0; transform:rotate(-34deg) scaleX(1); }
+  }
+  .spark{ width:4px; height:4px; border-radius:50%; background:#ffe9a8; box-shadow:0 0 9px #ffd24a; opacity:0; animation:sparkFly .65s ease-out forwards; }
+  @keyframes sparkFly{ 0%{ opacity:1; transform:translate(0,0); } 100%{ opacity:0; transform:translate(var(--dx),var(--dy)) scale(.3); } }
+  .shield{ left:0; top:0; width:100%; height:100%; overflow:visible; }
+  .shield svg{ width:100%; height:100%; overflow:visible; animation:shieldPulse 3s ease-in-out infinite; transform-origin:center; }
+  .shield path{ fill:rgba(95,195,165,.07); stroke:#5fc3a5; stroke-width:2; filter:drop-shadow(0 0 10px rgba(95,195,165,.85)); }
+  @keyframes shieldPulse{ 0%,100%{ transform:scale(.97); opacity:.7; } 50%{ transform:scale(1.03); opacity:1; } }
+  .orbg{
+    width:9px; height:9px; border-radius:50%; opacity:0; animation:orbUp ease-in-out infinite;
+    background:radial-gradient(circle, #d6fff0, #5fc3a5 55%, transparent 72%); box-shadow:0 0 12px rgba(95,195,165,.9);
+  }
+  @keyframes orbUp{ 0%{ transform:translate(0,30px) scale(.5); opacity:0; } 30%{ opacity:1; } 100%{ transform:translate(var(--dx),-230px) scale(1); opacity:0; } }
+  .halo{
+    left:50%; top:50%; width:560px; height:560px; margin:-280px 0 0 -280px; border-radius:50%;
+    background:repeating-conic-gradient(from 0deg, rgba(255,214,102,.42) 0 5deg, transparent 5deg 15deg);
+    -webkit-mask-image:radial-gradient(circle, transparent 30%, #000 42%, transparent 72%);
+    mask-image:radial-gradient(circle, transparent 30%, #000 42%, transparent 72%);
+    animation:haloSpin 22s linear infinite;
+  }
+  .halo-glow{
+    left:50%; top:50%; width:460px; height:520px; margin:-260px 0 0 -230px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,214,102,.35), rgba(255,214,102,.1) 50%, transparent 70%);
+    animation:shieldPulse 4s ease-in-out infinite;
+  }
+  @keyframes haloSpin{ to{ transform:rotate(360deg); } }
+  .ghost{ right:4px; top:32%; width:116px; animation:ghostPeek 8s ease-in-out infinite; }
+  .ghost svg{ width:100%; overflow:visible; filter:drop-shadow(0 0 9px rgba(160,130,255,.75)); }
+  .ghost .g-arm{ transform-origin:68px 62px; animation:armReach 8s ease-in-out infinite; }
+  @keyframes ghostPeek{
+    0%{ transform:translateX(-76px); } 12%{ transform:translateX(16px); }
+    82%{ transform:translateX(16px); } 95%,100%{ transform:translateX(-76px); }
+  }
+  @keyframes armReach{ 0%,30%{ transform:rotate(0); } 42%,58%{ transform:rotate(-58deg); } 70%,100%{ transform:rotate(0); } }
+  .dust{ width:3px; height:3px; border-radius:50%; background:rgba(255,255,255,.7); opacity:0; animation:dustFloat linear infinite; }
+  @keyframes dustFloat{ 0%{ transform:translate(0,24px); opacity:0; } 30%{ opacity:.85; } 100%{ transform:translate(var(--dx),-190px); opacity:0; } }
+  @media (prefers-reduced-motion: reduce){
+    .role-fx *, .breathe, .tilt-wrap, .wax-seal, .ring-svg rect, .ac-pill{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+    .role-fx{ display:none; }
+  }
 </style>
 </head>
 <body>
@@ -434,6 +767,14 @@
 
   <!-- Screen 0a: mode select -->
   <section id="screen-modeselect">
+    <div class="card hidden" id="resumeBox">
+      <p class="step-label" style="justify-content:center;">💾 في لعبة محفوظة</p>
+      <div id="resumeInfo" style="color:var(--ink-dim); font-size:13px; margin-bottom:12px;"></div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="discardSaved()">تجاهل</button>
+        <button class="btn btn-primary" onclick="resumeSaved()">متابعة ▶️</button>
+      </div>
+    </div>
     <div class="mode-card mode-vip" onclick="chooseVip()">
       <div class="mode-medal">👑</div>
       <div class="mode-title">شباب السطح VIP</div>
@@ -471,9 +812,25 @@
       <label class="f-label">كم واحد رح يلعب؟ (العدد مفتوح)</label>
       <input type="number" id="playerCount" min="3" max="60" value="8" inputmode="numeric">
       <label class="presenter-toggle">
-        <span>🎙️ فيه مقدم يشرف (مش من اللاعبين) — هو يتحكم بفتح كل بطاقة بدل ما تنفتح تلقائي</span>
-        <input type="checkbox" id="presenterToggle" onchange="state.presenterMode = this.checked;">
+        <span>🎙️ فيه مقدم يشرف (مش من اللاعبين) — يشوف كل البطاقات، ويدير الليل (القتل، الإسكات، الحماية، الكشف) والنهار والتصويت</span>
+        <input type="checkbox" id="presenterToggle" onchange="state.presenterMode = this.checked; document.getElementById('rulesCard').classList.toggle('hidden', !this.checked);">
       </label>
+    </div>
+    <div class="card vip-block" id="acCard">
+      <p class="step-label">⏳ إغلاق البطاقة تلقائياً</p>
+      <label class="presenter-toggle"><span>عدد الثواني بعد كشف البطاقة (0 = إيقاف)</span>
+        <input type="number" id="acInputA" min="0" max="120" inputmode="numeric" style="width:76px;height:40px;text-align:center;" onchange="setAutoClose(this.value)"></label>
+    </div>
+    <div class="card hidden" id="rulesCard">
+      <p class="step-label">⚙️ إعدادات المقدم</p>
+      <label class="presenter-toggle"><span>🔊 قراءة صوتية لنصوص المقدم (اختياري — بتفعّلها بنفسك)</span><input type="checkbox" id="rTts" onchange="setRule('tts', this.checked)"></label>
+      <label class="presenter-toggle"><span>🔉 مؤثرات صوتية (دقات قلب، طبل التصويت، فوز...)</span><input type="checkbox" id="rSfx" onchange="setRule('sfx', this.checked)"></label>
+      <label class="presenter-toggle"><span>🌌 أجواء ليل صوتية هادئة</span><input type="checkbox" id="rAmbient" onchange="setRule('ambient', this.checked)"></label>
+      <label class="presenter-toggle"><span>📢 اكشف دور اللاعب لما يطلع</span><input type="checkbox" id="rReveal" onchange="setRule('revealRole', this.checked)"></label>
+      <label class="presenter-toggle"><span>🛡️ الدكتور يقدر يحمي نفسه</span><input type="checkbox" id="rSelf" onchange="setRule('selfProtect', this.checked)"></label>
+      <label class="presenter-toggle"><span>🛡️ الدكتور يقدر يحمي نفس اللاعب ليلتين ورا بعض</span><input type="checkbox" id="rRepeat" onchange="setRule('repeatProtect', this.checked)"></label>
+      <label class="presenter-toggle"><span>⏱️ مؤقت تلقائي للنقاش — وينقلك للتصويت لما يخلص</span><input type="checkbox" id="rAuto" onchange="setRule('autoTimer', this.checked)"></label>
+      <label class="presenter-toggle"><span>👦 الولد يسحب لاعب حتى لو انقتل بالليل</span><input type="checkbox" id="rBoyNight" onchange="setRule('boyNight', this.checked)"></label>
     </div>
     <button class="btn btn-primary" onclick="goToNames()">التالي — أسماء اللاعبين</button>
   </section>
@@ -517,12 +874,16 @@
   <section id="screen-game" class="hidden">
     <div class="vip-badge"><span class="vb-medal">👑</span> MEMBERS ONLY <a onclick="backToModeSelect()">تغيير</a></div>
     <div class="round-tag" id="roundTag">🌙 الجولة رقم 1</div>
-    <div class="grid-title">
+    <div class="grid-title" id="gridTitle">
       <div class="lbl">مرّروا الجهاز بالدور</div>
       <div class="sub" id="gameFlowHint">كل واحد يشوف بطاقته ويسكرها، وبتنفتح تلقائي بطاقة اللي بعده</div>
     </div>
+    <label class="nar-opt vip-block" style="margin-bottom:12px;"><span>⏳ إغلاق البطاقة تلقائياً بعد (ثانية، 0 = إيقاف)</span>
+      <input type="number" id="acInputB" min="0" max="120" inputmode="numeric" style="width:76px;height:38px;text-align:center;" onchange="setAutoClose(this.value)"></label>
     <div class="vip-complete-banner hidden" id="completeBanner">🌙 خلص الكل شاف دوره — يلا ابدأوا الليلة الأولى</div>
     <button class="next-card-btn hidden" id="nextCardBtn" onclick="presenterOpenNext()">▶️ افتح بطاقة اللي بعده</button>
+    <button class="btn btn-primary hidden" id="narStartBtn" style="margin-bottom:12px;" onclick="narStart()">🎙️ ابدأ الليلة الأولى — غرفة تحكم المقدم</button>
+    <div id="narratorConsole" class="hidden"></div>
     <div class="progress-list" id="playerGrid"></div>
 
     <div class="card timer-card" style="margin-top:16px;">
@@ -542,6 +903,7 @@
     <div class="footer-actions">
       <button class="btn btn-ghost vip-only hidden" id="aliveDeadBtn" onclick="openAliveDead()">قائمة الأحياء/الموتى 💀</button>
       <button class="btn btn-ghost vip-only hidden" id="copySummaryBtn" onclick="copyRoundSummary()">📋 نسخ ملخص الجولة</button>
+      <button class="btn btn-ghost" onclick="openScores()">🏆 لوحة النتائج</button>
       <button class="btn btn-ghost" onclick="reshuffle()">إعادة توزيع الأدوار 🔀</button>
       <button class="btn btn-ghost" onclick="newGame()">لعبة جديدة</button>
     </div>
@@ -551,24 +913,53 @@
 
 <!-- Reveal Modal -->
 <div class="overlay hidden" id="overlay">
-  <div class="reveal-card">
+  <div class="reveal-card" id="revealCard">
     <div class="whose-turn">الدور على <b id="turnName">—</b></div>
-    <div class="flip-inner" id="flipInner">
-      <div class="face face-front">
-        <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="#c9a227" stroke-width="1.4"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><circle cx="12" cy="15.5" r="1.4" fill="#c9a227" stroke="none"/></svg>
-        <div class="who" id="frontName">—</div>
-        <div class="hint">بس أنت شوف الشاشة.<br>اضغط تحت وشوف بطاقتك.</div>
-        <button class="btn btn-primary" style="width:auto; padding:12px 30px;" onclick="revealCard()">اضغط للكشف 👁</button>
-      </div>
-      <div class="face face-back" id="backFace">
-        <!-- filled by JS -->
-      </div>
+    <div class="card-stage" id="cardStage">
+      <div class="role-fx" id="roleFx"></div>
+      <div class="breathe" id="breatheWrap"><div class="tilt-wrap" id="tiltWrap">
+        <div class="flip-inner" id="flipInner">
+          <div class="face face-front">
+            <div class="wax-seal" id="waxSeal"><div class="seal-half l">🎭</div><div class="seal-half r">🎭</div></div>
+            <div class="who" id="frontName">—</div>
+            <div class="hint">بس أنت شوف الشاشة.<br>اضغط مطولاً على الزر لحد ما ينكسر الختم.</div>
+            <button class="btn btn-primary hold-btn" id="holdBtn" oncontextmenu="return false"
+              onpointerdown="holdStart(event)" onpointerup="holdCancel()" onpointerleave="holdCancel()" onpointercancel="holdCancel()"
+              onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();revealCard();}">اضغط مطولاً للكشف 👁</button>
+          </div>
+          <div class="face face-back" id="backFace">
+            <!-- filled by JS -->
+          </div>
+        </div>
+      </div></div>
+      <svg class="ring-svg hold" id="holdRing" viewBox="0 0 100 150" preserveAspectRatio="none"><rect x="1.5" y="1.5" width="97" height="147" rx="6.5" ry="6.5" pathLength="1"/></svg>
+      <svg class="ring-svg auto" id="autoRing" viewBox="0 0 100 150" preserveAspectRatio="none"><rect x="1.5" y="1.5" width="97" height="147" rx="6.5" ry="6.5" pathLength="1"/></svg>
+      <div class="ac-pill hidden" id="acPill">⏳ <b id="acNum">0</b></div>
+      <div class="role-fx front" id="roleFxFront"></div>
     </div>
     <div style="text-align:center; margin-top:18px;" id="closeWrap">
       <button class="close-btn hidden" id="closeBtn" onclick="closeModal()">تم، أخفِ البطاقة</button>
     </div>
   </div>
 </div>
+
+
+<!-- Scoreboard overlay -->
+<div class="overlay hidden" id="scoreOverlay" style="align-items:flex-start; overflow-y:auto; padding-top:36px;">
+  <div class="reveal-card" style="max-width:380px;">
+    <div class="card" style="margin-bottom:12px;">
+      <p class="step-label">🏆 لوحة النتائج</p>
+      <div id="scoreBody"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" style="background:var(--surface);" onclick="resetScores()">تصفير</button>
+      <button class="btn btn-ghost" style="background:var(--surface);" onclick="closeScores()">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+<!-- Audience screen (opened with ?display=1) -->
+<div id="publicScreen" class="hidden"></div>
 
 <!-- Alive/Dead overlay -->
 <div class="overlay hidden" id="aliveDeadOverlay">
@@ -627,7 +1018,9 @@ let state = {
   viewed: [],
   dead: [],
   round: 1,
-  presenterMode: false
+  presenterMode: false,
+  rules: { tts:false, sfx:true, ambient:false, revealRole:true, selfProtect:true, repeatProtect:true, autoTimer:false, boyNight:false },
+  nar: narFresh()
 };
 
 // ---------- Load last saved setup (if any) ----------
@@ -648,6 +1041,9 @@ function saveLastSetup(){
     }));
   }catch(e){}
 }
+
+const DISPLAY_MODE = new URLSearchParams(location.search).has('display');
+let narUndoStack = [], voteBusy = false, narSpeakDelay = 0, wakeLock = null, _ac = null, ambientNodes = null;
 
 const VIP_CODE = '2982026';
 const VIP_CARDS = {
@@ -694,6 +1090,7 @@ function chooseVip(){
 function backToModeSelect(){
   if(state.assignments.length > 0){
     if(!confirm('رح تضيع المباراة الحالية (التوزيع والأدوار). أكيد بدك ترجع لاختيار النمط؟')) return;
+    clearSavedGame(); ambientStop();
   }
   state.vip = false;
   document.body.classList.remove('vip-mode');
@@ -850,11 +1247,14 @@ function startGame(keepRound){
   }));
   state.viewed = new Array(state.playerCount).fill(false);
   state.dead = new Array(state.playerCount).fill(false);
+  state.nar = narFresh();
+  narUndoStack = []; ambientStop();
   document.getElementById('gameFlowHint').textContent = state.presenterMode
     ? 'المقدم يفتح بطاقة كل لاعب بالدور، واللاعب يشوف بطاقته لحاله بس'
     : 'كل واحد يشوف بطاقته ويسكرها، وبتنفتح تلقائي بطاقة اللي بعده';
   setTimerPreset(timerState.total);
   showScreen('game');
+  keepAwake();
   currentIdx = null;
   if(state.presenterMode){
     renderProgressList(); // presenter taps "open next card" when ready
@@ -871,6 +1271,8 @@ function reshuffle(){
 
 function newGame(){
   if(!confirm('رح ترجع لإعداد اللعبة من الأول. أكيد؟')) return;
+  clearSavedGame(); ambientStop(); narUndoStack = [];
+  state.nar = narFresh(); narBgSync();
   state.round = 1;
   showScreen('count');
 }
@@ -885,6 +1287,7 @@ function renderTimer(){
   const el = document.getElementById('timerDisplay');
   el.textContent = fmtTime(timerState.remaining);
   el.classList.toggle('hot', timerState.remaining <= 10 && timerState.remaining > 0);
+  narPublishTimer();
 }
 function setTimerPreset(sec){
   clearInterval(timerState.interval);
@@ -900,11 +1303,13 @@ function timerToggle(){
     clearInterval(timerState.interval);
     timerState.running = false;
     document.getElementById('timerToggleBtn').textContent = '▶️ استئناف';
+    narPublishTimer();
     return;
   }
   if(timerState.remaining <= 0) timerState.remaining = timerState.total;
   timerState.running = true;
   document.getElementById('timerToggleBtn').textContent = '⏸️ إيقاف';
+  narPublishTimer();
   timerState.interval = setInterval(()=>{
     timerState.remaining--;
     renderTimer();
@@ -913,6 +1318,7 @@ function timerToggle(){
       timerState.running = false;
       document.getElementById('timerToggleBtn').textContent = '▶️ ابدأ';
       playAlarm();
+      timerFinished();
     }
   }, 1000);
 }
@@ -947,7 +1353,14 @@ function renderProgressList(){
   });
 
   const allViewed = state.viewed.length>0 && state.viewed.every(v=>v);
-  document.getElementById('completeBanner').classList.toggle('hidden', !allViewed);
+  const narOn = !!(state.nar && state.nar.active);
+  document.getElementById('completeBanner').classList.toggle('hidden', !allViewed || narOn || state.presenterMode);
+  document.getElementById('narStartBtn').classList.toggle('hidden', !(state.presenterMode && allViewed && !narOn));
+  document.getElementById('narratorConsole').classList.toggle('hidden', !narOn);
+  document.getElementById('playerGrid').classList.toggle('hidden', narOn);
+  document.getElementById('gridTitle').classList.toggle('hidden', narOn);
+  narBgSync();
+  saveGame();
   document.getElementById('aliveDeadBtn').classList.toggle('hidden', !state.vip);
   document.getElementById('copySummaryBtn').classList.toggle('hidden', !state.vip);
   document.getElementById('roundTag').textContent = '🌙 الجولة رقم ' + state.round;
@@ -981,6 +1394,7 @@ function openReveal(i){
   document.getElementById('turnName').textContent = p.name;
   document.getElementById('frontName').textContent = p.name;
   resetFlipInstant();
+  cardFxReset();
   document.getElementById('closeBtn').classList.add('hidden');
 
   const role = ROLES[p.roleKey];
@@ -993,6 +1407,8 @@ function openReveal(i){
   pendingBackHTML = `<img src="${imgSrc}" alt="${role.name}" class="card-photo">`;
 
   document.getElementById('overlay').classList.remove('hidden');
+  const rcOpen = document.querySelector('#overlay .reveal-card');
+  rcOpen.classList.remove('closing','opening'); void rcOpen.offsetWidth; rcOpen.classList.add('opening');
   renderProgressList();
 }
 
@@ -1012,16 +1428,32 @@ function playRevealEffect(){
 }
 
 function revealCard(){
+  if(revealedNow || currentIdx === null) return;
+  revealedNow = true;
   document.getElementById('backFace').innerHTML = pendingBackHTML;
   requestAnimationFrame(()=>document.getElementById('flipInner').classList.add('flipped'));
+  const burst = document.createElement('div'); burst.className = 'glow-burst';
+  document.getElementById('cardStage').appendChild(burst);
+  setTimeout(()=>burst.remove(), 950);
   document.getElementById('closeBtn').classList.remove('hidden');
   playRevealEffect();
   if(currentIdx !== null){
     state.viewed[currentIdx] = true;
   }
+  cardFxOnReveal();
 }
 
+let closingNow = false;
 function closeModal(){
+  if(closingNow) return;
+  closingNow = true;
+  clearAutoClose(); holdCancel(); roleFxStop();
+  const rc = document.querySelector('#overlay .reveal-card');
+  rc.classList.remove('opening'); rc.classList.add('closing');
+  setTimeout(()=>{ rc.classList.remove('closing'); closingNow = false; closeModalNow(); }, 260);
+}
+function closeModalNow(){
+  cardFxReset();
   document.getElementById('overlay').classList.add('hidden');
   currentIdx = null;
   pendingBackHTML = '';
@@ -1075,6 +1507,7 @@ function toggleDead(i){
 }
 function closeAliveDead(){
   document.getElementById('aliveDeadOverlay').classList.add('hidden');
+  narAfterManualChange();
 }
 
 // ---------- Copy round summary (VIP) ----------
@@ -1094,6 +1527,1146 @@ function copyRoundSummary(){
     prompt('انسخ النص من هون:', text);
   }
 }
+
+// =====================================================================
+// 🎙️ Narrator console (presenter mode) — runs the whole night/day cycle
+// =====================================================================
+function narFresh(){
+  return {
+    active:false, night:1, phase:'night', stepIdx:0, steps:[],
+    pick:{ kill:null, silence:null, protect:null, inspect:null },
+    silenced:[], votes:{}, tie:null, outcome:null, voteOut:null,
+    boy:null, winner:null, log:[], boyNight:false, showLog:false,
+    justDied:[], lastVote:null, lastDelta:0, lastProtect:null, boyPulled:null, hideRoles:false, scored:false
+  };
+}
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function nName(i){ return esc(state.assignments[i].name); }
+function nRole(i){ return ROLES[state.assignments[i].roleKey]; }
+function nAll(){ return state.assignments.map((p,i)=>i); }
+function nAlive(){ return nAll().filter(i=>!state.dead[i]); }
+function nHolders(keys){ return nAll().filter(i=>keys.includes(state.assignments[i].roleKey)); }
+function nAliveHolders(keys){ return nHolders(keys).filter(i=>!state.dead[i]); }
+function nNames(list){ return list.map(nName).join('، ') || '—'; }
+function nLog(t){ state.nar.log.push(t); }
+
+function narStart(){
+  const n = state.nar;
+  n.active = true; n.night = 1;
+  n.boyNight = !!state.rules.boyNight;
+  ac(); keepAwake();
+  document.getElementById('gameFlowHint').textContent = 'غرفة تحكم المقدم — كل البطاقات قدامك';
+  narBeginNight();
+}
+
+function narBeginNight(){
+  const n = state.nar;
+  n.phase = 'night'; n.stepIdx = 0;
+  n.pick = { kill:null, silence:null, protect:null, inspect:null };
+  n.outcome = null; n.voteOut = null; n.votes = {}; n.tie = null; n.boy = null;
+  n.silenced = []; n.boyPulled = null;
+  const steps = ['mafia'];
+  if(nHolders(['girl']).length)   steps.push('doctor');
+  if(nHolders(['sheikh']).length) steps.push('sheikh');
+  n.steps = steps;
+  nLog('🌙 بداية الليلة ' + n.night);
+  renderProgressList();
+  narTransition('night');
+  narRender(true);
+}
+
+function narSelect(slot, i){
+  const n = state.nar;
+  n.pick[slot] = (n.pick[slot] === i) ? null : i;
+  narRender();
+}
+
+function narConfirmStep(skipKill){
+  narSnap();
+  const n = state.nar, step = n.steps[n.stepIdx], p = n.pick;
+  if(step === 'mafia'){
+    if(skipKill){ p.kill = null; }
+    nLog('🔪 المافيا اختارت: ' + (p.kill!==null ? nNames([p.kill]) : 'لا أحد'));
+    if(p.silence!==null) nLog('🤐 مافيا القص أسكتت: ' + nNames([p.silence]));
+  } else if(step === 'doctor'){
+    n.lastProtect = p.protect;
+    nLog('🛡️ الدكتور حمى: ' + (p.protect!==null ? nNames([p.protect]) : (nAliveHolders(['girl']).length ? 'لا أحد' : '(ميت — تمثيلية)')));
+  } else if(step === 'sheikh'){
+    if(p.inspect!==null){
+      nLog('🔎 الشيخ سأل عن ' + nNames([p.inspect]) + ' ← ' + (nRole(p.inspect).team==='mafia' ? 'مافيا' : 'بريء'));
+    } else nLog('🔎 الشيخ: ' + (nAliveHolders(['sheikh']).length ? 'ما سأل أحد' : '(ميت — تمثيلية)'));
+  }
+  n.stepIdx++;
+  if(n.stepIdx >= n.steps.length) narDawn(); else narRender(true);
+}
+
+function narDawn(){
+  const n = state.nar, p = n.pick;
+  const out = { killed:null, saved:null, wrongProtect:null, silenced:null };
+  if(p.kill !== null){
+    if(p.protect === p.kill){
+      out.saved = p.kill;
+      nLog('✅ الدكتور أنقذ ' + nNames([p.kill]) + ' — ما مات أحد');
+    } else {
+      out.killed = p.kill;
+      state.dead[p.kill] = true;
+      n.justDied = [p.kill];
+      if(p.protect !== null) out.wrongProtect = p.protect;
+      nLog('☠️ انقتل ' + nNames([p.kill]) + (out.wrongProtect!==null ? ' (الدكتور حمى ' + nNames([p.protect]) + ' بالخطأ)' : ''));
+      if(state.assignments[p.kill].roleKey === 'boy' && n.boyNight) n.boy = { from:p.kill, reason:'night' };
+    }
+  }
+  if(p.silence !== null && !state.dead[p.silence]){
+    n.silenced = [p.silence];
+    out.silenced = p.silence;
+  }
+  n.outcome = out;
+  n.phase = 'dawn';
+  narTransition('dawn');
+  if(out.killed !== null) setTimeout(()=>{ narFlash('red'); sfx('heartbeat'); }, 1500);
+  else if(out.saved !== null) setTimeout(()=>{ narFlash('green'); sfx('saved'); }, 1500);
+  narRender(true);
+}
+
+function narFromDawn(){
+  narSnap();
+  const n = state.nar;
+  if(narCheckWin()){ narRender(true); return; }
+  n.phase = 'day';
+  nLog('☀️ نهار الليلة ' + n.night + ' — نقاش');
+  if(state.rules.autoTimer){ setTimerPreset(timerState.total); timerToggle(); }
+  narRender(true);
+}
+
+function narStartVote(){
+  narSnap();
+  const n = state.nar;
+  n.phase = 'vote'; n.votes = {}; n.tie = null; n.lastVote = null;
+  if(state.rules.autoTimer){ setTimerPreset(timerState.total); timerToggle(); }
+  narRender(true);
+}
+function narVote(i, d){
+  const n = state.nar;
+  n.votes[i] = Math.max(0, (n.votes[i]||0) + d);
+  n.lastVote = i; n.lastDelta = d;
+  narRender();
+}
+function narResetVotes(){
+  const n = state.nar; n.votes = {}; n.tie = null; n.lastVote = null; narRender();
+}
+function narEndVote(){
+  if(voteBusy) return;
+  const n = state.nar;
+  const entries = Object.entries(n.votes).filter(e=>e[1]>0);
+  if(!entries.length){
+    if(!confirm('ما في أي صوت مسجّل. تكمل بدون إقصاء؟')) return;
+    return narVoteOut(null);
+  }
+  const max = Math.max(...entries.map(e=>e[1]));
+  const top = entries.filter(e=>e[1]===max).map(e=>+e[0]);
+  if(top.length > 1){ n.tie = top; narRender(true); return; }
+  if(state.rules.sfx){
+    voteBusy = true; sfx('drum');
+    setTimeout(()=>{ voteBusy = false; narVoteOut(top[0]); }, 1350);
+  } else narVoteOut(top[0]);
+}
+function narVoteOut(i){
+  narSnap();
+  const n = state.nar;
+  n.tie = null; n.voteOut = i; n.phase = 'voteResult'; n.boyPulled = null;
+  if(i === null){
+    nLog('🗳️ تصويت الليلة ' + n.night + ': بدون إقصاء');
+  } else {
+    state.dead[i] = true;
+    n.justDied = [i];
+    nLog('🗳️ التصويت أخرج ' + nNames([i]) + ' (' + nRole(i).name + ')');
+    if(state.assignments[i].roleKey === 'boy') n.boy = { from:i, reason:'vote' };
+  }
+  narRender(true);
+}
+
+function narBoyPick(i){
+  narSnap();
+  const n = state.nar;
+  if(i !== null){
+    state.dead[i] = true;
+    n.justDied = [i];
+    n.boyPulled = i;
+    nLog('👦 الولد سحب معه ' + nNames([i]) + ' (' + nRole(i).name + ')');
+    narSpeak('الولد سحب معه ' + state.assignments[i].name);
+  } else {
+    nLog('👦 الولد ما سحب أحد');
+  }
+  n.boy = null;
+  narRender();
+}
+
+function narNextNight(){
+  narSnap();
+  const n = state.nar;
+  if(narCheckWin()){ narRender(true); return; }
+  n.night++;
+  narBeginNight();
+}
+
+function narCheckWin(){
+  const n = state.nar;
+  const alive = nAlive();
+  const m = alive.filter(i=>nRole(i).team==='mafia').length;
+  const c = alive.length - m;
+  n.winner = null;
+  if(m === 0) n.winner = 'citizen';
+  else if(m >= c) n.winner = 'mafia';
+  if(n.winner){
+    n.phase = 'over';
+    nLog(n.winner==='mafia' ? '🏴 فازت المافيا' : '🏆 فاز المواطنون');
+    scoresRecord();
+  }
+  return !!n.winner;
+}
+
+// manual edits from the alive/dead list while the console is open
+function narAfterManualChange(){
+  const n = state.nar;
+  if(!n || !n.active) return;
+  if(n.phase === 'over'){
+    if(n.scored){ scoresRevert(n.winner); n.scored = false; }
+    n.winner = null; n.phase = 'day'; narCheckWin();
+  }
+  narRender();
+}
+
+// ---------- rendering ----------
+function narPicker(slot, cls, blocked){
+  const n = state.nar; blocked = blocked || [];
+  return '<div class="nar-grid">' + nAlive().map(i=>{
+    const r = nRole(i), bl = blocked.includes(i);
+    return `<button class="nar-chip ${n.pick[slot]===i ? 'sel '+cls : ''}" ${bl?'disabled':''} onclick="narSelect('${slot}',${i})"><span>${nName(i)}</span><small class="t-${r.team}">${bl ? 'ممنوع حسب القواعد' : r.name}</small></button>`;
+  }).join('') + '</div>';
+}
+
+function narHeaderHtml(){
+  const n = state.nar, alive = nAlive();
+  const m = alive.filter(i=>nRole(i).team==='mafia').length;
+  const labels = {
+    night:'🌙 الليلة ' + n.night, dawn:'🌅 فجر الليلة ' + n.night,
+    day:'☀️ نهار ' + n.night + ' — نقاش', vote:'🗳️ التصويت',
+    voteResult:'⚖️ نتيجة التصويت', over:'🏁 انتهت اللعبة'
+  };
+  let h = `<div class="nar-head"><div class="nar-phase">${labels[n.phase]}</div>
+    <div class="nar-stats">أحياء ${alive.length} · 🔴 مافيا ${m} · 🟢 مواطنين ${alive.length-m}</div></div>`;
+  h += `<div class="nar-tools">
+    <button class="btn btn-ghost" ${narUndoStack.length ? '' : 'disabled'} onclick="narUndo()">↩ تراجع</button>
+    <button class="btn btn-ghost" onclick="narToggleHide()">${n.hideRoles ? '👁 إظهار الأدوار' : '🙈 إخفاء الأدوار'}</button>
+    <button class="btn btn-ghost" onclick="narToggleTts()">${state.rules.tts ? '🔊 القراءة: تشغيل' : '🔇 القراءة: إيقاف'}</button>
+    ${state.rules.tts ? '<button class="btn btn-ghost" onclick="narReplay()">🔁 أعد القراءة</button>' : ''}
+    <button class="btn btn-ghost" onclick="narOpenPublic()">📺 شاشة الجمهور</button>
+    <button class="btn btn-ghost" onclick="openScores()">🏆 النتائج</button>
+  </div>`;
+  if(nHolders(['boy']).length){
+    h += `<label class="nar-opt"><span>👦 الولد يسحب لاعب معه حتى لو انقتل بالليل (الأصل: بالتصويت بس)</span>
+      <input type="checkbox" ${n.boyNight?'checked':''} onchange="state.nar.boyNight=this.checked"></label>`;
+  }
+  return h;
+}
+
+function narRosterHtml(){
+  const n = state.nar;
+  const order = nAll().sort((a,b)=> ((state.dead[a]?1:0) - (state.dead[b]?1:0)) || (a-b));
+  const rows = order.map(i=>{
+    const r = nRole(i), dead = state.dead[i];
+    const badges = (dead ? ' <span class="skull">☠️</span>' : '') + (n.silenced.includes(i) && !dead ? ' 🤐' : '');
+    return `<div class="nar-rrow ${dead?'dead':''} ${n.justDied.includes(i)?'just-died':''}" data-i="${i}"><span class="ic t-${r.team}">${r.icon}</span><span class="nm">${nName(i)}${badges}</span><span class="rl t-${r.team}">${r.name}</span></div>`;
+  }).join('');
+  return `<details class="card nar-fold" id="narRoster" open><summary>👁 كل البطاقات والأدوار (للمقدم فقط)</summary><div style="margin-top:8px;">${rows}</div></details>`;
+}
+
+function narBoyHtml(){
+  const n = state.nar;
+  if(!n.boy) return '';
+  const targets = nAlive();
+  return `<div class="card" style="border-color:var(--gold);">
+    <p class="step-label">👦 الولد خرج — بيختار لاعب يخرج معه</p>
+    <div class="nar-script">قول: <b>«الولد طلع.. وبيسحب معه لاعب واحد. مين اللي بتختاره؟»</b></div>
+    <div class="nar-grid">${targets.map(i=>{
+      const r = nRole(i);
+      return `<button class="nar-chip" onclick="narBoyPick(${i})"><span>${nName(i)}</span><small class="t-${r.team}">${r.name}</small></button>`;
+    }).join('')}</div>
+    <div class="nar-actions"><button class="btn btn-ghost" onclick="narBoyPick(null)">بدون سحب</button></div>
+  </div>`;
+}
+
+function narStepHtml(){
+  const n = state.nar, step = n.steps[n.stepIdx], p = n.pick;
+  const total = n.steps.length, no = n.stepIdx + 1;
+
+  if(step === 'mafia'){
+    const hasSlasher = nAliveHolders(['slasher']).length > 0;
+    const mafiaHold = nAliveHolders(['mafia','slasher']);
+    return `<div class="card">
+      <p class="step-label"><span class="n">${no}</span> المافيا (${no}/${total})</p>
+      <div class="nar-script">قول: <b>«الكل يغمض عيونه.. المافيا يفتحوا عيونهم، واتفقوا مين بدكم تقتلوا${hasSlasher?' ومين بدكم تسكتوا':''}»</b></div>
+      <div class="nar-note secret" style="margin-top:0;text-align:right;">فريق المافيا الحي: ${nNames(mafiaHold)}</div>
+      <div class="nar-sub">🔪 ضحية الليلة</div>
+      ${narPicker('kill','sel-kill')}
+      ${hasSlasher ? `<div class="nar-sub">🤐 اللاعب اللي بتسكته مافيا القص (ما يحكي ولا يصوّت بكرا)</div>${narPicker('silence','sel-silence')}` : ''}
+      <div class="nar-actions">
+        <button class="btn btn-primary" ${p.kill===null?'disabled':''} onclick="narConfirmStep()">تأكيد — المافيا تغمض عيونها ⏭</button>
+        <button class="btn btn-ghost" onclick="narConfirmStep(true)">بدون قتل هالليلة</button>
+      </div>
+    </div>`;
+  }
+
+  if(step === 'doctor'){
+    const alive = nAliveHolders(['girl']).length > 0;
+    if(!alive) return narFakeHtml('الدكتور', no, total);
+    return `<div class="card">
+      <p class="step-label"><span class="n">${no}</span> الدكتور 🛡️ (${no}/${total})</p>
+      <div class="nar-script">قول: <b>«المافيا يغمضوا عيونهم.. الدكتور يفتح عيونه، مين بدك تحمي؟»</b></div>
+      <div class="nar-note secret" style="margin-top:0;text-align:right;">الدكتور: ${nNames(nAliveHolders(['girl']))}</div>
+      <div class="nar-sub">🛡️ اللاعب اللي بيتحمّى</div>
+      ${narPicker('protect','sel-protect',narBlockedProtect())}
+      ${p.protect!==null && p.kill!==null ? `<div class="nar-note secret">${p.protect===p.kill ? '✅ حماه صح — الضحية رح تنجو' : '❌ حماية خاطئة — الضحية رح تخرج'} (يظهر للمقدم بس)</div>` : ''}
+      <div class="nar-actions">
+        <button class="btn btn-primary" ${p.protect===null?'disabled':''} onclick="narConfirmStep()">تأكيد — الدكتور يغمض عيونه ⏭</button>
+        <button class="btn btn-ghost" onclick="narConfirmStep()">ما حمى أحد</button>
+      </div>
+    </div>`;
+  }
+
+  if(step === 'sheikh'){
+    const alive = nAliveHolders(['sheikh']).length > 0;
+    if(!alive) return narFakeHtml('الشيخ / المحقق', no, total);
+    let result = '';
+    if(p.inspect !== null){
+      const isM = nRole(p.inspect).team === 'mafia';
+      result = `<div class="nar-result ${isM?'bad':'good'}">${nName(p.inspect)}: ${isM ? '🔴 من المافيا (قاتل)' : '🟢 بريء — مو مافيا'}</div>
+        <div class="nar-note">بلّغ الشيخ بإشارة صامتة بس.</div>`;
+    }
+    return `<div class="card">
+      <p class="step-label"><span class="n">${no}</span> الشيخ / المحقق 🔎 (${no}/${total})</p>
+      <div class="nar-script">قول: <b>«الدكتور يغمض عيونه.. الشيخ يفتح عيونه، عن مين بدك تسأل؟»</b></div>
+      <div class="nar-note secret" style="margin-top:0;text-align:right;">الشيخ: ${nNames(nAliveHolders(['sheikh']))}</div>
+      <div class="nar-sub">🔎 اللاعب اللي بيسأل عنه</div>
+      ${narPicker('inspect','sel-inspect')}
+      ${result}
+      <div class="nar-actions">
+        <button class="btn btn-primary" ${p.inspect===null?'disabled':''} onclick="narConfirmStep()">تم تبليغه — الشيخ يغمض عيونه ⏭</button>
+        <button class="btn btn-ghost" onclick="narConfirmStep()">ما سأل أحد</button>
+      </div>
+    </div>`;
+  }
+  return '';
+}
+
+function narFakeHtml(who, no, total){
+  return `<div class="card">
+    <p class="step-label"><span class="n">${no}</span> ${who} (${no}/${total})</p>
+    <div class="nar-script">قول نفس الكلام بصوتك المعتاد: <b>«${who} يفتح عيونه.. اختار.. وبيغمض عيونه»</b></div>
+    <div class="nar-fake">⚠️ <b>${who}</b> خارج اللعبة — اعمل تمثيلية وانتظر بضع ثواني عشان ما ينكشف إنه طلع.</div>
+    <div class="nar-actions"><button class="btn btn-primary" onclick="narConfirmStep()">كمّل ⏭</button></div>
+  </div>`;
+}
+
+function narDawnHtml(){
+  const n = state.nar, o = n.outcome || {};
+  let news, detail = '';
+  if(o.killed !== null && o.killed !== undefined){
+    news = `☠️ الليلة انقتل: ${nName(o.killed)}`;
+    detail = narRoleLine(o.killed) + (o.wrongProtect!==null && o.wrongProtect!==undefined ? `<br>الدكتور حمى ${nName(o.wrongProtect)} بالخطأ.` : '');
+  } else if(o.saved !== null && o.saved !== undefined){
+    news = '🌅 الليلة ما مات أحد';
+    detail = `🛡️ الدكتور أنقذ ${nName(o.saved)} من القتل (للمقدم بس — لا تعلنها إلا إذا بدك).`;
+  } else {
+    news = '🌅 الليلة ما انقتل أحد';
+    detail = 'المافيا ما اختارت ضحية.';
+  }
+  let silent = '';
+  if(o.silenced !== null && o.silenced !== undefined){
+    silent = `<div class="nar-news" style="font-size:16px;">🤐 ${nName(o.silenced)} ممنوع يحكي ويصوّت اليوم</div>`;
+  }
+  return `<div class="card">
+    <p class="step-label">🌅 الفجر</p>
+    <div class="nar-script">قول: <b>«الكل يفتح عيونه.. صباح الخير!»</b></div>
+    <div class="nar-news ${narAnimNow ? (o.killed!==null && o.killed!==undefined ? 'fx-victim' : (o.saved!==null && o.saved!==undefined ? 'fx-saved' : '')) : ''}">${news}</div>
+    ${silent}
+    <div class="nar-note secret">${detail}</div>
+  </div>
+  ${narBoyHtml()}
+  <button class="btn btn-primary" ${n.boy?'disabled':''} onclick="narFromDawn()">ابدأ النقاش ☀️</button>`;
+}
+
+function narDayHtml(){
+  const n = state.nar;
+  const sil = n.silenced.filter(i=>!state.dead[i]);
+  return `<div class="card">
+    <p class="step-label">☀️ النقاش</p>
+    <div class="nar-script">دير النقاش وحلّلوا مين مشبوه — استخدم <b>المؤقت</b> تحت.</div>
+    ${sil.length ? `<div class="nar-news" style="font-size:16px;">🤐 ممنوع يحكي ويصوّت: ${nNames(sil)}</div>` : ''}
+  </div>
+  <button class="btn btn-primary" onclick="narStartVote()">ابدأ التصويت 🗳️</button>`;
+}
+
+function narVoteHtml(){
+  const n = state.nar;
+  const alive = nAlive();
+  const sil = n.silenced.filter(i=>!state.dead[i]);
+  const eligible = alive.length - sil.length;
+  const cast = Object.values(n.votes).reduce((a,b)=>a+b, 0);
+
+  if(n.tie){
+    return `<div class="card">
+      <p class="step-label">⚖️ تعادل!</p>
+      <div class="nar-note" style="margin-top:0;">تعادل بين: ${nNames(n.tie)}</div>
+      <div class="nar-actions">
+        ${n.tie.map(i=>`<button class="btn btn-primary" onclick="narVoteOut(${i})">أقصِ ${nName(i)}</button>`).join('')}
+        <button class="btn btn-ghost" onclick="narResetVotes()">إعادة التصويت</button>
+        <button class="btn btn-ghost" onclick="narVoteOut(null)">لا إقصاء</button>
+      </div>
+    </div>`;
+  }
+
+  const maxV = Math.max(0, ...alive.map(i=>n.votes[i]||0));
+  const rows = alive.map(i=>{
+    const r = nRole(i), v = n.votes[i]||0;
+    const lead = maxV > 0 && v === maxV;
+    const pulse = (n.lastVote === i && n.lastDelta > 0) ? 'pulse' : '';
+    return `<div class="nar-vrow ${lead?'lead':''}"><div class="nm">${nName(i)}${sil.includes(i)?' 🤐':''}<small class="t-${r.team}">${r.name}</small></div>
+      <button onclick="narVote(${i},-1)">−</button><span class="cnt ${pulse}">${v}</span><button onclick="narVote(${i},1)">+</button></div>`;
+  }).join('');
+  return `<div class="card">
+    <p class="step-label">🗳️ سجّل الأصوات لكل لاعب</p>
+    <div class="nar-note" style="margin-top:0;">الأصوات المسجّلة: <b>${cast}</b> من ${eligible} يحق لهم التصويت${sil.length?' (المسكّت ما يصوّت: '+nNames(sil)+')':''}</div>
+    ${rows}
+  </div>
+  <button class="btn btn-primary" onclick="narEndVote()">أعلن النتيجة — إقصاء الأكثر أصواتًا ⚖️</button>
+  <button class="btn btn-ghost" onclick="narResetVotes()">تصفير الأصوات</button>`;
+}
+
+function narVoteResultHtml(){
+  const n = state.nar, i = n.voteOut;
+  let news, detail = '';
+  if(i === null){ news = '⚖️ ما انطرد أحد'; }
+  else {
+    news = `⚖️ خرج بالتصويت: ${nName(i)}`;
+    detail = narRoleLine(i);
+  }
+  return `<div class="card">
+    <p class="step-label">⚖️ نتيجة التصويت</p>
+    <div class="nar-news">${news}</div>
+    <div class="nar-note secret">${detail}</div>
+  </div>
+  ${narBoyHtml()}
+  <button class="btn btn-primary" ${n.boy?'disabled':''} onclick="narNextNight()">الليلة ${n.night+1} 🌙</button>`;
+}
+
+function narOverHtml(){
+  const n = state.nar, mafiaWin = n.winner === 'mafia';
+  return `<div class="card nar-win">
+    <div style="font-size:48px;">${mafiaWin ? '🏴' : '🏆'}</div>
+    <div class="big ${mafiaWin?'t-mafia':'t-citizen'}">${mafiaWin ? 'فازت المافيا!' : 'فاز المواطنون!'}</div>
+    <div class="nar-note">${mafiaWin ? 'عدد المافيا صار مثل أو أكثر من المواطنين.' : 'تم إقصاء كل المافيا.'}</div>
+    ${narScoreLine()}
+    <div class="nar-actions">
+      <button class="btn btn-primary" onclick="reshuffle()">جولة جديدة بتوزيع جديد 🔀</button>
+      <button class="btn btn-ghost" onclick="newGame()">لعبة جديدة</button>
+    </div>
+  </div>`;
+}
+
+function narLogHtml(){
+  const n = state.nar;
+  return `<details class="card nar-fold" ${n.showLog?'open':''} ontoggle="state.nar.showLog=this.open"><summary>📜 سجل الأحداث</summary>
+    <div class="secret" style="margin-top:8px;">${n.log.map(l=>`<div class="nar-logline">${l}</div>`).join('') || '—'}</div></details>`;
+}
+
+function narRender(scroll){
+  const n = state.nar, el = document.getElementById('narratorConsole');
+  if(!n || !n.active){ el.classList.add('hidden'); narBgSync(); narPublishPublic(); return; }
+  el.classList.remove('hidden');
+  narAnimNow = !!scroll;
+  // remember roster row positions (relative to the roster card) for the "slide down" animation
+  const oldPos = {};
+  const oldRoster = document.getElementById('narRoster');
+  if(oldRoster && n.justDied.length){
+    const base = oldRoster.getBoundingClientRect().top;
+    el.querySelectorAll('.nar-rrow[data-i]').forEach(r=>{ oldPos[r.dataset.i] = r.getBoundingClientRect().top - base; });
+  }
+  let body = '';
+  if(n.phase === 'night')           body = narStepHtml();
+  else if(n.phase === 'dawn')       body = narDawnHtml();
+  else if(n.phase === 'day')        body = narDayHtml();
+  else if(n.phase === 'vote')       body = narVoteHtml();
+  else if(n.phase === 'voteResult') body = narVoteResultHtml();
+  else if(n.phase === 'over')       body = narOverHtml();
+  el.innerHTML = narHeaderHtml() + `<div class="${scroll ? 'nar-slide' : ''}">` + body + '</div>' + narRosterHtml() + narLogHtml();
+  if(n.justDied.length && Object.keys(oldPos).length){
+    const base = document.getElementById('narRoster').getBoundingClientRect().top;
+    el.querySelectorAll('.nar-rrow[data-i]').forEach(r=>{
+      const delta = oldPos[r.dataset.i] - (r.getBoundingClientRect().top - base);
+      if(Math.abs(delta) > 2){
+        r.style.transition = 'none'; r.style.transform = `translateY(${delta}px)`;
+        void r.offsetWidth;
+        r.style.transition = 'transform .8s cubic-bezier(.2,.8,.2,1) .35s'; r.style.transform = '';
+      }
+    });
+  }
+  n.justDied = [];
+  el.classList.toggle('roles-hidden', !!n.hideRoles);
+  narBgSync();
+  if(scroll && n.phase === 'over' && n.winner) narVictoryFx(n.winner);
+  if(scroll && state.rules.tts){
+    const delay = narSpeakDelay || 250, say = narSayLines();
+    narSpeakDelay = 0;
+    setTimeout(()=>narSpeak(say), delay);
+  }
+  saveGame(); narPublishPublic();
+  if(scroll) el.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+// =====================================================================
+// ✨ Animations
+// =====================================================================
+let narAnimNow = false;
+
+function narEnsureBg(){
+  let bg = document.getElementById('narBg');
+  if(bg) return bg;
+  bg = document.createElement('div'); bg.id = 'narBg';
+  let h = '<div class="fog f1"></div><div class="fog f2"></div>';
+  for(let i=0;i<38;i++){
+    const sz = (1 + Math.random()*2.2).toFixed(1);
+    h += `<span class="star" style="left:${(Math.random()*100).toFixed(1)}%;top:${(Math.random()*70).toFixed(1)}%;width:${sz}px;height:${sz}px;animation-delay:${(Math.random()*3).toFixed(2)}s;animation-duration:${(2+Math.random()*3).toFixed(1)}s"></span>`;
+  }
+  bg.innerHTML = h;
+  document.body.appendChild(bg);
+  return bg;
+}
+function narBgSync(){
+  const n = state.nar;
+  narEnsureBg().classList.toggle('on', !!(n && n.active && n.phase === 'night'));
+}
+function narTransition(kind){
+  const n = state.nar;
+  narSpeakDelay = 1300;
+  if(kind === 'night'){ sfx('night'); ambientStart(); } else { sfx('dawn'); ambientStop(); }
+  const d = document.createElement('div');
+  if(kind === 'night'){
+    d.className = 'nar-fx night';
+    d.innerHTML = `<div class="orb">🌙</div><div class="cap">الليلة ${n.night} — الكل يغمض عيونه</div>`;
+  } else {
+    d.className = 'nar-fx dawn';
+    d.innerHTML = `<div class="orb">☀️</div><div class="cap">صباح الخير — الكل يفتح عيونه</div>`;
+  }
+  document.body.appendChild(d);
+  setTimeout(()=>d.remove(), 1950);
+}
+function narFlash(color){
+  const d = document.createElement('div');
+  d.className = 'nar-flash ' + color;
+  document.body.appendChild(d);
+  setTimeout(()=>d.remove(), 950);
+}
+function narVictoryFx(winner){
+  ambientStop(); sfx(winner === 'mafia' ? 'lose' : 'win');
+  if(winner === 'mafia'){
+    const d = document.createElement('div');
+    d.className = 'nar-fx mafia-win';
+    d.innerHTML = '<div class="orb">🏴</div>';
+    document.body.appendChild(d);
+    setTimeout(()=>d.remove(), 3700);
+  } else {
+    const colors = ['#c9a227','#5fc3a5','#d1305a','#6aa8ff','#ede7da','#f6cf6a'];
+    for(let i=0;i<70;i++){
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = (Math.random()*100) + 'vw';
+      c.style.background = colors[i % colors.length];
+      c.style.animationDuration = (2.4 + Math.random()*2.4).toFixed(2) + 's';
+      c.style.animationDelay = (Math.random()*0.9).toFixed(2) + 's';
+      c.style.transform = 'rotate(' + Math.floor(Math.random()*360) + 'deg)';
+      document.body.appendChild(c);
+      setTimeout(()=>c.remove(), 6000);
+    }
+  }
+}
+
+// =====================================================================
+// 🧰 Extra features: save/resume, wake lock, voice, sound, undo, public screen, scores
+// =====================================================================
+
+// ---------- Rules UI ----------
+function syncRulesUI(){
+  const r = state.rules, map = { rTts:'tts', rSfx:'sfx', rAmbient:'ambient', rReveal:'revealRole',
+    rSelf:'selfProtect', rRepeat:'repeatProtect', rAuto:'autoTimer', rBoyNight:'boyNight' };
+  Object.keys(map).forEach(id=>{ const el = document.getElementById(id); if(el) el.checked = !!r[map[id]]; });
+  document.getElementById('presenterToggle').checked = !!state.presenterMode;
+  document.getElementById('rulesCard').classList.toggle('hidden', !state.presenterMode);
+}
+function setRule(key, val){
+  state.rules[key] = val;
+  if(key === 'tts' && val) narSpeak('تم تفعيل القراءة الصوتية');
+  if(key === 'sfx' && val) sfx('saved');
+  if(state.nar && state.nar.active) narRender();
+}
+
+// ---------- Auto-save / resume ----------
+const SAVE_KEY = 'mafiaSavedGame';
+function saveGame(){
+  try{
+    if(DISPLAY_MODE || !state.assignments.length) return;
+    localStorage.setItem(SAVE_KEY, JSON.stringify({
+      v:1, vip:state.vip, playerCount:state.playerCount, names:state.names, roleCounts:state.roleCounts,
+      assignments:state.assignments, viewed:state.viewed, dead:state.dead, round:state.round,
+      presenterMode:state.presenterMode, rules:state.rules, nar:state.nar, undo:narUndoStack, ts:Date.now()
+    }));
+  }catch(e){}
+}
+function clearSavedGame(){ try{ localStorage.removeItem(SAVE_KEY); }catch(e){} }
+let savedGameData = null;
+function checkSavedGame(){
+  try{
+    const raw = localStorage.getItem(SAVE_KEY);
+    if(!raw) return;
+    const g = JSON.parse(raw);
+    if(!g || !Array.isArray(g.assignments) || !g.assignments.length) return;
+    savedGameData = g;
+    const live = g.nar && g.nar.active;
+    document.getElementById('resumeInfo').textContent =
+      g.assignments.length + ' لاعبين · الجولة ' + g.round + (live ? ' · الليلة ' + g.nar.night : '') + (g.vip ? ' · VIP' : '');
+    document.getElementById('resumeBox').classList.remove('hidden');
+  }catch(e){}
+}
+function discardSaved(){
+  clearSavedGame(); savedGameData = null;
+  document.getElementById('resumeBox').classList.add('hidden');
+}
+function resumeSaved(){
+  const g = savedGameData; if(!g) return;
+  state.vip = !!g.vip;
+  state.playerCount = g.playerCount; state.names = g.names || [];
+  state.roleCounts = Object.assign(state.roleCounts, g.roleCounts || {});
+  state.assignments = g.assignments; state.viewed = g.viewed; state.dead = g.dead; state.round = g.round;
+  state.presenterMode = !!g.presenterMode;
+  state.rules = Object.assign(state.rules, g.rules || {});
+  state.nar = Object.assign(narFresh(), g.nar || {});
+  narUndoStack = Array.isArray(g.undo) ? g.undo : [];
+  document.body.classList.toggle('vip-mode', state.vip);
+  document.getElementById('resumeBox').classList.add('hidden');
+  syncRulesUI();
+  document.getElementById('gameFlowHint').textContent = state.nar.active ? 'غرفة تحكم المقدم — كل البطاقات قدامك' : 'متابعة اللعبة المحفوظة';
+  setTimerPreset(timerState.total);
+  showScreen('game');
+  keepAwake();
+  currentIdx = null;
+  renderProgressList();
+  if(state.nar.active){ narRender(true); }
+  else {
+    const next = state.viewed.indexOf(false);
+    if(next !== -1 && !state.presenterMode) openReveal(next);
+  }
+}
+
+// ---------- Keep screen awake ----------
+async function keepAwake(){
+  try{
+    if('wakeLock' in navigator && document.visibilityState === 'visible'){
+      wakeLock = await navigator.wakeLock.request('screen');
+    }
+  }catch(e){}
+}
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState === 'visible' && !document.getElementById('screen-game').classList.contains('hidden')) keepAwake();
+});
+
+// ---------- Voice (opt-in) ----------
+function narSpeak(text){
+  if(!state.rules.tts || !text) return;
+  if(!('speechSynthesis' in window)) return;
+  try{
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'ar-SA'; u.rate = 0.92;
+    const v = speechSynthesis.getVoices().find(v=>/^ar/i.test(v.lang));
+    if(v) u.voice = v;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+function narSayLines(){
+  const n = state.nar; if(!n || !n.active) return '';
+  const nm = i=>state.assignments[i].name, o = n.outcome || {}, rv = state.rules.revealRole;
+  let t = '';
+  if(n.phase === 'night'){
+    const sl = nAliveHolders(['slasher']).length > 0;
+    t = ({
+      mafia:'الكل يغمض عيونه.. المافيا يفتحوا عيونهم، واتفقوا مين بدكم تقتلوا' + (sl ? ' ومين بدكم تسكتوا' : ''),
+      doctor:'المافيا يغمضوا عيونهم.. الدكتور يفتح عيونه، مين بدك تحمي؟',
+      sheikh:'الدكتور يغمض عيونه.. الشيخ يفتح عيونه، عن مين بدك تسأل؟'
+    })[n.steps[n.stepIdx]] || '';
+  } else if(n.phase === 'dawn'){
+    t = 'الكل يفتح عيونه.. صباح الخير! ';
+    if(o.killed != null) t += 'الليلة انقتل ' + nm(o.killed) + (rv ? ' وكان دوره ' + nRole(o.killed).name : '') + '. ';
+    else t += 'الليلة ما انقتل أحد. ';
+    if(o.silenced != null) t += nm(o.silenced) + ' ممنوع يحكي ويصوّت اليوم. ';
+  } else if(n.phase === 'day'){ t = 'يلا ابدأوا النقاش.'; }
+  else if(n.phase === 'vote'){ t = 'حان وقت التصويت.'; }
+  else if(n.phase === 'voteResult'){
+    t = n.voteOut == null ? 'ما انطرد أحد.' : 'خرج بالتصويت ' + nm(n.voteOut) + (rv ? ' وكان دوره ' + nRole(n.voteOut).name : '') + '.';
+  } else if(n.phase === 'over'){ t = n.winner === 'mafia' ? 'فازت المافيا!' : 'فاز المواطنون!'; }
+  if(n.boy) t += ' الولد طلع.. وبيسحب معه لاعب واحد. مين اللي بتختاره؟';
+  return t;
+}
+function narToggleTts(){
+  if(!('speechSynthesis' in window)){ alert('المتصفح ما يدعم القراءة الصوتية'); return; }
+  setRule('tts', !state.rules.tts);
+  syncRulesUI();
+  narRender();
+}
+function narReplay(){ narSpeak(narSayLines()); }
+
+// ---------- Sound effects (synthesized, no files) ----------
+function ac(){
+  try{
+    if(!_ac) _ac = new (window.AudioContext || window.webkitAudioContext)();
+    if(_ac.state === 'suspended') _ac.resume();
+    return _ac;
+  }catch(e){ return null; }
+}
+function tone(f, t0, dur, type, vol, f2){
+  const c = ac(); if(!c) return;
+  const o = c.createOscillator(), g = c.createGain(), t = c.currentTime + t0;
+  o.type = type || 'sine';
+  o.frequency.setValueAtTime(f, t);
+  if(f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol || 0.12, t + Math.min(0.03, dur/3));
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect(c.destination);
+  o.start(t); o.stop(t + dur + 0.05);
+}
+function sfx(name){
+  if(!state.rules.sfx) return;
+  switch(name){
+    case 'night': tone(220,0,1.1,'triangle',.1,165); tone(165,.35,1.3,'triangle',.08,110); break;
+    case 'dawn': [523,659,784,1047].forEach((f,i)=>tone(f,i*.16,.7,'sine',.09)); break;
+    case 'heartbeat': [0,.3,1.2,1.5].forEach(t=>tone(70,t,.25,'sine',.45,38)); break;
+    case 'saved': tone(880,0,.5,'sine',.1); tone(1320,.18,.7,'sine',.09); break;
+    case 'drum': {
+      let t = 0, gap = 0.2;
+      while(t < 1.1){ tone(80,t,.18,'sine',.3,45); t += gap; gap = Math.max(.05, gap*.82); }
+      tone(60,1.2,.6,'sine',.6,30); tone(240,1.2,.2,'triangle',.15,80);
+      break;
+    }
+    case 'win': [523,659,784,1047,1319].forEach((f,i)=>tone(f,i*.14,.5,'triangle',.1)); break;
+    case 'lose': tone(196,0,.9,'sawtooth',.06,147); tone(147,.4,1.2,'sawtooth',.06,98); break;
+  }
+}
+function ambientStart(){
+  if(!state.rules.ambient || ambientNodes) return;
+  const c = ac(); if(!c) return;
+  const g = c.createGain(); g.gain.value = 0.0001; g.connect(c.destination);
+  const o1 = c.createOscillator(), o2 = c.createOscillator(), lfo = c.createOscillator(), lg = c.createGain();
+  o1.type = 'sine'; o1.frequency.value = 55; o2.type = 'triangle'; o2.frequency.value = 82.5;
+  lfo.frequency.value = 0.15; lg.gain.value = 0.012; lfo.connect(lg); lg.connect(g.gain);
+  o1.connect(g); o2.connect(g);
+  [o1,o2,lfo].forEach(o=>o.start());
+  g.gain.setTargetAtTime(0.03, c.currentTime, 1.5);
+  ambientNodes = { g, o:[o1,o2,lfo] };
+}
+function ambientStop(){
+  if(!ambientNodes) return;
+  const a = ambientNodes; ambientNodes = null;
+  try{
+    const c = ac();
+    a.g.gain.setTargetAtTime(0.0001, c.currentTime, 0.5);
+    setTimeout(()=>a.o.forEach(o=>{ try{ o.stop(); }catch(e){} }), 1800);
+  }catch(e){}
+}
+
+// ---------- Undo ----------
+function narSnap(){
+  narUndoStack.push(JSON.stringify({ nar:state.nar, dead:state.dead }));
+  if(narUndoStack.length > 60) narUndoStack.shift();
+}
+function narUndo(){
+  if(!narUndoStack.length) return;
+  const cur = state.nar, wasScored = cur.scored, prevWinner = cur.winner;
+  const s = JSON.parse(narUndoStack.pop());
+  const keep = { hideRoles:cur.hideRoles, showLog:cur.showLog, boyNight:cur.boyNight };
+  state.nar = Object.assign(narFresh(), s.nar, keep, { active:true, justDied:[] });
+  state.dead = s.dead;
+  if(wasScored && !state.nar.scored) scoresRevert(prevWinner);
+  try{ speechSynthesis.cancel(); }catch(e){}
+  renderProgressList();
+  narRender();
+}
+function narToggleHide(){
+  state.nar.hideRoles = !state.nar.hideRoles;
+  narRender();
+}
+
+// ---------- Rules helpers ----------
+function narBlockedProtect(){
+  const n = state.nar, b = [];
+  if(!state.rules.selfProtect) nAliveHolders(['girl']).forEach(i=>b.push(i));
+  if(!state.rules.repeatProtect && n.lastProtect !== null && n.lastProtect !== undefined) b.push(n.lastProtect);
+  return b;
+}
+function narRoleLine(i){
+  return state.rules.revealRole
+    ? `كان دوره: <b>${nRole(i).name}</b> — اعلنه للناس.`
+    : `كان دوره: <b>${nRole(i).name}</b> (سري — لا تعلنه).`;
+}
+function narScoreLine(){
+  const sc = scoresLoad();
+  return `<div class="nar-note">المجموع عبر الجولات: 🏴 المافيا <b>${sc.teams.mafia}</b> — 🟢 المواطنون <b>${sc.teams.citizen}</b></div>`;
+}
+function timerFinished(){
+  const n = state.nar;
+  if(n && n.active && state.rules.autoTimer && n.phase === 'day') narStartVote();
+}
+function narPublishTimer(){
+  try{
+    localStorage.setItem('mafiaPublicTimer', JSON.stringify({ running:timerState.running, remaining:timerState.remaining, total:timerState.total }));
+  }catch(e){}
+}
+
+// ---------- Scoreboard ----------
+const SCORE_KEY = 'mafiaScores';
+function scoresLoad(){
+  try{
+    const s = JSON.parse(localStorage.getItem(SCORE_KEY));
+    if(s && s.teams && s.players) return s;
+  }catch(e){}
+  return { teams:{ mafia:0, citizen:0 }, players:{}, games:0 };
+}
+function scoresSave(sc){ try{ localStorage.setItem(SCORE_KEY, JSON.stringify(sc)); }catch(e){} }
+function scoresRecord(){
+  const n = state.nar;
+  if(n.scored || !n.winner) return;
+  n.scored = true;
+  const sc = scoresLoad();
+  sc.games++; sc.teams[n.winner]++;
+  state.assignments.forEach(p=>{
+    const e = sc.players[p.name] || (sc.players[p.name] = { wins:0, games:0 });
+    e.games++;
+    if(ROLES[p.roleKey].team === n.winner) e.wins++;
+  });
+  scoresSave(sc);
+}
+function scoresRevert(winner){
+  if(!winner) return;
+  const sc = scoresLoad();
+  sc.games = Math.max(0, sc.games - 1);
+  sc.teams[winner] = Math.max(0, sc.teams[winner] - 1);
+  state.assignments.forEach(p=>{
+    const e = sc.players[p.name]; if(!e) return;
+    e.games = Math.max(0, e.games - 1);
+    if(ROLES[p.roleKey].team === winner) e.wins = Math.max(0, e.wins - 1);
+  });
+  scoresSave(sc);
+}
+function openScores(){
+  const sc = scoresLoad();
+  const rows = Object.entries(sc.players).sort((a,b)=> (b[1].wins - a[1].wins) || (a[1].games - b[1].games));
+  document.getElementById('scoreBody').innerHTML =
+    `<div class="sc-teams"><div class="t-mafia">🏴 المافيا<b>${sc.teams.mafia}</b></div><div class="t-citizen">🟢 المواطنون<b>${sc.teams.citizen}</b></div></div>` +
+    (rows.length ? rows.map(([name,e])=>`<div class="sc-row"><span class="nm">${esc(name)}</span><span class="w">${e.wins} فوز</span><span class="g">من ${e.games}</span></div>`).join('')
+                 : '<div class="nar-note">ما في نتائج بعد — بتتسجل لما تخلص أول جولة.</div>');
+  document.getElementById('scoreOverlay').classList.remove('hidden');
+}
+function closeScores(){ document.getElementById('scoreOverlay').classList.add('hidden'); }
+function resetScores(){
+  if(!confirm('رح تنمسح كل النتائج المسجّلة. أكيد؟')) return;
+  scoresSave({ teams:{ mafia:0, citizen:0 }, players:{}, games:0 });
+  openScores();
+}
+
+// ---------- Audience screen ----------
+function narPublicPayload(){
+  const n = state.nar;
+  if(!n || !n.active) return { phase:'idle', icon:'🎭', title:'لعبة المافيا', lines:[], alive:[], dead:[], silenced:[] };
+  const nm = i=>state.assignments[i].name, o = n.outcome || {}, rv = state.rules.revealRole;
+  const pl = {
+    phase:n.phase, night:n.night, icon:'', title:'', lines:[],
+    alive:nAlive().map(nm), dead:nAll().filter(i=>state.dead[i]).map(nm),
+    silenced:n.silenced.filter(i=>!state.dead[i]).map(nm)
+  };
+  const L = (text, cls)=>pl.lines.push({ text, cls:cls || '' });
+  if(n.phase === 'night'){ pl.icon = '🌙'; pl.title = 'الليلة ' + n.night; L('الكل يغمض عيونه'); }
+  else if(n.phase === 'dawn'){
+    pl.icon = '🌅'; pl.title = 'صباح الخير';
+    if(o.killed != null){ L('☠️ الليلة انقتل: ' + nm(o.killed), 'bad'); if(rv) L('كان دوره: ' + nRole(o.killed).name); }
+    else L('الليلة ما انقتل أحد', 'good');
+    if(o.silenced != null) L('🤐 ' + nm(o.silenced) + ' ممنوع يحكي ويصوّت اليوم');
+  } else if(n.phase === 'day'){
+    pl.icon = '☀️'; pl.title = 'النقاش';
+    pl.silenced.forEach(s=>L('🤐 ' + s + ' ممنوع يحكي ويصوّت'));
+  } else if(n.phase === 'vote'){ pl.icon = '🗳️'; pl.title = 'التصويت'; }
+  else if(n.phase === 'voteResult'){
+    pl.icon = '⚖️'; pl.title = 'نتيجة التصويت';
+    if(n.voteOut != null){ L('خرج بالتصويت: ' + nm(n.voteOut), 'bad'); if(rv) L('كان دوره: ' + nRole(n.voteOut).name); }
+    else L('ما انطرد أحد');
+  } else if(n.phase === 'over'){
+    pl.icon = n.winner === 'mafia' ? '🏴' : '🏆'; pl.title = 'انتهت اللعبة';
+    L(n.winner === 'mafia' ? 'فازت المافيا!' : 'فاز المواطنون!', n.winner === 'mafia' ? 'bad' : 'good');
+  }
+  if(n.boyPulled != null) L('👦 الولد سحب معه: ' + nm(n.boyPulled), 'bad');
+  return pl;
+}
+function narPublishPublic(){
+  if(DISPLAY_MODE) return;
+  try{ localStorage.setItem('mafiaPublicState', JSON.stringify(narPublicPayload())); }catch(e){}
+}
+function narOpenPublic(){
+  narPublishPublic(); narPublishTimer();
+  const url = location.href.split('#')[0].split('?')[0] + '?display=1';
+  window.open(url, 'mafiaPublic', 'width=1000,height=640');
+}
+let pubKey = '';
+function renderPublic(pl){
+  const el = document.getElementById('publicScreen');
+  narEnsureBg().classList.toggle('on', pl.phase === 'night');
+  const key = JSON.stringify([pl.phase, pl.night, pl.lines, pl.dead, pl.silenced]);
+  if(key === pubKey) return;
+  pubKey = key;
+  el.innerHTML = `<div class="pub-in"><div class="pub-icon">${pl.icon}</div><div class="pub-title">${esc(pl.title)}</div>` +
+    pl.lines.map(l=>`<div class="pub-line ${l.cls}">${esc(l.text)}</div>`).join('') +
+    `<div class="pub-timer" id="pubTimer"></div></div>` +
+    (pl.alive.length || pl.dead.length ? `<div class="pub-list">` +
+      pl.alive.map(a=>`<span class="pub-chip ${pl.silenced.includes(a)?'sil':''}">${esc(a)}</span>`).join('') +
+      pl.dead.map(d=>`<span class="pub-chip dead">${esc(d)}</span>`).join('') + `</div>` : '');
+  renderPubTimer();
+}
+function renderPubTimer(){
+  const el = document.getElementById('pubTimer'); if(!el) return;
+  try{
+    const t = JSON.parse(localStorage.getItem('mafiaPublicTimer') || 'null');
+    el.textContent = (t && t.running) ? fmtTime(t.remaining) : '';
+  }catch(e){}
+}
+function initDisplay(){
+  document.body.classList.add('display-mode');
+  document.getElementById('publicScreen').classList.remove('hidden');
+  const tick = ()=>{
+    try{
+      const raw = localStorage.getItem('mafiaPublicState');
+      renderPublic(raw ? JSON.parse(raw) : { phase:'idle', icon:'🎭', title:'لعبة المافيا', lines:[], alive:[], dead:[], silenced:[] });
+      renderPubTimer();
+    }catch(e){}
+  };
+  tick(); setInterval(tick, 500);
+}
+
+// ---------- boot ----------
+syncRulesUI();
+if(DISPLAY_MODE) initDisplay(); else checkSavedGame();
+
+// =====================================================================
+// 🃏 Card effects: hold-to-reveal + wax seal, tilt, glow, role effects (VIP), auto-close (VIP)
+// =====================================================================
+var revealedNow = false, holdTimer = null, holdOn = false, acTimeout = null, acInterval = null;
+var fxTimers = [], tiltWanted = false, tiltBase = null, orientationOK = null;
+var HOLD_MS = 850;
+var GHOST_SVG = `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+  <g><circle cx="50" cy="30" r="19" fill="#1a1236" stroke="rgba(170,140,255,.85)" stroke-width="1.4"/>
+  <path d="M28 56 Q50 44 72 56 L76 112 Q50 128 24 112 Z" fill="#1a1236" stroke="rgba(170,140,255,.85)" stroke-width="1.4"/>
+  <path d="M33 112 L29 134 M67 112 L71 134" stroke="#1a1236" stroke-width="9" stroke-linecap="round" fill="none"/></g>
+  <circle cx="43" cy="28" r="2.8" fill="#fff"/><circle cx="57" cy="28" r="2.8" fill="#fff"/>
+  <g class="g-arm"><path d="M68 62 L94 88" stroke="#1a1236" stroke-width="9" stroke-linecap="round" fill="none"/><circle cx="96" cy="90" r="6.5" fill="#1a1236"/></g>
+</svg>`;
+
+function reducedMotion(){ try{ return matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; } }
+function rnd(a, b){ return a + Math.random() * (b - a); }
+function clampN(v, a, b){ return Math.max(a, Math.min(b, v)); }
+function fxEl(cls, style, html){
+  const s = document.createElement('span');
+  s.className = cls; s.style.cssText = style || ''; if(html) s.innerHTML = html;
+  return s;
+}
+
+// ---------- auto-close setting (VIP) ----------
+function setAutoClose(v){
+  let n = parseInt(v, 10); if(isNaN(n) || n < 0) n = 0; if(n > 120) n = 120;
+  state.autoClose = n;
+  try{ localStorage.setItem('mafiaAutoClose', String(n)); }catch(e){}
+  ['acInputA','acInputB'].forEach(id=>{ const el = document.getElementById(id); if(el) el.value = n; });
+}
+
+// ---------- hold-to-reveal with wax seal ----------
+function askOrientation(){
+  if(orientationOK !== null) return;
+  try{
+    if(typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function'){
+      orientationOK = false;
+      DeviceOrientationEvent.requestPermission().then(s=>{
+        orientationOK = (s === 'granted');
+        if(orientationOK && tiltWanted) attachOrientation();
+      }).catch(()=>{ orientationOK = false; });
+    } else orientationOK = ('DeviceOrientationEvent' in window);
+  }catch(e){ orientationOK = false; }
+}
+function holdStart(e){
+  if(e && e.cancelable) e.preventDefault();
+  if(holdOn || revealedNow || currentIdx === null) return;
+  askOrientation(); ac();
+  holdOn = true;
+  const ring = document.getElementById('holdRing');
+  ring.style.setProperty('--dur', HOLD_MS + 'ms');
+  ring.classList.remove('run'); void ring.getBoundingClientRect(); ring.classList.add('run');
+  document.getElementById('waxSeal').classList.add('holding');
+  if(navigator.vibrate) navigator.vibrate(20);
+  holdTimer = setTimeout(holdDone, HOLD_MS);
+}
+function holdCancel(){
+  if(!holdOn) return;
+  holdOn = false; clearTimeout(holdTimer);
+  document.getElementById('holdRing').classList.remove('run');
+  document.getElementById('waxSeal').classList.remove('holding');
+}
+function holdDone(){
+  holdOn = false;
+  const seal = document.getElementById('waxSeal');
+  seal.classList.remove('holding'); seal.classList.add('cracked');
+  document.getElementById('holdRing').classList.remove('run');
+  if(navigator.vibrate) navigator.vibrate([30, 40, 60]);
+  setTimeout(()=>{ if(currentIdx !== null) revealCard(); }, 420);
+}
+
+// ---------- tilt (phone orientation, or mouse on desktop) ----------
+function tiltApply(rx, ry){
+  const w = document.getElementById('tiltWrap');
+  w.style.transform = `rotateX(${rx.toFixed(1)}deg) rotateY(${ry.toFixed(1)}deg)`;
+  w.style.setProperty('--sx', (ry * 3.2).toFixed(1) + '%');
+}
+function onOrient(e){
+  if(e.gamma == null || e.beta == null) return;
+  if(!tiltBase) tiltBase = { g:e.gamma, b:e.beta };
+  tiltApply(clampN(-(e.beta - tiltBase.b) * 0.35, -8, 8), clampN((e.gamma - tiltBase.g) * 0.35, -9, 9));
+}
+function onPtr(e){
+  const r = document.getElementById('cardStage').getBoundingClientRect();
+  tiltApply(clampN(-(e.clientY - (r.top + r.height/2)) / r.height * 14, -7, 7),
+            clampN((e.clientX - (r.left + r.width/2)) / r.width * 16, -9, 9));
+}
+function attachOrientation(){
+  window.removeEventListener('deviceorientation', onOrient);
+  window.addEventListener('deviceorientation', onOrient);
+}
+function startTilt(){
+  if(reducedMotion()) return;
+  tiltWanted = true; tiltBase = null;
+  document.getElementById('revealCard').classList.add('tilting');
+  if(orientationOK) attachOrientation();
+  try{ if(matchMedia('(pointer:fine)').matches) document.addEventListener('pointermove', onPtr); }catch(e){}
+}
+function stopTilt(){
+  tiltWanted = false;
+  window.removeEventListener('deviceorientation', onOrient);
+  document.removeEventListener('pointermove', onPtr);
+  const w = document.getElementById('tiltWrap');
+  if(w){ w.style.transform = ''; w.style.removeProperty('--sx'); }
+  document.getElementById('revealCard').classList.remove('tilting');
+}
+
+// ---------- role effects (VIP only) ----------
+function roleFxStop(){
+  fxTimers.forEach(t=>clearInterval(t)); fxTimers = [];
+  ['roleFx','roleFxFront'].forEach(id=>{ const e = document.getElementById(id); if(e) e.innerHTML = ''; });
+}
+function slashOnce(){
+  const front = document.getElementById('roleFxFront'); if(!front) return;
+  front.innerHTML = '';
+  front.appendChild(fxEl('slash', ''));
+  for(let i=0;i<14;i++){
+    const t = rnd(.22, .78), a = rnd(0, Math.PI*2), d = rnd(30, 90);
+    front.appendChild(fxEl('spark', `left:${(t*100).toFixed(1)}%;top:${(73 - 45.7*t).toFixed(1)}%;--dx:${(Math.cos(a)*d).toFixed(0)}px;--dy:${(Math.sin(a)*d).toFixed(0)}px;animation-delay:${rnd(.15,.45).toFixed(2)}s`));
+  }
+}
+function roleFxStart(key){
+  roleFxStop();
+  if(reducedMotion()) return;
+  const back = document.getElementById('roleFx'), front = document.getElementById('roleFxFront');
+  if(key === 'mafia'){
+    for(let i=0;i<14;i++) back.appendChild(fxEl('smoke', `left:${rnd(5,95).toFixed(0)}%;bottom:${rnd(-6,22).toFixed(0)}%;--s:${rnd(70,130).toFixed(0)}px;--dx:${rnd(-45,45).toFixed(0)}px;animation-duration:${rnd(3.8,6.5).toFixed(1)}s;animation-delay:${rnd(0,4).toFixed(1)}s`));
+    for(let i=0;i<14;i++) front.appendChild(fxEl('ember', `left:${rnd(8,92).toFixed(0)}%;bottom:${rnd(0,18).toFixed(0)}%;--dx:${rnd(-35,35).toFixed(0)}px;animation-duration:${rnd(2.2,4.2).toFixed(1)}s;animation-delay:${rnd(0,3).toFixed(1)}s`));
+  } else if(key === 'slasher'){
+    slashOnce(); fxTimers.push(setInterval(slashOnce, 6000));
+  } else if(key === 'girl'){
+    back.appendChild(fxEl('shield', '', '<svg viewBox="0 0 100 120" preserveAspectRatio="none"><path d="M50 4 L92 20 V58 C92 86 72 106 50 116 C28 106 8 86 8 58 V20 Z"/></svg>'));
+    for(let i=0;i<14;i++) front.appendChild(fxEl('orbg', `left:${rnd(6,94).toFixed(0)}%;bottom:${rnd(0,20).toFixed(0)}%;--dx:${rnd(-30,30).toFixed(0)}px;animation-duration:${rnd(3.5,6).toFixed(1)}s;animation-delay:${rnd(0,4).toFixed(1)}s`));
+  } else if(key === 'sheikh'){
+    back.appendChild(fxEl('halo-glow', ''));
+    back.appendChild(fxEl('halo', ''));
+  } else if(key === 'boy'){
+    back.appendChild(fxEl('ghost', '', GHOST_SVG));
+  } else {
+    for(let i=0;i<24;i++) back.appendChild(fxEl('dust', `left:${rnd(0,100).toFixed(0)}%;bottom:${rnd(0,30).toFixed(0)}%;--dx:${rnd(-30,30).toFixed(0)}px;animation-duration:${rnd(5,9).toFixed(1)}s;animation-delay:${rnd(0,6).toFixed(1)}s`));
+  }
+}
+
+// ---------- auto-close (VIP only) ----------
+function clearAutoClose(){
+  clearTimeout(acTimeout); clearInterval(acInterval); acTimeout = null; acInterval = null;
+  const r = document.getElementById('autoRing'); if(r) r.classList.remove('run');
+  const p = document.getElementById('acPill'); if(p){ p.classList.add('hidden'); p.classList.remove('hot'); }
+}
+function startAutoClose(){
+  clearAutoClose();
+  const sec = state.autoClose;
+  if(!state.vip || !sec) return;
+  const ring = document.getElementById('autoRing');
+  ring.style.setProperty('--dur', sec + 's');
+  ring.classList.remove('run'); void ring.getBoundingClientRect(); ring.classList.add('run');
+  const pill = document.getElementById('acPill'), num = document.getElementById('acNum');
+  let left = sec; num.textContent = left; pill.classList.remove('hidden');
+  acInterval = setInterval(()=>{
+    left--; num.textContent = Math.max(0, left);
+    if(left <= 3) pill.classList.add('hot');
+  }, 1000);
+  acTimeout = setTimeout(autoCloseNow, sec * 1000);
+}
+function autoCloseNow(){
+  if(currentIdx === null) return;
+  clearAutoClose();
+  roleFxStop(); stopTilt();
+  const rc = document.getElementById('revealCard');
+  rc.classList.remove('glow-red','glow-green');
+  document.getElementById('flipInner').classList.remove('flipped');   // flips back over
+  setTimeout(()=>{ if(currentIdx !== null) closeModal(); }, 700);
+}
+
+// ---------- glue ----------
+function cardFxOnReveal(){
+  if(currentIdx === null) return;
+  const p = state.assignments[currentIdx], role = ROLES[p.roleKey];
+  const rc = document.getElementById('revealCard');
+  rc.classList.add('revealed', role.team === 'mafia' ? 'glow-red' : 'glow-green');
+  startTilt();
+  if(state.vip){
+    setTimeout(()=>{ if(currentIdx !== null && revealedNow) roleFxStart(p.roleKey); }, 650);
+    startAutoClose();
+  }
+}
+function cardFxReset(){
+  holdCancel();
+  clearAutoClose(); roleFxStop(); stopTilt();
+  revealedNow = false;
+  const rc = document.getElementById('revealCard');
+  rc.classList.remove('revealed','glow-red','glow-green');
+  const seal = document.getElementById('waxSeal');
+  seal.classList.remove('holding','cracked');
+  document.getElementById('holdRing').classList.remove('run');
+}
+
+// ---------- boot ----------
+(function(){
+  let saved = null;
+  try{ saved = localStorage.getItem('mafiaAutoClose'); }catch(e){}
+  setAutoClose(saved === null ? 8 : saved);
+})();
 </script>
 <script>
 if ('serviceWorker' in navigator) {
