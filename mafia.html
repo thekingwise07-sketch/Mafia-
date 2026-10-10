@@ -499,20 +499,6 @@
   .reveal-card{ position:relative; }
   .flip-inner.flipped .card-photo{ animation:photoZoom .9s cubic-bezier(.2,.8,.2,1) .2s both; }
   @keyframes photoZoom{ from{ transform:scale(1.1); } to{ transform:scale(1); } }
-  .face-back.photo-back::after{
-    content:""; position:absolute; inset:0; pointer-events:none; border-radius:20px; opacity:0;
-    background:linear-gradient(115deg, transparent 35%, rgba(255,226,140,.55) 50%, transparent 65%);
-    background-size:250% 100%; background-position:120% 0;
-  }
-  .flip-inner.flipped .face-back.photo-back::after{ animation:goldSweep 1s ease .45s 1 both; }
-  @keyframes goldSweep{ 0%{ opacity:1; background-position:120% 0; } 100%{ opacity:0; background-position:-60% 0; } }
-  .glow-burst{
-    position:absolute; left:50%; top:50%; width:60px; height:60px; margin:-30px 0 0 -30px; border-radius:50%;
-    pointer-events:none; z-index:5;
-    background:radial-gradient(circle, rgba(255,226,140,.85), rgba(201,162,39,.35) 45%, transparent 70%);
-    animation:burst .9s ease-out forwards;
-  }
-  @keyframes burst{ from{ transform:scale(.3); opacity:1; } to{ transform:scale(9); opacity:0; } }
 
   /* night / day transition + background */
   #narBg{
@@ -590,7 +576,7 @@
   @keyframes redSpread{ 0%{ opacity:0; transform:scale(.2); } 25%{ opacity:1; transform:scale(1.2); } 80%{ opacity:1; } 100%{ opacity:0; transform:scale(1.2); } }
 
   @media (prefers-reduced-motion: reduce){
-    #narratorConsole *, .nar-fx, .nar-fx *, .reveal-card, .reveal-card *, .glow-burst, #narBg *{
+    #narratorConsole *, .nar-fx, .nar-fx *, .reveal-card, .reveal-card *, #narBg *{
       animation-duration:.01ms !important; animation-delay:0s !important; transition-duration:.01ms !important;
     }
   }
@@ -648,31 +634,51 @@
   .reveal-card.glow-red .tilt-wrap::before{ box-shadow:0 0 28px rgba(209,48,90,.8), 0 0 64px rgba(163,34,62,.45); animation:glowPulse 2.6s ease-in-out infinite; }
   .reveal-card.glow-green .tilt-wrap::before{ box-shadow:0 0 28px rgba(95,195,165,.75), 0 0 64px rgba(95,195,165,.4); animation:glowPulse 2.6s ease-in-out infinite; }
   @keyframes glowPulse{ 0%,100%{ opacity:.4; } 50%{ opacity:1; } }
-  /* moving sheen that follows the tilt */
-  .face-back.photo-back::before{
-    content:""; position:absolute; inset:0; z-index:2; pointer-events:none; border-radius:20px; opacity:0;
-    background:linear-gradient(115deg, transparent 35%, rgba(255,226,140,.3) 50%, transparent 65%);
-    background-size:260% 100%; background-position:calc(50% + var(--sx, 0%)) 0;
-    transition:opacity .4s;
-  }
-  .reveal-card.tilting .face-back.photo-back::before{ opacity:1; }
 
-  /* wax seal + hold-to-reveal */
-  .wax-seal{ position:relative; width:84px; height:84px; margin:0 auto 14px; filter:drop-shadow(0 5px 7px rgba(0,0,0,.55)); }
-  .seal-half{
-    position:absolute; inset:0; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:32px;
-    background:radial-gradient(circle at 35% 30%, #e0476f, #a3223e 55%, #5a0f20);
-    box-shadow:inset 0 0 0 6px rgba(0,0,0,.16), inset 0 0 0 7px rgba(255,255,255,.08);
+  /* app logo: tap once to crack, tap again to open */
+  .logo-btn{
+    position:relative; display:block; width:136px; height:136px; margin:0 auto 18px; padding:0; border:0; background:none;
+    cursor:pointer; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; touch-action:manipulation;
+    filter:drop-shadow(0 8px 14px rgba(0,0,0,.6)); outline-offset:6px;
+    animation:logoIdle 2.8s ease-in-out infinite;
   }
-  .seal-half.l{ clip-path:polygon(0 0, 53% 0, 46% 20%, 55% 38%, 45% 60%, 54% 80%, 49% 100%, 0 100%); }
-  .seal-half.r{ clip-path:polygon(53% 0, 100% 0, 100% 100%, 49% 100%, 54% 80%, 45% 60%, 55% 38%, 46% 20%); }
-  .wax-seal.holding{ animation:sealShake .11s linear infinite; filter:drop-shadow(0 0 14px rgba(224,71,111,.9)); }
-  @keyframes sealShake{ 0%{ transform:translate(0,0) rotate(0); } 25%{ transform:translate(-1.5px,1px) rotate(-1.5deg); } 50%{ transform:translate(1.5px,-1px) rotate(1.5deg); } 75%{ transform:translate(-1px,-1.5px) rotate(-1deg); } 100%{ transform:translate(0,0); } }
-  .wax-seal.cracked .seal-half.l{ animation:sealL .5s cubic-bezier(.5,0,.9,.5) forwards; }
-  .wax-seal.cracked .seal-half.r{ animation:sealR .5s cubic-bezier(.5,0,.9,.5) forwards; }
-  @keyframes sealL{ to{ transform:translate(-46px,52px) rotate(-38deg); opacity:0; } }
-  @keyframes sealR{ to{ transform:translate(46px,58px) rotate(36deg); opacity:0; } }
-  .hold-btn{ width:auto; padding:12px 30px; touch-action:none; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+  @keyframes logoIdle{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.045); } }
+  .logo-half{
+    position:absolute; inset:0; border-radius:30px; overflow:hidden; display:block;
+    background:radial-gradient(circle at 35% 30%, #e0476f, #a3223e 55%, #5a0f20);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+    transition:transform .22s cubic-bezier(.3,1.6,.5,1);
+  }
+  .logo-half::before{ content:"🎭"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:58px; }
+  body.vip-mode .logo-half::before{ content:"👑"; }
+  .logo-half img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; pointer-events:none; }
+  .logo-half.l{ clip-path:polygon(0 0, 53.8% 0, 46.8% 20%, 55.8% 38%, 45.8% 60%, 54.8% 80%, 49.8% 100%, 0 100%); }
+  .logo-half.r{ clip-path:polygon(53% 0, 100% 0, 100% 100%, 49% 100%, 54% 80%, 45% 60%, 55% 38%, 46% 20%); }
+  .logo-crack{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; opacity:0; z-index:2; }
+  .logo-crack path{ fill:none; stroke:#fff; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:1; stroke-dashoffset:1; }
+  .logo-crack path.c2{ stroke-width:1.4; stroke:rgba(255,255,255,.75); }
+  .logo-btn.cracked1{ animation:logoShake .42s ease-out 1; filter:drop-shadow(0 0 16px rgba(224,71,111,.85)); }
+  .logo-btn.cracked1 .logo-half.l{ transform:translate(-5px,1px) rotate(-3deg); transition:none; animation:halfSettleL .35s ease-out; }
+  .logo-btn.cracked1 .logo-half.r{ transform:translate(5px,2px) rotate(3deg); transition:none; animation:halfSettleR .35s ease-out; }
+  .logo-btn.cracked1 .logo-crack{ opacity:1; }
+  .logo-btn.cracked1 .logo-crack path{ animation:crackDraw .32s ease-out forwards; }
+  .logo-btn.cracked1 .logo-crack path.c2{ animation-delay:.1s; }
+  @keyframes crackDraw{ to{ stroke-dashoffset:0; } }
+  @keyframes logoShake{
+    0%{ transform:scale(1.12) rotate(0); } 20%{ transform:translate(-5px,2px) rotate(-3deg); } 40%{ transform:translate(5px,-2px) rotate(3deg); }
+    60%{ transform:translate(-3px,1px) rotate(-2deg); } 80%{ transform:translate(3px,0) rotate(1.5deg); } 100%{ transform:none; }
+  }
+  @keyframes halfSettleL{ from{ transform:translate(0,0) rotate(0); } }
+  @keyframes halfSettleR{ from{ transform:translate(0,0) rotate(0); } }
+  .logo-btn.cracked1:not(.broken){ animation:logoShake .42s ease-out 1, logoWobble 2.4s ease-in-out .5s infinite; }
+  @keyframes logoWobble{ 0%,100%{ transform:rotate(0); } 50%{ transform:rotate(1.6deg); } }
+  .logo-btn.broken{ animation:none; }
+  .logo-btn.broken .logo-crack{ opacity:0; }
+  .logo-btn.broken .logo-half.l{ transition:none; animation:logoFallL .55s cubic-bezier(.5,0,.9,.5) forwards; }
+  .logo-btn.broken .logo-half.r{ transition:none; animation:logoFallR .55s cubic-bezier(.5,0,.9,.5) forwards; }
+  @keyframes logoFallL{ from{ transform:translate(-5px,1px) rotate(-3deg); } to{ transform:translate(-70px,120px) rotate(-34deg); opacity:0; } }
+  @keyframes logoFallR{ from{ transform:translate(5px,2px) rotate(3deg); } to{ transform:translate(70px,130px) rotate(32deg); opacity:0; } }
+  .face-front .hint b{ color:var(--gold); }
   .ring-svg{
     position:absolute; left:-9px; top:-9px; width:calc(100% + 18px); height:calc(100% + 18px);
     pointer-events:none; overflow:visible; z-index:4;
@@ -681,8 +687,6 @@
     fill:none; stroke:#c9a227; stroke-width:1.8; stroke-linecap:round;
     stroke-dasharray:1; stroke-dashoffset:1; filter:drop-shadow(0 0 4px rgba(201,162,39,.9));
   }
-  .ring-svg.hold.run rect{ animation:ringFill var(--dur, .85s) linear forwards; }
-  @keyframes ringFill{ from{ stroke-dashoffset:1; } to{ stroke-dashoffset:0; } }
   .ring-svg.auto rect{ stroke-dashoffset:0; }
   .ring-svg.auto:not(.run){ visibility:hidden; }
   .ring-svg.auto.run rect{ animation:ringDrain var(--dur, 8s) linear forwards, ringColor var(--dur, 8s) linear forwards; }
@@ -754,7 +758,7 @@
   .dust{ width:3px; height:3px; border-radius:50%; background:rgba(255,255,255,.7); opacity:0; animation:dustFloat linear infinite; }
   @keyframes dustFloat{ 0%{ transform:translate(0,24px); opacity:0; } 30%{ opacity:.85; } 100%{ transform:translate(var(--dx),-190px); opacity:0; } }
   @media (prefers-reduced-motion: reduce){
-    .role-fx *, .breathe, .tilt-wrap, .wax-seal, .ring-svg rect, .ac-pill{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+    .role-fx *, .breathe, .tilt-wrap, .logo-btn, .logo-half, .logo-crack path, .ring-svg rect, .ac-pill{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
     .role-fx{ display:none; }
   }
 </style>
@@ -923,19 +927,22 @@
       <div class="breathe" id="breatheWrap"><div class="tilt-wrap" id="tiltWrap">
         <div class="flip-inner" id="flipInner">
           <div class="face face-front">
-            <div class="wax-seal" id="waxSeal"><div class="seal-half l">🎭</div><div class="seal-half r">🎭</div></div>
+            <button type="button" class="logo-btn" id="logoBtn" onclick="logoTap()" aria-label="اكبس على الشعار">
+              <span class="logo-half l"><img src="icon-192.png" alt="" draggable="false" onerror="this.remove()"></span>
+              <span class="logo-half r"><img src="icon-192.png" alt="" draggable="false" onerror="this.remove()"></span>
+              <svg class="logo-crack" viewBox="0 0 100 100" aria-hidden="true">
+                <path pathLength="1" d="M53 0 L46 20 L55 38 L45 60 L54 80 L49 100"/>
+                <path class="c2" pathLength="1" d="M55 38 L70 44 L76 56 M45 60 L30 66 L24 78"/>
+              </svg>
+            </button>
             <div class="who" id="frontName">—</div>
-            <div class="hint">بس أنت شوف الشاشة.<br>اضغط مطولاً على الزر لحد ما ينكسر الختم.</div>
-            <button class="btn btn-primary hold-btn" id="holdBtn" oncontextmenu="return false"
-              onpointerdown="holdStart(event)" onpointerup="holdCancel()" onpointerleave="holdCancel()" onpointercancel="holdCancel()"
-              onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();revealCard();}">اضغط مطولاً للكشف 👁</button>
+            <div class="hint" id="frontHint">بس أنت شوف الشاشة.<br>اكبس على <b>الشعار</b> لكسره.</div>
           </div>
           <div class="face face-back" id="backFace">
             <!-- filled by JS -->
           </div>
         </div>
       </div></div>
-      <svg class="ring-svg hold" id="holdRing" viewBox="0 0 100 150" preserveAspectRatio="none"><rect x="1.5" y="1.5" width="97" height="147" rx="6.5" ry="6.5" pathLength="1"/></svg>
       <svg class="ring-svg auto" id="autoRing" viewBox="0 0 100 150" preserveAspectRatio="none"><rect x="1.5" y="1.5" width="97" height="147" rx="6.5" ry="6.5" pathLength="1"/></svg>
       <div class="ac-pill hidden" id="acPill">⏳ <b id="acNum">0</b></div>
       <div class="role-fx front" id="roleFxFront"></div>
@@ -1435,9 +1442,6 @@ function revealCard(){
   revealedNow = true;
   document.getElementById('backFace').innerHTML = pendingBackHTML;
   requestAnimationFrame(()=>document.getElementById('flipInner').classList.add('flipped'));
-  const burst = document.createElement('div'); burst.className = 'glow-burst';
-  document.getElementById('cardStage').appendChild(burst);
-  setTimeout(()=>burst.remove(), 950);
   document.getElementById('closeBtn').classList.remove('hidden');
   playRevealEffect();
   if(currentIdx !== null){
@@ -1450,7 +1454,7 @@ let closingNow = false;
 function closeModal(){
   if(closingNow) return;
   closingNow = true;
-  clearAutoClose(); holdCancel(); roleFxStop();
+  clearAutoClose(); roleFxStop();
   const rc = document.querySelector('#overlay .reveal-card');
   rc.classList.remove('opening'); rc.classList.add('closing');
   setTimeout(()=>{ rc.classList.remove('closing'); closingNow = false; closeModalNow(); }, 260);
@@ -2262,6 +2266,7 @@ function sfx(name){
       tone(60,1.2,.6,'sine',.6,30); tone(240,1.2,.2,'triangle',.15,80);
       break;
     }
+    case 'crack': tone(1400,0,.07,'square',.07,300); tone(420,.02,.16,'sawtooth',.06,90); tone(2200,.04,.05,'square',.04,500); break;
     case 'win': [523,659,784,1047,1319].forEach((f,i)=>tone(f,i*.14,.5,'triangle',.1)); break;
     case 'lose': tone(196,0,.9,'sawtooth',.06,147); tone(147,.4,1.2,'sawtooth',.06,98); break;
   }
@@ -2470,9 +2475,8 @@ if(DISPLAY_MODE) initDisplay(); else checkSavedGame();
 // =====================================================================
 // 🃏 Card effects: hold-to-reveal + wax seal, tilt, glow, role effects (VIP), auto-close (VIP)
 // =====================================================================
-var revealedNow = false, holdTimer = null, holdOn = false, acTimeout = null, acInterval = null;
+var revealedNow = false, acTimeout = null, acInterval = null;
 var fxTimers = [], tiltWanted = false, tiltBase = null, orientationOK = null;
-var HOLD_MS = 850;
 var GHOST_SVG = `<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
   <g><circle cx="50" cy="30" r="19" fill="#1a1236" stroke="rgba(170,140,255,.85)" stroke-width="1.4"/>
   <path d="M28 56 Q50 44 72 56 L76 112 Q50 128 24 112 Z" fill="#1a1236" stroke="rgba(170,140,255,.85)" stroke-width="1.4"/>
@@ -2498,7 +2502,8 @@ function setAutoClose(v){
   ['acInputA','acInputB'].forEach(id=>{ const el = document.getElementById(id); if(el) el.value = n; });
 }
 
-// ---------- hold-to-reveal with wax seal ----------
+// ---------- tap-to-crack logo: tap 1 cracks it, tap 2 opens the card ----------
+var logoStage = 0;
 function askOrientation(){
   if(orientationOK !== null) return;
   try{
@@ -2511,31 +2516,29 @@ function askOrientation(){
     } else orientationOK = ('DeviceOrientationEvent' in window);
   }catch(e){ orientationOK = false; }
 }
-function holdStart(e){
-  if(e && e.cancelable) e.preventDefault();
-  if(holdOn || revealedNow || currentIdx === null) return;
+function logoTap(){
+  if(revealedNow || currentIdx === null || logoStage >= 2) return;
+  const btn = document.getElementById('logoBtn'), hint = document.getElementById('frontHint');
   askOrientation(); ac();
-  holdOn = true;
-  const ring = document.getElementById('holdRing');
-  ring.style.setProperty('--dur', HOLD_MS + 'ms');
-  ring.classList.remove('run'); void ring.getBoundingClientRect(); ring.classList.add('run');
-  document.getElementById('waxSeal').classList.add('holding');
-  if(navigator.vibrate) navigator.vibrate(20);
-  holdTimer = setTimeout(holdDone, HOLD_MS);
+  if(logoStage === 0){
+    logoStage = 1;
+    btn.classList.add('cracked1');
+    hint.innerHTML = 'انكسر الشعار.<br><b>اكبس عليه مرة ثانية</b> لفتح البطاقة.';
+    sfx('crack');
+    if(navigator.vibrate) navigator.vibrate([25, 30, 25]);
+  } else {
+    logoStage = 2;
+    btn.classList.remove('cracked1'); btn.classList.add('broken');
+    sfx('crack');
+    if(navigator.vibrate) navigator.vibrate([30, 40, 60]);
+    setTimeout(()=>{ if(currentIdx !== null) revealCard(); }, 380);
+  }
 }
-function holdCancel(){
-  if(!holdOn) return;
-  holdOn = false; clearTimeout(holdTimer);
-  document.getElementById('holdRing').classList.remove('run');
-  document.getElementById('waxSeal').classList.remove('holding');
-}
-function holdDone(){
-  holdOn = false;
-  const seal = document.getElementById('waxSeal');
-  seal.classList.remove('holding'); seal.classList.add('cracked');
-  document.getElementById('holdRing').classList.remove('run');
-  if(navigator.vibrate) navigator.vibrate([30, 40, 60]);
-  setTimeout(()=>{ if(currentIdx !== null) revealCard(); }, 420);
+function logoReset(){
+  logoStage = 0;
+  const btn = document.getElementById('logoBtn'), hint = document.getElementById('frontHint');
+  if(btn) btn.classList.remove('cracked1', 'broken');
+  if(hint) hint.innerHTML = 'بس أنت شوف الشاشة.<br>اكبس على <b>الشعار</b> لكسره.';
 }
 
 // ---------- tilt (phone orientation, or mouse on desktop) ----------
@@ -2548,7 +2551,6 @@ function tiltApply(rx, ry){
     if(!tiltNext || !tiltWanted) return;
     const w = document.getElementById('tiltWrap'), a = tiltNext; tiltNext = null;
     w.style.transform = `rotateX(${a[0].toFixed(1)}deg) rotateY(${a[1].toFixed(1)}deg)`;
-    w.style.setProperty('--sx', (a[1] * 3.2).toFixed(1) + '%');
   });
 }
 function onOrient(e){
@@ -2577,7 +2579,7 @@ function stopTilt(){
   window.removeEventListener('deviceorientation', onOrient);
   document.removeEventListener('pointermove', onPtr);
   const w = document.getElementById('tiltWrap');
-  if(w){ w.style.transform = ''; w.style.removeProperty('--sx'); }
+  if(w){ w.style.transform = ''; }
   document.getElementById('revealCard').classList.remove('tilting');
 }
 
@@ -2661,14 +2663,11 @@ function cardFxOnReveal(){
   }
 }
 function cardFxReset(){
-  holdCancel();
+  logoReset();
   clearAutoClose(); roleFxStop(); stopTilt();
   revealedNow = false;
   const rc = document.getElementById('revealCard');
   rc.classList.remove('revealed','glow-red','glow-green');
-  const seal = document.getElementById('waxSeal');
-  seal.classList.remove('holding','cracked');
-  document.getElementById('holdRing').classList.remove('run');
 }
 
 // ---------- boot ----------
